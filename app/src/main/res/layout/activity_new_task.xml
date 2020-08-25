@@ -17,6 +17,7 @@
         android:layout_weight="1"/>
 
     <DatePicker
+        android:id="@+id/date_picker"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:calendarViewShown="false"
@@ -24,10 +25,33 @@
         android:layout_weight="4"/>
 
     <TimePicker
+        android:id="@+id/time_picker"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:timePickerMode="spinner"
         android:layout_weight="4"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Photos"
+        android:textAllCaps="false"
+        android:layout_weight="1"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Location"
+        android:textAllCaps="false"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/button_save_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Save Task"
+        android:layout_weight="1"/>
 
 
 </LinearLayout>
