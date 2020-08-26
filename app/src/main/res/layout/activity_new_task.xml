@@ -1,57 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
     android:orientation="vertical"
     tools:context=".views.NewTask">
 
     <EditText
         android:id="@+id/edit_text_task"
-        android:autofillHints="text"
-        android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Task Here"
-        android:layout_weight="1"/>
+        android:autofillHints="text"
+        android:inputType="text" />
 
     <DatePicker
         android:id="@+id/date_picker"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:calendarViewShown="false"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_task"
         android:datePickerMode="spinner"
-        android:layout_weight="4"/>
+        android:calendarViewShown="false"
+        tools:targetApi="lollipop" />
 
     <TimePicker
         android:id="@+id/time_picker"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/date_picker"
         android:timePickerMode="spinner"
-        android:layout_weight="4"/>
+        tools:targetApi="lollipop" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Photos"
-        android:textAllCaps="false"
-        android:layout_weight="1"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Location"
-        android:textAllCaps="false"
-        android:layout_weight="1"/>
-
-    <Button
-        android:id="@+id/button_save_task"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@id/time_picker"
         android:text="Save Task"
-        android:layout_weight="1"/>
+        android:textAllCaps="false"
+        android:layout_centerInParent="true" />
 
 
-</LinearLayout>
+</RelativeLayout>
