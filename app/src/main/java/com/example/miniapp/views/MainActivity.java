@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        buttonAddNewTask = findViewById(R.id.button_add_new_task);
+        buttonAddNewTask = findViewById(R.id.button_sign_in);
         buttonAddNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
