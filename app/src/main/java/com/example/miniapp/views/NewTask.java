@@ -2,20 +2,25 @@ package com.example.miniapp.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.miniapp.R;
 
-public class NewTask extends AppCompatActivity {
+import java.util.Calendar;
+
+public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private EditText editTextTask;
     private EditText editTextSelectDate;
+    private EditText editTextSelectTime;
     private Button buttonSaveTask;
 
     @Override
@@ -24,9 +29,8 @@ public class NewTask extends AppCompatActivity {
         setContentView(R.layout.activity_new_task);
 
         editTextTask = findViewById(R.id.edit_text_task);
-
         editTextSelectDate = findViewById(R.id.edit_text_select_date);
-
+        editTextSelectTime = findViewById(R.id.edit_text_select_time);
         buttonSaveTask = findViewById(R.id.button_save_task);
         buttonSaveTask.setEnabled(false);
 
@@ -54,7 +58,15 @@ public class NewTask extends AppCompatActivity {
         editTextSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(NewTask.this, "Show Date Picker Dialog now bro", Toast.LENGTH_SHORT).show();
+                openDatePickerDialog();
+            }
+        });
+
+        editTextSelectTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openTimePickerDialog();
+                Toast.makeText(NewTask.this, "Show Time Picker Dialog now dude", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -64,5 +76,25 @@ public class NewTask extends AppCompatActivity {
                 Toast.makeText(NewTask.this, "GRRRRR", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void openDatePickerDialog() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+        Toast.makeText(NewTask.this, "Show Date Picker Dialog now bro", Toast.LENGTH_SHORT).show();
+    }
+
+    private void openTimePickerDialog() {
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        String date = i2 + " " + i1 + " " + i;
+        editTextSelectDate.setText(date);
     }
 }
