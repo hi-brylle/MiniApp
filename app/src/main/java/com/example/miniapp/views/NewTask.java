@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.example.miniapp.R;
 
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -93,7 +95,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        String date = i2 + " " + i1 + " " + i;
+        String month = new DateFormatSymbols().getMonths()[i1 - 1];
+        String date = i2 + " " + month + " " + i;
         editTextSelectDate.setText(date);
     }
 }
