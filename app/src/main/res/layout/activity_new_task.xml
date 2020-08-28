@@ -11,11 +11,23 @@
         android:layout_height="wrap_content"
         android:hint="Task" />
 
+    <EditText
+        android:id="@+id/edit_text_select_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_task"
+        android:layout_centerInParent="true"
+        android:hint="Select Date"
+        android:inputType="none"
+        android:clickable="true"
+        android:focusable="false"
+        android:textAllCaps="false" />
+
     <Button
         android:id="@+id/button_save_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_text_task"
+        android:layout_below="@id/edit_text_select_date"
         android:layout_centerInParent="true"
         android:text="Save Task"
         android:textAllCaps="false" />

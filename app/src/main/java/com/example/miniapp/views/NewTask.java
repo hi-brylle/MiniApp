@@ -15,6 +15,7 @@ import com.example.miniapp.R;
 public class NewTask extends AppCompatActivity {
 
     private EditText editTextTask;
+    private EditText editTextSelectDate;
     private Button buttonSaveTask;
 
     @Override
@@ -23,6 +24,9 @@ public class NewTask extends AppCompatActivity {
         setContentView(R.layout.activity_new_task);
 
         editTextTask = findViewById(R.id.edit_text_task);
+
+        editTextSelectDate = findViewById(R.id.edit_text_select_date);
+
         buttonSaveTask = findViewById(R.id.button_save_task);
         buttonSaveTask.setEnabled(false);
 
@@ -44,6 +48,13 @@ public class NewTask extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        editTextSelectDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(NewTask.this, "Show Date Picker Dialog now bro", Toast.LENGTH_SHORT).show();
             }
         });
 
