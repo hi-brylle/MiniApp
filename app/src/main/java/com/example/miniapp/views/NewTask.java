@@ -79,14 +79,13 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     private void openDatePickerDialog() {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                this,
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, this,
                 Calendar.getInstance().get(Calendar.YEAR),
                 Calendar.getInstance().get(Calendar.MONTH),
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
-        Toast.makeText(NewTask.this, "Show Date Picker Dialog now bro", Toast.LENGTH_SHORT).show();
     }
 
     private void openTimePickerDialog() {
