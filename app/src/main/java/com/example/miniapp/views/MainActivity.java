@@ -6,13 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.miniapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button buttonAddNewTask;
+    private Button buttonSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        buttonAddNewTask = findViewById(R.id.button_sign_in);
-        buttonAddNewTask.setOnClickListener(new View.OnClickListener() {
+        buttonSignIn = findViewById(R.id.button_sign_in);
+        buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NewTaskActivity();

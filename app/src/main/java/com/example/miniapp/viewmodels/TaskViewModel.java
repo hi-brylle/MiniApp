@@ -1,5 +1,7 @@
 package com.example.miniapp.viewmodels;
 
-public class TaskViewModel {
+import java.util.Observable;
+
+public class TaskViewModel extends Observable {
 
 }
