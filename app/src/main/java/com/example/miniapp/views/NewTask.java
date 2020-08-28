@@ -3,6 +3,7 @@ package com.example.miniapp.views;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,15 +11,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.miniapp.R;
 
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
-public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private EditText editTextTask;
     private EditText editTextSelectDate;
@@ -68,7 +69,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             @Override
             public void onClick(View view) {
                 openTimePickerDialog();
-                Toast.makeText(NewTask.this, "Show Time Picker Dialog now dude", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -91,6 +91,14 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     private void openTimePickerDialog() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                this,
+                Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                Calendar.getInstance().get(Calendar.MINUTE) + 5,
+                false);
+
+        timePickerDialog.show();
     }
 
     @Override
@@ -98,5 +106,15 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         String month = new DateFormatSymbols().getMonths()[i1 - 1];
         String date = i2 + " " + month + " " + i;
         editTextSelectDate.setText(date);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+        String hour = i < 10 ? "0" + i : String.valueOf(i);
+        String minute = i1 < 10 ? "0" + i1 : String.valueOf(i1);
+        String xm = i < 12 ? "AM" : "PM";
+
+        String time = hour + ":" + minute + " " + xm;
+        editTextSelectTime.setText(time);
     }
 }
