@@ -146,24 +146,33 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         timePickerDialog.show();
     }
 
+    String dateRepresentation(int year, int month, int day){
+        // needs localization
+        String monthName = new DateFormatSymbols().getMonths()[month];
+
+        return day + " " + monthName + " " + year;
+    }
+
+    String timeRepresentation(int hr, int min){
+        String hour = hr < 10 ? "0" + hr : String.valueOf(hr);
+        String minute = min < 10 ? "0" + min : String.valueOf(min);
+        String xm = hr < 12 ? "AM" : "PM";
+
+        return hour + ":" + minute + " " + xm;
+    }
+
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         if (date == null){
             date = new Date();
         }
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, i);
         calendar.set(Calendar.MONTH, i1);
         calendar.set(Calendar.DAY_OF_MONTH, i2);
-
         date = calendar.getTime();
 
-        // needs localization
-        String month = new DateFormatSymbols().getMonths()[i1];
-
-        String date = i2 + " " + month + " " + i;
-        editTextSelectDate.setText(date);
+        editTextSelectDate.setText(dateRepresentation(i, i1, i2));
     }
 
     @Override
@@ -171,19 +180,12 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         if (date == null){
             date = new Date();
         }
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, i);
         calendar.set(Calendar.MINUTE, i1);
-
         date = calendar.getTime();
 
-        String hour = i < 10 ? "0" + i : String.valueOf(i);
-        String minute = i1 < 10 ? "0" + i1 : String.valueOf(i1);
-        String xm = i < 12 ? "AM" : "PM";
-
-        String time = hour + ":" + minute + " " + xm;
-        editTextSelectTime.setText(time);
+        editTextSelectTime.setText(timeRepresentation(i, i1));
     }
 
     private void saveButtonEnable(){
