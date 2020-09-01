@@ -58,12 +58,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() == 0){
-
-                    buttonSaveTask.setEnabled(false);
-                } else {
-                    buttonSaveTask.setEnabled(true);
-                }
+                saveButtonEnable();
             }
 
             @Override
@@ -71,6 +66,40 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                 if (editable.length() != 0){
                     task = String.valueOf(editable);
                 }
+            }
+        });
+
+        editTextSelectDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                saveButtonEnable();
+            }
+        });
+
+        editTextSelectTime.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                saveButtonEnable();
             }
         });
 
@@ -155,6 +184,16 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         String time = hour + ":" + minute + " " + xm;
         editTextSelectTime.setText(time);
+    }
+
+    private void saveButtonEnable(){
+        if(editTextTask.getText().length() != 0 &&
+            editTextSelectDate.getText().length() != 0 &&
+            editTextSelectTime.getText().length() != 0){
+            buttonSaveTask.setEnabled(true);
+        } else{
+            buttonSaveTask.setEnabled(false);
+        }
     }
 
     private void saveTask() {
