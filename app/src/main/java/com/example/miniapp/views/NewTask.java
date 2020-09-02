@@ -34,7 +34,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     private TaskViewModel taskViewModel;
 
     String task;
-    Date date;
+    Date dateStart;
+    Date dateCreated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,27 +164,27 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        if (date == null){
-            date = new Date();
+        if (dateStart == null){
+            dateStart = new Date();
         }
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, i);
         calendar.set(Calendar.MONTH, i1);
         calendar.set(Calendar.DAY_OF_MONTH, i2);
-        date = calendar.getTime();
+        dateStart = calendar.getTime();
 
         editTextSelectDate.setText(dateRepresentation(i, i1, i2));
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        if (date == null){
-            date = new Date();
+        if (dateStart == null){
+            dateStart = new Date();
         }
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, i);
         calendar.set(Calendar.MINUTE, i1);
-        date = calendar.getTime();
+        dateStart = calendar.getTime();
 
         editTextSelectTime.setText(timeRepresentation(i, i1));
     }
@@ -199,13 +200,16 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     private void saveTask() {
-        Toast.makeText(NewTask.this, task + " " + date, Toast.LENGTH_SHORT).show();
+        dateCreated = Calendar.getInstance().getTime();
+//        Toast.makeText(NewTask.this, task + " due at " + dateStart, Toast.LENGTH_SHORT).show();
         Log.v("MY TAG", "Task: " + task);
-        Log.v("MY TAG", "Date: " + date);
+        Log.v("MY TAG", "Created: " + dateCreated);
+        Log.v("MY TAG", "Due: " + dateStart);
+        taskViewModel.submit(task, dateCreated, dateStart);
     }
 
     @Override
     public void update(Observable observable, Object o) {
-
+        Toast.makeText(this, (CharSequence) o, Toast.LENGTH_SHORT).show();
     }
 }
