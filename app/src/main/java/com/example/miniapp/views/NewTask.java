@@ -207,6 +207,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         Log.v("MY TAG", "Created: " + dateCreated);
         Log.v("MY TAG", "Due: " + dateStart);
         taskViewModel.submit(task, dateCreated, dateStart);
+        Toast.makeText(this, "Saved?", Toast.LENGTH_SHORT).show();
     }
 
     @Override
