@@ -203,7 +203,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     private void saveTask() {
         dateCreated = Calendar.getInstance().getTime();
-//        Toast.makeText(NewTask.this, task + " due at " + dateStart, Toast.LENGTH_SHORT).show();
         Log.v("MY TAG", "Task: " + task);
         Log.v("MY TAG", "Created: " + dateCreated);
         Log.v("MY TAG", "Due: " + dateStart);

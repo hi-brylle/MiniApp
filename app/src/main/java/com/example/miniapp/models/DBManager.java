@@ -1,6 +1,8 @@
 package com.example.miniapp.models;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
@@ -34,6 +36,7 @@ public class DBManager {
 
         try {
             database.save(doc);
+            Log.v("MY TAG", "Success I guess?");
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
