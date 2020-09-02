@@ -34,4 +34,24 @@ public class Task {
         }
         imageURIs.add(imgURI);
     }
+
+    public String getTask() {
+        return task;
+    }
+
+    public Date getDateCreated() {
+        return created;
+    }
+
+    public Date getDateStart() {
+        return start;
+    }
+
+    public boolean getIsMarkDone() {
+        return isDone;
+    }
+
+    public boolean getIsInProgress() {
+        return isInProgress;
+    }
 }

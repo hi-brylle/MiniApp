@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.miniapp.R;
+import com.example.miniapp.models.DBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
 
 import java.text.DateFormatSymbols;
@@ -48,7 +49,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         buttonSaveTask = findViewById(R.id.button_save_task);
         buttonSaveTask.setEnabled(false);
 
-        taskViewModel = new TaskViewModel();
+        // manual DI
+        taskViewModel = new TaskViewModel(new DBManager(this));
         taskViewModel.addObserver(this);
 
         editTextTask.addTextChangedListener(new TextWatcher() {
