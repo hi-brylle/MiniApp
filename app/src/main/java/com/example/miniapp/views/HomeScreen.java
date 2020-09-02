@@ -1,15 +1,14 @@
 package com.example.miniapp.views;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.miniapp.R;
+import com.example.miniapp.helper_classes.CustomAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeScreen extends AppCompatActivity {
@@ -17,8 +16,8 @@ public class HomeScreen extends AppCompatActivity {
     private RecyclerView.Adapter recViewAdapter;
     private RecyclerView.LayoutManager recViewLayoutManager;
 
-    private Button buttonMenu;
-    private FloatingActionButton fabAddNewTask;
+    private Button buttonPopupMenu;
+    private FloatingActionButton fabNewTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +25,12 @@ public class HomeScreen extends AppCompatActivity {
         setContentView(R.layout.activity_home_screen);
 
         recViewTaskList = findViewById(R.id.recycler_view_task_list);
-        recViewLayoutManager = new LinearLayoutManager(this);
-        //recViewAdapter =
-        recViewTaskList.setAdapter(recViewAdapter);//not initialized
+        recViewAdapter = new CustomAdapter(null); //TODO: connect to DB via a viewmodel to get data
+        recViewTaskList.setAdapter(recViewAdapter);
+        recViewTaskList.setLayoutManager(new LinearLayoutManager(this));
+
+        buttonPopupMenu = findViewById(R.id.button_popup_menu);
+        fabNewTask = findViewById(R.id.fab_new_task);
 
     }
 }
