@@ -11,9 +11,18 @@ import com.couchbase.lite.Document;
 import com.couchbase.lite.MutableDocument;
 
 public class DBManager {
+    private static DBManager dbManager = null;
     private Database database;
 
-    public DBManager(Context context){
+    public static DBManager getInstance(Context context){
+        if (dbManager == null){
+            dbManager = new DBManager(context);
+        }
+
+        return dbManager;
+    }
+
+    private DBManager(Context context){
         DatabaseConfiguration config = new DatabaseConfiguration(context.getApplicationContext());
         try {
             database = new Database("mini-app-db", config);

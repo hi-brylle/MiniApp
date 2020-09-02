@@ -50,7 +50,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         buttonSaveTask.setEnabled(false);
 
         // manual DI
-        taskViewModel = new TaskViewModel(new DBManager(this));
+        taskViewModel = new TaskViewModel(DBManager.getInstance(this));
         taskViewModel.addObserver(this);
 
         editTextTask.addTextChangedListener(new TextWatcher() {
