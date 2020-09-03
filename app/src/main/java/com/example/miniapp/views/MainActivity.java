@@ -10,7 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
+import com.example.miniapp.models.DBManager;
+import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
@@ -18,8 +21,10 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class MainActivity extends AppCompatActivity implements Validator.ValidationListener {
+public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, Observer {
 
     private static final String LOGGED_IN_USERS = "loggedInUsers";
     private static final String LOGGED_IN_USERNAME = "loggedInUsername";
@@ -38,12 +43,14 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     private Button buttonSignInGoogle;
     private Button buttonSignInFacebook;
 
+    private LoginViewModel loginViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //check if user is logged in (if yes, go to HomeScreen; else, stay here)
+        // check if user is logged in (if yes, go to HomeScreen; else, stay here)
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -53,6 +60,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         buttonSignIn = findViewById(R.id.button_sign_in);
         buttonSignInGoogle = findViewById(R.id.button_sign_in_google);
         buttonSignInFacebook = findViewById(R.id.button_sign_in_facebook);
+
+
+        loginViewModel = new LoginViewModel(new DBManager("users_login", new DatabaseConfiguration(this.getApplicationContext())));
+        loginViewModel.addObserver(this);
+
 
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,5 +109,10 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+
     }
 }

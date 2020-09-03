@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -46,8 +44,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     private Button buttonSaveTask;
 
     private TaskViewModel taskViewModel;
-
-
 
     String task;
     Date dateStart;
