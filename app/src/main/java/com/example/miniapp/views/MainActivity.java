@@ -2,6 +2,7 @@ package com.example.miniapp.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -79,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void onValidationSucceeded() {
-        Toast.makeText(this, "Put creds in DB now", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Put creds in DB now", Toast.LENGTH_SHORT).show();
+        Intent testIntent = new Intent(MainActivity.this, NewTask.class);
+        startActivity(testIntent);
     }
 
     @Override

@@ -65,14 +65,12 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextSelectDate = findViewById(R.id.edit_text_select_date);
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
         buttonSaveTask = findViewById(R.id.button_save_task);
-        buttonSaveTask.setEnabled(false);
 
         // manual DI
         // TODO: "debug_user" is a temporary value, once all are set, NewTask receives the proper name
         // TODO: in form of an email address (for simplicity) from an Intent coming from HomeScreen activity
         taskViewModel = new TaskViewModel(new DBManager("debug_user", new DatabaseConfiguration(this.getApplicationContext())));
         taskViewModel.addObserver(this);
-
 
         editTextSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,8 +108,9 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     @Override
     public void onValidationSucceeded() {
-        Toast.makeText(this, "valid stuff, into the DB nowwww", Toast.LENGTH_SHORT).show();
-        //saveTask();
+//        Toast.makeText(this, "valid stuff, into the DB nowwww", Toast.LENGTH_SHORT).show();
+        task = String.valueOf(editTextTask.getText());
+        saveTask();
     }
 
     @Override
