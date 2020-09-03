@@ -1,10 +1,13 @@
 package com.example.miniapp.views;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,25 +23,25 @@ import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 
+import org.json.JSONException;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, Observer {
 
+    // SharedPreferences used to track login status of users for auto-login checking
     private static final String LOGGED_IN_USERS = "loggedInUsers";
     private static final String LOGGED_IN_USERNAME = "loggedInUsername";
     private static SharedPreferences userLoginTrackerSharedPref;
 
     private Validator validator;
-
-    @NotEmpty(message = "This field is required")
+    @NotEmpty
     @Email(message = "Invalid Email")
     private EditText editTextEmail;
-
     @Password(min = 6, scheme = Password.Scheme.ANY, message = "Password must be at least 6 characters")
     private EditText ediTextPassword;
-
     private Button buttonSignIn;
     private Button buttonSignInGoogle;
     private Button buttonSignInFacebook;
@@ -65,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         loginViewModel = new LoginViewModel(new DBManager("users_login", new DatabaseConfiguration(this.getApplicationContext())));
         loginViewModel.addObserver(this);
 
-
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,13 +88,27 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 Toast.makeText(MainActivity.this, "Activity for FB log in...", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loginViewModel.openDB();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        loginViewModel.closeDB();
     }
 
     @Override
     public void onValidationSucceeded() {
-//        Toast.makeText(this, "Put creds in DB now", Toast.LENGTH_SHORT).show();
+        try {
+            loginViewModel.verify(String.valueOf(editTextEmail.getText()), String.valueOf(ediTextPassword.getText()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Intent testIntent = new Intent(MainActivity.this, NewTask.class);
         startActivity(testIntent);
     }
@@ -113,6 +129,52 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void update(Observable observable, Object o) {
+        // the following integers are used for the login status
+        // 0: email is not registered
+        // 1: email is registered, password is correct
+        // -1: email is registered, password is incorrect
+        int loginStatus = (int) o;
+        handleLoginStatus(loginStatus);
+    }
 
+    private void handleLoginStatus(int loginStatus) {
+        switch (loginStatus){
+            // register email
+            case 0:
+                loginViewModel.register(String.valueOf(editTextEmail.getText()), String.valueOf(ediTextPassword.getText()));
+                // TODO: set SharedPref to be logged in for this email
+                break;
+
+            // password correct
+            case 1:
+                // TODO: make intent go to HomeScreen, in the mean time, skip right to NewTask
+                Intent intent = new Intent(MainActivity.this, NewTask.class);
+                startActivity(intent);
+                // TODO: set SharedPref to be logged in for this email
+                break;
+
+            // password incorrect
+            case -1:
+                passwordEmailMismatchDialog();
+                break;
+
+            default:
+                Log.v("MY TAG", "Error in login status for some reason");
+        }
+    }
+
+    private void passwordEmailMismatchDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Sign In Failed")
+                .setMessage("Your email or password is incorrect.")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        editTextEmail.setText("");
+                        ediTextPassword.setText("");
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

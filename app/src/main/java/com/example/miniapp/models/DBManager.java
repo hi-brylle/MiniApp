@@ -68,16 +68,16 @@ public class DBManager implements IDBManager {
     @Override
     public JSONArray getAll() {
         Query query = QueryBuilder.select(SelectResult.all()).from(DataSource.database(currentDatabase));
+        JSONArray res = null;
 
         try {
             ResultSet results = query.execute();
-            return new JSONArray(results);
+            res = new JSONArray(results);
         } catch (CouchbaseLiteException | JSONException e) {
             e.printStackTrace();
         }
 
-        return null;
-
+        return res;
     }
 
 
