@@ -19,21 +19,35 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.models.DBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Observer {
+public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Observer, Validator.ValidationListener {
 
+    private Validator validator;
+
+    @NotEmpty
     private EditText editTextTask;
+
+    @NotEmpty
     private EditText editTextSelectDate;
+
+    @NotEmpty
     private EditText editTextSelectTime;
+
     private Button buttonSaveTask;
 
     private TaskViewModel taskViewModel;
+
+
 
     String task;
     Date dateStart;
@@ -44,6 +58,9 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
 
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+
         editTextTask = findViewById(R.id.edit_text_task);
         editTextSelectDate = findViewById(R.id.edit_text_select_date);
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
@@ -51,61 +68,11 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         buttonSaveTask.setEnabled(false);
 
         // manual DI
-        taskViewModel = new TaskViewModel(DBManager.getInstance(new DatabaseConfiguration(this.getApplicationContext())));
+        // TODO: "debug_user" is a temporary value, once all are set, NewTask receives the proper name
+        // TODO: in form of an email address (for simplicity) from an Intent coming from HomeScreen activity
+        taskViewModel = new TaskViewModel(new DBManager("debug_user", new DatabaseConfiguration(this.getApplicationContext())));
         taskViewModel.addObserver(this);
 
-        editTextTask.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                saveButtonEnable();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.length() != 0){
-                    task = String.valueOf(editable);
-                }
-            }
-        });
-
-        editTextSelectDate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                saveButtonEnable();
-            }
-        });
-
-        editTextSelectTime.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                saveButtonEnable();
-            }
-        });
 
         editTextSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,9 +91,41 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         buttonSaveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveTask();
+                validator.validate();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        taskViewModel.openDB();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        taskViewModel.closeDB();
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        Toast.makeText(this, "valid stuff, into the DB nowwww", Toast.LENGTH_SHORT).show();
+        //saveTask();
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for(ValidationError error : errors){
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+
+            if (view instanceof EditText){
+                ((EditText) view).setError(message);
+            } else{
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void openDatePickerDialog() {
@@ -192,16 +191,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextSelectTime.setText(timeRepresentation(i, i1));
     }
 
-    private void saveButtonEnable(){
-        if(editTextTask.getText().length() != 0 &&
-            editTextSelectDate.getText().length() != 0 &&
-            editTextSelectTime.getText().length() != 0){
-            buttonSaveTask.setEnabled(true);
-        } else{
-            buttonSaveTask.setEnabled(false);
-        }
-    }
-
     private void saveTask() {
         dateCreated = Calendar.getInstance().getTime();
         Log.v("MY TAG", "Task: " + task);
@@ -214,6 +203,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     @Override
     public void update(Observable observable, Object o) {
-        Toast.makeText(this, (CharSequence) o, Toast.LENGTH_SHORT).show();
+
     }
+
+
 }

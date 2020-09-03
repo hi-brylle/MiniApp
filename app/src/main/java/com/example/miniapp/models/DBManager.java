@@ -1,22 +1,17 @@
 package com.example.miniapp.models;
 
-import android.util.Log;
-
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
-import com.couchbase.lite.Document;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
-import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +19,18 @@ import java.util.Map;
 public class DBManager implements IDBManager {
     private Database currentDatabase;   // open one database per session (yeah?)
     private String DBToUseOrMake;       // DB name to use or make for current session
+    private DatabaseConfiguration config;
 
-    private DBManager(String dbName, DatabaseConfiguration config){
+    public DBManager(String dbName, DatabaseConfiguration config){
         // DBToUseOrMake can either be a name for a shared database of login credentials
         // or email names for user-specific data
         DBToUseOrMake = dbName;
+        this.config = config;
 
+    }
+
+    @Override
+    public void openDB() {
         // open database or create it if it doesn't exist
         try {
             currentDatabase = new Database(DBToUseOrMake, config);
@@ -38,48 +39,10 @@ public class DBManager implements IDBManager {
         }
     }
 
-    public void create(Task task) {
-        // docID shall be the Unix timestamp of the task on the date it was created,
-        // I mean, that should be unique enough
-        String docID = String.valueOf(task.getDateCreated().getTime() / 1000);
-        MutableDocument doc = new MutableDocument(docID);
-
-        doc.setString("task", task.getTask());
-        doc.setDate("dateCreated", task.getDateCreated());
-        doc.setDate("dateStart", task.getDateStart());
-        doc.setBoolean("isDone", task.getIsMarkDone());
-        doc.setBoolean("isInProgress", task.getIsInProgress());
-
+    @Override
+    public void closeDB() {
         try {
-            currentDatabase.save(doc);
-            Log.v("MY TAG", "Success I guess?");
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void read() {
-
-    }
-
-    public void update(String docID, Boolean markDone, Boolean markInProgress) {
-        Document immutableDoc = currentDatabase.getDocument(docID);
-        MutableDocument mutableDoc = immutableDoc.toMutable();
-        mutableDoc.setBoolean("isDone", markDone);
-        mutableDoc.setBoolean("isInProgress", markInProgress);
-
-        try {
-            currentDatabase.save(mutableDoc);
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void delete(String docID) {
-        Document immutableDoc = currentDatabase.getDocument(docID);
-
-        try {
-            currentDatabase.delete(immutableDoc);
+            currentDatabase.close();
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
@@ -116,4 +79,6 @@ public class DBManager implements IDBManager {
         return null;
 
     }
+
+
 }
