@@ -2,7 +2,6 @@ package com.example.miniapp.models;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
