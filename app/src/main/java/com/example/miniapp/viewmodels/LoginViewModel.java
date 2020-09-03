@@ -1,6 +1,7 @@
 package com.example.miniapp.viewmodels;
 
 import android.text.Editable;
+import android.util.Log;
 
 import com.example.miniapp.models.DBManager;
 
@@ -46,14 +47,16 @@ public class LoginViewModel extends Observable implements IViewModel {
 
         // go through the iteration of email-hash pairs if dbManager returns non-null
         if (emailsAndHashes != null){
+            Log.v("MY TAG", "emails and hashes are not null");
             for (int i = 0; i < emailsAndHashes.length(); i++) {
                 JSONObject emailHashPair = emailsAndHashes.getJSONObject(i);
                 String storedEmail = emailHashPair.getString("email");
 
                 // if email exists in record, check for password match
-                if (storedEmail.equals(email)) {
+                if (email.equals(storedEmail)) {
                     isEmailRegistered = true;
                     String storedHash = emailHashPair.getString("hash");
+                    Log.v("MY TAG", "found email: " + storedEmail + " with hash: " + storedHash);
                     isPasswordCorrect = isPasswordCorrect(password, storedHash);
                     // TODO: wait for hash check thread execute
                     break;

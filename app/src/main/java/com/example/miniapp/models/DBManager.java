@@ -7,13 +7,16 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
+import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DBManager implements IDBManager {
@@ -65,6 +68,25 @@ public class DBManager implements IDBManager {
         }
     }
 
+    private JSONArray resultsSetToJSON(ResultSet results){
+        JSONArray jsonArrayResults = new JSONArray();
+
+        for(Result result: results){
+            Map<String, Object> map = result.toMap();
+            JSONObject row = new JSONObject();
+            for(Map.Entry<String, Object> entry : map.entrySet()){
+                try {
+                    row.put(entry.getKey(), entry.getValue());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            jsonArrayResults.put(row);
+        }
+
+        return jsonArrayResults;
+    }
+
     @Override
     public JSONArray getAll() {
         Query query = QueryBuilder.select(SelectResult.all()).from(DataSource.database(currentDatabase));
@@ -72,8 +94,8 @@ public class DBManager implements IDBManager {
 
         try {
             ResultSet results = query.execute();
-            res = new JSONArray(results);
-        } catch (CouchbaseLiteException | JSONException e) {
+            res = resultsSetToJSON(results);
+        } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
 
