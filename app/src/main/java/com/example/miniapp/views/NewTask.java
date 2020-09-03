@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.models.DBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
@@ -50,7 +51,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         buttonSaveTask.setEnabled(false);
 
         // manual DI
-        taskViewModel = new TaskViewModel(DBManager.getInstance(this));
+        taskViewModel = new TaskViewModel(DBManager.getInstance(new DatabaseConfiguration(this.getApplicationContext())));
         taskViewModel.addObserver(this);
 
         editTextTask.addTextChangedListener(new TextWatcher() {

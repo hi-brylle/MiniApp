@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Email(message = "Invalid Email")
     private EditText editTextEmail;
 
-    @Password(min = 6, scheme = Password.Scheme.ALPHA_NUMERIC, message = "Invalid password")
+    @Password(min = 6, scheme = Password.Scheme.ANY, message = "Password must be at least 6 characters")
     private EditText ediTextPassword;
 
     private Button buttonSignIn;
@@ -43,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //check if user is logged in (if yes, go to HomeScreen; else, stay here)
 
         validator = new Validator(this);
         validator.setValidationListener(this);

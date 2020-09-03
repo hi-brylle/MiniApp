@@ -1,6 +1,5 @@
 package com.example.miniapp.models;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.couchbase.lite.CouchbaseLiteException;
@@ -9,22 +8,17 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.MutableDocument;
 
-public class DBManager {
-    private static DBManager dbManager = null;
-    private Database database;
+import java.util.HashMap;
 
-    public static DBManager getInstance(Context context){
-        if (dbManager == null){
-            dbManager = new DBManager(context);
-        }
+public class DBManager implements IDBManager {
+    private Database currentDatabase;   //open one database per session (yeah?)
+    private String DBToUseOrMake;       //DB name to use or make for current session
 
-        return dbManager;
-    }
+    private DBManager(String dbName, DatabaseConfiguration config){
+        DBToUseOrMake = dbName;
 
-    private DBManager(Context context){
-        DatabaseConfiguration config = new DatabaseConfiguration(context.getApplicationContext());
         try {
-            database = new Database("mini-app-db", config);
+            currentDatabase = new Database(DBToUseOrMake, config);
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
@@ -43,7 +37,7 @@ public class DBManager {
         doc.setBoolean("isInProgress", task.getIsInProgress());
 
         try {
-            database.save(doc);
+            currentDatabase.save(doc);
             Log.v("MY TAG", "Success I guess?");
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
@@ -55,25 +49,30 @@ public class DBManager {
     }
 
     public void update(String docID, Boolean markDone, Boolean markInProgress) {
-        Document immutableDoc = database.getDocument(docID);
+        Document immutableDoc = currentDatabase.getDocument(docID);
         MutableDocument mutableDoc = immutableDoc.toMutable();
         mutableDoc.setBoolean("isDone", markDone);
         mutableDoc.setBoolean("isInProgress", markInProgress);
 
         try {
-            database.save(mutableDoc);
+            currentDatabase.save(mutableDoc);
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
     }
 
     public void delete(String docID) {
-        Document immutableDoc = database.getDocument(docID);
+        Document immutableDoc = currentDatabase.getDocument(docID);
 
         try {
-            database.delete(immutableDoc);
+            currentDatabase.delete(immutableDoc);
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void create(HashMap<String, String> kvPairs) {
+        
     }
 }
