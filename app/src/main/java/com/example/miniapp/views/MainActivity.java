@@ -140,15 +140,13 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             // register email
             case 0:
                 loginViewModel.register(String.valueOf(editTextEmail.getText()), String.valueOf(ediTextPassword.getText()));
+                login();
                 // TODO: set SharedPref to be logged in for this email
                 break;
 
             // password correct
             case 1:
-                // TODO: make intent go to HomeScreen, in the mean time, skip right to NewTask
-                Intent intent = new Intent(MainActivity.this, NewTask.class);
-                intent.putExtra("userEmail", String.valueOf(editTextEmail.getText()));
-                startActivity(intent);
+                login();
                 // TODO: set SharedPref to be logged in for this email
                 break;
 
@@ -160,6 +158,14 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             default:
                 Log.v("MY TAG", "Error in login status for some reason");
         }
+    }
+
+    // TODO: make intent go to HomeScreen, in the mean time, skip right to NewTask
+    private void login() {
+        Intent intent = new Intent(MainActivity.this, NewTask.class);
+        // userEmail shall also be the name of the user-specific database
+        intent.putExtra("userEmail", String.valueOf(editTextEmail.getText()));
+        startActivity(intent);
     }
 
     private void passwordEmailMismatchDialog() {
