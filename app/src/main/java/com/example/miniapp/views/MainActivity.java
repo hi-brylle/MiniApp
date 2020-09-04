@@ -108,8 +108,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Intent testIntent = new Intent(MainActivity.this, NewTask.class);
-        startActivity(testIntent);
     }
 
     @Override
@@ -133,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         // 1: email is registered, password is correct
         // -1: email is registered, password is incorrect
         int loginStatus = (int) o;
+        Log.v("MY TAG", "received status: " + loginStatus);
         handleLoginStatus(loginStatus);
     }
 

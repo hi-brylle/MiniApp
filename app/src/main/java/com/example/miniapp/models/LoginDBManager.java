@@ -59,32 +59,60 @@ public class LoginDBManager {
         }
     }
 
-    public int verify(String email, String hash) {
-        Query emailQuery = QueryBuilder.select(SelectResult.property("email"), SelectResult.property("hash"))
-                        .from(DataSource.database(currentDatabase))
-                        .where(Expression.property("email").equalTo(Expression.string(email)));
+    public boolean isEmailRegistered(String email) {
+        boolean isEmailRegistered = false;
 
-        label:
+        Query emailQuery = QueryBuilder.select(SelectResult.property("email"))
+                .from(DataSource.database(currentDatabase))
+                .where(Expression.property("email").equalTo(Expression.string(email)));
+
+        exitLabel:
         try {
             ResultSet resultSet = emailQuery.execute();
+
+            // DB has no entries yet
             if (resultSet == null){
-                // register email
-                break label;
+                break exitLabel;
             }
+
+            for(Result result: resultSet){
+                Log.v("MY TAG", "email found: " + result.getString("email"));
+                if (email.equals(result.getString("email"))){
+                    isEmailRegistered = true;
+                }
+            }
+
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+
+
+        return isEmailRegistered;
+    }
+
+    public boolean verify(String email, String hash) {
+        boolean isPasswordCorrect = false;
+        Query hashQuery = QueryBuilder.select(SelectResult.property("email"), SelectResult.property("hash"))
+                        .from(DataSource.database(currentDatabase))
+                        .where(Expression.property("email").equalTo(Expression.string(email))
+                                .add(Expression.property("hash").equalTo(Expression.string(hash))));
+
+        try {
+            ResultSet resultSet = hashQuery.execute();
             Log.v("MY TAG", "matched users");
             for(Result result : resultSet){
                Log.v("MY TAG", "email: " + result.getString("email"));
                Log.v("MY TAG", "hash: " + result.getString("hash"));
+               if(email.equals(result.getString("email")) && hash.equals(result.getString("hash"))){
+                   isPasswordCorrect = true;
+               }
             }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
 
-        // return 0 when email is not yet registered
-        return 0;
+        return isPasswordCorrect;
     }
 
-    public boolean isEmailRegistered(String email) {
-        return false;
-    }
+
 }
