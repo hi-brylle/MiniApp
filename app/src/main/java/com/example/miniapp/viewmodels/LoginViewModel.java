@@ -1,21 +1,20 @@
 package com.example.miniapp.viewmodels;
 
-import android.text.Editable;
+// TODO : remove android.* after use
 import android.util.Log;
 
 import com.example.miniapp.models.DBManager;
+import com.example.miniapp.models.IDBManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Observable;
 
 public class LoginViewModel extends Observable implements IViewModel {
-    private DBManager dbManager;
+    private IDBManager dbManager;
 
-    public LoginViewModel(DBManager dbM){
+    public LoginViewModel(IDBManager dbM){
         dbManager = dbM;
     }
 
@@ -41,28 +40,10 @@ public class LoginViewModel extends Observable implements IViewModel {
     }
 
     public void verify(String email, String password) throws JSONException {
-        JSONArray emailsAndHashes = dbManager.getAll();
+        // TODO : FIX THIS
+
         boolean isEmailRegistered = false;
         boolean isPasswordCorrect = false;
-
-        // go through the iteration of email-hash pairs if dbManager returns non-null
-        if (emailsAndHashes != null){
-            Log.v("MY TAG", "emails and hashes are not null");
-            for (int i = 0; i < emailsAndHashes.length(); i++) {
-                JSONObject emailHashPair = emailsAndHashes.getJSONObject(i);
-                String storedEmail = emailHashPair.getString("email");
-
-                // if email exists in record, check for password match
-                if (email.equals(storedEmail)) {
-                    isEmailRegistered = true;
-                    String storedHash = emailHashPair.getString("hash");
-                    Log.v("MY TAG", "found email: " + storedEmail + " with hash: " + storedHash);
-                    isPasswordCorrect = isPasswordCorrect(password, storedHash);
-                    // TODO: wait for hash check thread execute
-                    break;
-                }
-            }
-        }
 
         // the following integers are used for the login status
         // 0: email is not registered
@@ -85,10 +66,6 @@ public class LoginViewModel extends Observable implements IViewModel {
 
     public void register(String email, String password) {
         // TODO: hash (and even salt) the password!
-        HashMap<String, String> emailHashPair = new HashMap<>();
-        emailHashPair.put("email", email);
-        emailHashPair.put("hash", hash(password));
-
-        dbManager.create(emailHashPair);
+        dbManager.create(email, password);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.miniapp.models;
 
+import android.util.Log;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.Database;
@@ -11,12 +13,7 @@ import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DBManager implements IDBManager {
@@ -29,7 +26,6 @@ public class DBManager implements IDBManager {
         // or email names for user-specific data
         DBToUseOrMake = dbName;
         this.config = config;
-
     }
 
     @Override
@@ -53,7 +49,6 @@ public class DBManager implements IDBManager {
 
     @Override
     public void create(HashMap<String, String> kvPairs) {
-        // no need for custom ID cuz we're querying them all later anyway (?)
         MutableDocument doc = new MutableDocument();
 
         for(Map.Entry<String, String> kvPair : kvPairs.entrySet()){
@@ -68,39 +63,22 @@ public class DBManager implements IDBManager {
         }
     }
 
-    private JSONArray resultsSetToJSON(ResultSet results){
-        JSONArray jsonArrayResults = new JSONArray();
+    @Override
+    public void create(String email, String hash) {
 
-        for(Result result: results){
-            Map<String, Object> map = result.toMap();
-            JSONObject row = new JSONObject();
-            for(Map.Entry<String, Object> entry : map.entrySet()){
-                try {
-                    row.put(entry.getKey(), entry.getValue());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            jsonArrayResults.put(row);
-        }
-
-        return jsonArrayResults;
     }
 
-    @Override
-    public JSONArray getAll() {
-        Query query = QueryBuilder.select(SelectResult.all()).from(DataSource.database(currentDatabase));
-        JSONArray res = null;
-
+    public void read(String email, String password){
+        Query query = QueryBuilder.select(SelectResult.property("email"), SelectResult.property("hash")).from(DataSource.database(currentDatabase));
         try {
-            ResultSet results = query.execute();
-            res = resultsSetToJSON(results);
+            ResultSet resultsSet = query.execute();
+            for(Result result : resultsSet){
+                Log.v("MY TAG", "email: " + result.getString("email"));
+                Log.v("MY TAG", "password: "+ result.getString("hash"));
+            }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
-
-        return res;
     }
-
 
 }

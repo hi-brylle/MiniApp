@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             case 1:
                 // TODO: make intent go to HomeScreen, in the mean time, skip right to NewTask
                 Intent intent = new Intent(MainActivity.this, NewTask.class);
+                intent.putExtra("userEmail", String.valueOf(editTextEmail.getText()));
                 startActivity(intent);
                 // TODO: set SharedPref to be logged in for this email
                 break;
