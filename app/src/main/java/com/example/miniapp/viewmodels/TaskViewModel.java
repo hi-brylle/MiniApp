@@ -1,6 +1,6 @@
 package com.example.miniapp.viewmodels;
 
-import com.example.miniapp.models.DBManager;
+import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.models.Task;
 
 import java.util.Date;
@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.Observable;
 
 public class TaskViewModel extends Observable {
-    private DBManager dbManager;
+    private UserDBManager dbManager;
 
-    public TaskViewModel(DBManager dbM){
+    public TaskViewModel(UserDBManager dbM){
         dbManager = dbM;
     }
 

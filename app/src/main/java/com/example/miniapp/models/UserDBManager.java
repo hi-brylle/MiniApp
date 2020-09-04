@@ -16,19 +16,18 @@ import com.couchbase.lite.SelectResult;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DBManager implements IDBManager {
+public class UserDBManager {
     private Database currentDatabase;   // open one database per session (yeah?)
     private String DBToUseOrMake;       // DB name to use or make for current session
     private DatabaseConfiguration config;
 
-    public DBManager(String dbName, DatabaseConfiguration config){
+    public UserDBManager(String dbName, DatabaseConfiguration config){
         // DBToUseOrMake can either be a name for a shared database of login credentials
         // or email names for user-specific data
         DBToUseOrMake = dbName;
         this.config = config;
     }
 
-    @Override
     public void openDB() {
         // open database or create it if it doesn't exist
         try {
@@ -38,7 +37,6 @@ public class DBManager implements IDBManager {
         }
     }
 
-    @Override
     public void closeDB() {
         try {
             currentDatabase.close();
@@ -47,7 +45,6 @@ public class DBManager implements IDBManager {
         }
     }
 
-    @Override
     public void create(HashMap<String, String> kvPairs) {
         MutableDocument doc = new MutableDocument();
 
@@ -63,22 +60,6 @@ public class DBManager implements IDBManager {
         }
     }
 
-    @Override
-    public void create(String email, String hash) {
 
-    }
-
-    public void read(String email, String password){
-        Query query = QueryBuilder.select(SelectResult.property("email"), SelectResult.property("hash")).from(DataSource.database(currentDatabase));
-        try {
-            ResultSet resultsSet = query.execute();
-            for(Result result : resultsSet){
-                Log.v("MY TAG", "email: " + result.getString("email"));
-                Log.v("MY TAG", "password: "+ result.getString("hash"));
-            }
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
 
 }

@@ -1,20 +1,15 @@
 package com.example.miniapp.viewmodels;
 
-// TODO : remove android.* after use
-import android.util.Log;
-
-import com.example.miniapp.models.DBManager;
-import com.example.miniapp.models.IDBManager;
+import com.example.miniapp.models.LoginDBManager;
 
 import org.json.JSONException;
 
-import java.util.HashMap;
 import java.util.Observable;
 
 public class LoginViewModel extends Observable implements IViewModel {
-    private IDBManager dbManager;
+    private LoginDBManager dbManager;
 
-    public LoginViewModel(IDBManager dbM){
+    public LoginViewModel(LoginDBManager dbM){
         dbManager = dbM;
     }
 
@@ -40,15 +35,15 @@ public class LoginViewModel extends Observable implements IViewModel {
     }
 
     public void verify(String email, String password) throws JSONException {
-        // TODO : FIX THIS
-
-        boolean isEmailRegistered = false;
-        boolean isPasswordCorrect = false;
-
+        // TODO : HASH!
+        boolean isEmailRegistered = dbManager.isEmailRegistered(email);
         // the following integers are used for the login status
         // 0: email is not registered
         // 1: email is registered, password is correct
         // -1: email is registered, password is incorrect
+        int loginStatus = dbManager.verify(email, hash(password));
+        boolean isPasswordCorrect = false;
+
         if (!isEmailRegistered) {
             setChanged();
             notifyObservers(0);

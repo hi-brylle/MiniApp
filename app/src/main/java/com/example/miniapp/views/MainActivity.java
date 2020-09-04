@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
-import com.example.miniapp.models.DBManager;
+import com.example.miniapp.models.LoginDBManager;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
@@ -64,8 +64,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         buttonSignInGoogle = findViewById(R.id.button_sign_in_google);
         buttonSignInFacebook = findViewById(R.id.button_sign_in_facebook);
 
-
-        loginViewModel = new LoginViewModel(new DBManager("users_login", new DatabaseConfiguration(this.getApplicationContext())));
+        loginViewModel = new LoginViewModel(new LoginDBManager(new DatabaseConfiguration(this.getApplicationContext())));
         loginViewModel.addObserver(this);
 
         buttonSignIn.setOnClickListener(new View.OnClickListener() {

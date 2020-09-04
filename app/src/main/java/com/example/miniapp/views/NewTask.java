@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
-import com.example.miniapp.models.DBManager;
+import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
@@ -65,7 +65,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         // manual DI
         // TODO: "debug_user" is a temporary value, once all are set, NewTask receives the proper name
         // TODO: in form of an email address (for simplicity) from an Intent coming from HomeScreen activity
-        taskViewModel = new TaskViewModel(new DBManager("debug_user", new DatabaseConfiguration(this.getApplicationContext())));
+        taskViewModel = new TaskViewModel(new UserDBManager("debug_user", new DatabaseConfiguration(this.getApplicationContext())));
         taskViewModel.addObserver(this);
 
         editTextSelectDate.setOnClickListener(new View.OnClickListener() {
