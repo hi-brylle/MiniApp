@@ -14,37 +14,15 @@ import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
-import java.util.HashMap;
-
-public class LoginDBManager {
+public class LoginDBManager extends DBManager {
     private Database currentDatabase;   // open one database per session (yeah?)
     // this is the fixed name that identifies the database for login credentials
     private static final String DBToUseOrMake = "users_login";
     private DatabaseConfiguration config;
 
     public LoginDBManager(DatabaseConfiguration config){
+        super();
         this.config = config;
-    }
-
-    public void openDB() {
-        // open database or create it if it doesn't exist
-        try {
-            currentDatabase = new Database(DBToUseOrMake, config);
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void closeDB() {
-        try {
-            currentDatabase.close();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void create(HashMap<String, String> kvPairs) {
-
     }
 
     public void create(String email, String hash) {

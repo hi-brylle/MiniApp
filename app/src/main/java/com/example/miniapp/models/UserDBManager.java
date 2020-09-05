@@ -8,33 +8,13 @@ import com.couchbase.lite.MutableDocument;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserDBManager {
+public class UserDBManager extends DBManager {
     private Database currentDatabase;   // open one database per session (yeah?)
     private String DBToUseOrMake;       // DB name to use or make for current session
     private DatabaseConfiguration config;
 
     public UserDBManager(String dbName, DatabaseConfiguration config){
-        // DBToUseOrMake can either be a name for a shared database of login credentials
-        // or email names for user-specific data
-        DBToUseOrMake = dbName;
-        this.config = config;
-    }
-
-    public void openDB() {
-        // open database or create it if it doesn't exist
-        try {
-            currentDatabase = new Database(DBToUseOrMake, config);
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void closeDB() {
-        try {
-            currentDatabase.close();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
+        super(dbName, config);
     }
 
     public void create(HashMap<String, String> kvPairs) {
