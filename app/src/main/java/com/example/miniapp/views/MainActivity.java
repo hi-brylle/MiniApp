@@ -53,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // TODO: this should be in HomeScreen as well
+        if (getIntent().getBooleanExtra("EXIT", false)){
+            finish();
+        }
+
         // TODO: check if user is logged in (if yes, go to HomeScreen; else, stay here)
 
         validator = new Validator(this);
