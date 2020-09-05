@@ -5,23 +5,23 @@ import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
 
 public abstract class DBManager {
-    private Database currentDatabase;   // open one database per session (yeah?)
-    private String DBToUseOrMake;       // DB name to use or make for current session
-    private DatabaseConfiguration config;
+    protected  Database currentDatabase;   // open one database per session (yeah?)
+    protected String dbToUseOrMake;       // DB name to use or make for current session
+    protected DatabaseConfiguration config;
 
     public DBManager() {
 
     }
 
     public DBManager(String dbName, DatabaseConfiguration config){
-        DBToUseOrMake = dbName;
+        dbToUseOrMake = dbName;
         this.config = config;
     }
 
     public void openDB() {
         // open database or create it if it doesn't exist
         try {
-            currentDatabase = new Database(DBToUseOrMake, config);
+            currentDatabase = new Database(dbToUseOrMake, config);
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }

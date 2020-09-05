@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
-import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Expression;
 import com.couchbase.lite.MutableDocument;
@@ -15,14 +14,10 @@ import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
 public class LoginDBManager extends DBManager {
-    private Database currentDatabase;   // open one database per session (yeah?)
-    // this is the fixed name that identifies the database for login credentials
-    private static final String DBToUseOrMake = "users_login";
-    private DatabaseConfiguration config;
-
     public LoginDBManager(DatabaseConfiguration config){
         super();
         this.config = config;
+        dbToUseOrMake = "users_login";
     }
 
     public void create(String email, String hash) {

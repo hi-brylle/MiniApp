@@ -1,7 +1,6 @@
 package com.example.miniapp.models;
 
 import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.MutableDocument;
 
@@ -9,10 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserDBManager extends DBManager {
-    private Database currentDatabase;   // open one database per session (yeah?)
-    private String DBToUseOrMake;       // DB name to use or make for current session
-    private DatabaseConfiguration config;
-
     public UserDBManager(String dbName, DatabaseConfiguration config){
         super(dbName, config);
     }
@@ -31,7 +26,5 @@ public class UserDBManager extends DBManager {
             e.printStackTrace();
         }
     }
-
-
 
 }
