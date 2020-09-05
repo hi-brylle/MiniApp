@@ -62,10 +62,13 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
         buttonSaveTask = findViewById(R.id.button_save_task);
 
+        // this StringExtra will never be null, so use of Bundle getExtras is not needed
+        String dbName = getIntent().getStringExtra("userEmail");
+
         // manual DI
         // TODO: "debug_user" is a temporary value, once all are set, NewTask receives the proper name
         // TODO: in form of an email address (for simplicity) from an Intent coming from HomeScreen activity
-        taskViewModel = new TaskViewModel(new UserDBManager("debug_user", new DatabaseConfiguration(this.getApplicationContext())));
+        taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(this.getApplicationContext())));
         taskViewModel.addObserver(this);
 
         editTextSelectDate.setOnClickListener(new View.OnClickListener() {

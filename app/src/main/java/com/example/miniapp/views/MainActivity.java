@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // check if user is logged in (if yes, go to HomeScreen; else, stay here)
+        // TODO: check if user is logged in (if yes, go to HomeScreen; else, stay here)
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -103,11 +103,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void onValidationSucceeded() {
-        try {
-            loginViewModel.verify(String.valueOf(editTextEmail.getText()), String.valueOf(ediTextPassword.getText()));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        loginViewModel.verify(String.valueOf(editTextEmail.getText()), String.valueOf(ediTextPassword.getText()));
     }
 
     @Override
