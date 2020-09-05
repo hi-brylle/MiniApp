@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.example.miniapp.models.LoginDBManager;
 
-import org.json.JSONException;
-
 import java.util.Observable;
 
 public class LoginViewModel extends Observable implements IViewModel {
@@ -25,23 +23,12 @@ public class LoginViewModel extends Observable implements IViewModel {
         dbManager.closeDB();
     }
 
-    // TODO: implement this!
-    private String hash(String plainPassword){
-        // hash code here...
-        return plainPassword; // LOL
-    }
-
-    // TODO: implement the actual hashing and checking, do in separate thread
-    private boolean isPasswordCorrect(String password, String storedHash){
-        return password.equals(storedHash);
-    }
-
-    public void verify(String email, String password) throws JSONException {
+    public void verify(String email, String password) {
         boolean isEmailRegistered = dbManager.isEmailRegistered(email);
         Boolean isPasswordCorrect = null;
         Log.v("MY TAG", "email reg: " + isEmailRegistered);
         if (isEmailRegistered){
-            isPasswordCorrect = dbManager.verify(email, hash(password));
+            isPasswordCorrect = dbManager.verifyPassword(email, password);
             Log.v("MY TAG", "password correct: " + isPasswordCorrect);
         }
 
@@ -53,11 +40,10 @@ public class LoginViewModel extends Observable implements IViewModel {
             setChanged();
             notifyObservers(0);
         } else {
+            setChanged();
             if (isPasswordCorrect) {
-                setChanged();
                 notifyObservers(1);
             } else {
-                setChanged();
                 notifyObservers(-1);
             }
         }
@@ -65,7 +51,6 @@ public class LoginViewModel extends Observable implements IViewModel {
 
 
     public void register(String email, String password) {
-        // TODO: hash (and even salt) the password!
         dbManager.create(email, password);
     }
 }

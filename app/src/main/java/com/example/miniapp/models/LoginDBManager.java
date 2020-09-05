@@ -12,6 +12,7 @@ import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
+import com.example.miniapp.helper_classes.PasswordHash;
 
 public class LoginDBManager extends DBManager {
     public LoginDBManager(DatabaseConfiguration config){
@@ -20,10 +21,10 @@ public class LoginDBManager extends DBManager {
         dbToUseOrMake = "users_login";
     }
 
-    public void create(String email, String hash) {
+    public void create(String email, String password) {
         MutableDocument doc = new MutableDocument();
         doc.setString("email", email);
-        doc.setString("hash", hash);
+        doc.setString("hash", PasswordHash.hash(password));
 
         try {
             currentDatabase.save(doc);
@@ -63,12 +64,13 @@ public class LoginDBManager extends DBManager {
         return isEmailRegistered;
     }
 
-    public boolean verify(String email, String hash) {
+    // TODO: should be done server-side
+    public boolean verifyPassword(String email, String password) {
         boolean isPasswordCorrect = false;
         Query hashQuery = QueryBuilder.select(SelectResult.property("email"), SelectResult.property("hash"))
                         .from(DataSource.database(currentDatabase))
                         .where(Expression.property("email").equalTo(Expression.string(email))
-                                .add(Expression.property("hash").equalTo(Expression.string(hash))));
+                                .add(Expression.property("hash").equalTo(Expression.string(PasswordHash.hash(password)))));
 
         try {
             ResultSet resultSet = hashQuery.execute();
@@ -76,7 +78,7 @@ public class LoginDBManager extends DBManager {
             for(Result result : resultSet){
                Log.v("MY TAG", "email: " + result.getString("email"));
                Log.v("MY TAG", "hash: " + result.getString("hash"));
-               if(email.equals(result.getString("email")) && hash.equals(result.getString("hash"))){
+               if(email.equals(result.getString("email")) && PasswordHash.hash(password).equals(result.getString("hash"))){
                    isPasswordCorrect = true;
                }
             }
