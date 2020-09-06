@@ -13,6 +13,7 @@ import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class UserDBManager extends DBManager {
@@ -22,15 +23,21 @@ public class UserDBManager extends DBManager {
 
     public void create(Task newTask) {
         MutableDocument doc = new MutableDocument();
-        doc.setString("task", newTask.getTask());
-        doc.setDate("dateCreated", newTask.getDateCreated());
-        doc.setDate("dateStart", newTask.getDateStart());
-        doc.setBoolean("isDone", newTask.getIsDone());
-        doc.setBoolean("isInProgress", newTask.getIsInProgress());
+//        doc.setString("task", newTask.getTask());
+//        doc.setDate("dateCreated", newTask.getDateCreated());
+//        doc.setDate("dateStart", newTask.getDateStart());
+//        doc.setBoolean("isDone", newTask.getIsDone());
+//        doc.setBoolean("isInProgress", newTask.getIsInProgress());
 
-        Log.v("MY TAG", "task inserted: " + newTask.getTask());
-        Log.v("MY TAG", "date created inserted: " + newTask.getDateCreated());
-        Log.v("MY TAG", "date start inserted: " + newTask.getDateStart());
+        Log.v("mUserDBManager.create", "task inserted: " + newTask.getTask());
+        Log.v("mUserDBManager.create", "date created inserted: " + newTask.getDateCreated());
+        Log.v("mUserDBManager.create", "date start inserted: " + newTask.getDateStart());
+
+        doc.setString("task", newTask.getTask());
+        doc.setString("dateCreated", String.valueOf(newTask.getDateCreated()));
+        doc.setString("dateStart", String.valueOf(newTask.getDateStart()));
+        doc.setString("isDone", String.valueOf(newTask.getIsDone()));
+        doc.setString("isInProgress", String.valueOf(newTask.getIsInProgress()));
 
         try {
             currentDatabase.save(doc);
@@ -54,21 +61,28 @@ public class UserDBManager extends DBManager {
 
             Log.v("MY TAG", "data from: " + currentDatabase.getName());
             for(Result result : results){
-                // TODO: for some fucking reason, these assholes return null;
-                //       opening the DB using debug tools outside AS shows it is not empty
+
+//                String task = result.getString("task");
+//                Date dateCreated = result.getDate("dateCreated");
+//                Date dateStart = result.getDate("dateStart");
+//                boolean isDone = result.getBoolean("isDone");
+//                boolean isInProgress = result.getBoolean("isInProgress");
+
+                // TODO: get back to work here
                 String task = result.getString("task");
-                Date dateCreated = result.getDate("dateCreated");
-                Date dateStart = result.getDate("dateStart");
-                boolean isDone = result.getBoolean("isDone");
-                boolean isInProgress = result.getBoolean("isInProgress");
+                String dateCreated = result.getString("dateCreated");
+                String dateStart = result.getString("dateStart");
+                String isDone = result.getString("isDone");
+                String isInProgress = result.getString("isInProgress");
 
-                Log.v("MY TAG", "task: " + task);
-                Log.v("MY TAG", "date created: " + dateCreated);
-                Log.v("MY TAG", "date start: " + dateStart);
+                Log.v("mUserDBManager.readAll", "task: " + task);
+                Log.v("mUserDBManager.readAll", "date created: " + dateCreated);
+                Log.v("mUserDBManager.readAll", "date start: " + dateStart);
 
-                Task newTask = new Task(task, dateCreated, dateStart);
-                newTask.setDone(isDone);
-                newTask.setInProgress(isInProgress);
+                Date dummyDates = Calendar.getInstance().getTime();
+                Task newTask = new Task(task, dummyDates, dummyDates);
+//                newTask.setDone(isDone);
+//                newTask.setInProgress(isInProgress);
 
                 tasks.add(newTask);
             }

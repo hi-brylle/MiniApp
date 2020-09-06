@@ -64,6 +64,12 @@ public class HomeScreen extends AppCompatActivity implements Observer {
 
     }
 
+    // TODO: update custom adapter here of additions
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

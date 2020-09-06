@@ -189,12 +189,12 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     private void saveTask() {
         dateCreated = Calendar.getInstance().getTime();
-        Log.v("MY TAG", "Task: " + task);
-        Log.v("MY TAG", "Created: " + dateCreated);
-        Log.v("MY TAG", "Due: " + dateStart);
+        Log.v("mNewTask.saveTask()", "Task: " + task);
+        Log.v("mNewTask.saveTask()", "Created: " + dateCreated);
+        Log.v("mNewTask.saveTask()", "Start: " + dateStart);
         taskViewModel.submit(task, dateCreated, dateStart);
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
-        // Exit this Activity, go back to HomeScreen
+        // TODO: Exit this Activity, go back to HomeScreen
     }
 
     @Override
