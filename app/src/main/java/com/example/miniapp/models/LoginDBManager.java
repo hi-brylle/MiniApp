@@ -42,14 +42,14 @@ public class LoginDBManager extends DBManager {
 
         exitLabel:
         try {
-            ResultSet resultSet = emailQuery.execute();
+            ResultSet results = emailQuery.execute();
 
-            // DB has no entries yet
-            if (resultSet == null){
+            // if app has no users yet
+            if (results == null){
                 break exitLabel;
             }
 
-            for(Result result: resultSet){
+            for(Result result: results){
                 Log.v("MY TAG", "email found: " + result.getString("email"));
                 if (email.equals(result.getString("email"))){
                     isEmailRegistered = true;

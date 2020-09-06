@@ -3,32 +3,35 @@ package com.example.miniapp.helper_classes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.miniapp.R;
 import com.example.miniapp.models.Task;
-import com.example.miniapp.views.CustomViewHolder;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayList;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
-    List<Task> tasksList = Collections.emptyList();
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
 
-    public CustomAdapter(List<Task> tasks){
-        tasksList = tasks;
+    private ArrayList<Task> tasksList;
+
+    public CustomAdapter(ArrayList<Task> list){
+        if (list.isEmpty()){
+            tasksList = new ArrayList<>();
+        } else {
+            tasksList = list;
+        }
     }
 
     @NonNull
     @Override
     public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_row_layout, parent, false);
-        CustomViewHolder customViewHolder = new CustomViewHolder(view);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_row_layout, parent, false);
 
-        return customViewHolder;
+        return new CustomViewHolder(itemView);
     }
 
     @Override
@@ -56,5 +59,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
         int position = tasksList.indexOf(task);
         tasksList.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        public TextView textViewTaskRow;
+        public TextView textViewDateRow;
+
+        public CustomViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            textViewTaskRow = itemView.findViewById(R.id.text_view_task_row);
+            textViewDateRow = itemView.findViewById(R.id.text_view_date_row);
+        }
     }
 }

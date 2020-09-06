@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @NotEmpty
     @Email(message = "Invalid Email")
     private EditText editTextEmail;
-    @Password(min = 6, scheme = Password.Scheme.ANY, message = "Password must be at least 6 characters")
+    @Password(scheme = Password.Scheme.ANY, message = "Password must be at least 6 characters")
     private EditText ediTextPassword;
     private Button buttonSignIn;
     private Button buttonSignInGoogle;
@@ -53,12 +53,12 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: this should be in HomeScreen as well
+        // TODO: check if user is logged in (if yes, go to HomeScreen; else, stay here)
+
+        // this closes the app when the Back button is pressed in Home Screen
         if (getIntent().getBooleanExtra("EXIT", false)){
             finish();
         }
-
-        // TODO: check if user is logged in (if yes, go to HomeScreen; else, stay here)
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         buttonSignInGoogle = findViewById(R.id.button_sign_in_google);
         buttonSignInFacebook = findViewById(R.id.button_sign_in_facebook);
 
-        loginViewModel = new LoginViewModel(new LoginDBManager(new DatabaseConfiguration(this.getApplicationContext())));
+        loginViewModel = new LoginViewModel(new LoginDBManager(new DatabaseConfiguration(getApplicationContext())));
         loginViewModel.addObserver(this);
 
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
@@ -161,9 +161,8 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         }
     }
 
-    // TODO: make intent go to HomeScreen, in the mean time, skip right to NewTask
     private void login() {
-        Intent intent = new Intent(MainActivity.this, NewTask.class);
+        Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         // userEmail shall also be the name of the user-specific database
         intent.putExtra("userEmail", String.valueOf(editTextEmail.getText()));
         startActivity(intent);

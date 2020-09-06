@@ -65,11 +65,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         // this StringExtra will never be null, so use of Bundle getExtras is not needed
         String dbName = getIntent().getStringExtra("userEmail");
-
         // manual DI
-        // TODO: "debug_user" is a temporary value, once all are set, NewTask receives the proper name
-        // TODO: in form of an email address (for simplicity) from an Intent coming from HomeScreen activity
-        taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(this.getApplicationContext())));
+        taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
         taskViewModel.addObserver(this);
 
         editTextSelectDate.setOnClickListener(new View.OnClickListener() {
@@ -104,16 +101,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     protected void onStop() {
         super.onStop();
         taskViewModel.closeDB();
-    }
-
-    // TODO: this should really be in HomeScreen, not here
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(NewTask.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("EXIT", true);
-        startActivity(intent);
     }
 
     @Override
@@ -206,7 +193,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         Log.v("MY TAG", "Created: " + dateCreated);
         Log.v("MY TAG", "Due: " + dateStart);
         taskViewModel.submit(task, dateCreated, dateStart);
-        Toast.makeText(this, "Saved?", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
         // Exit this Activity, go back to HomeScreen
     }
 

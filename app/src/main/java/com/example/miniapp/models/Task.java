@@ -6,26 +6,26 @@ import java.util.Date;
 
 public class Task {
     private String task;
-    private Date created;
-    private Date start;
+    private Date dateCreated;
+    private Date dateStart;
     private Boolean isDone;
     private Boolean isInProgress;
     private ArrayList<URI> imageURIs;
 
     public Task(String task, Date created, Date start){
         this.task = task;
-        this.created = created;
-        this.start = start;
+        this.dateCreated = created;
+        this.dateStart = start;
         this.isDone = false;
         this.isInProgress = false;
     }
 
-    public void markInProgress(){
-        isInProgress = true;
+    public void setDone(boolean m){
+        isDone = m;
     }
 
-    public void markDone(){
-        isDone = true;
+    public void setInProgress(boolean p){
+        isInProgress = p;
     }
 
     protected void addImageURI(URI imgURI){
@@ -40,14 +40,14 @@ public class Task {
     }
 
     public Date getDateCreated() {
-        return created;
+        return dateCreated;
     }
 
     public Date getDateStart() {
-        return start;
+        return dateStart;
     }
 
-    public boolean getIsMarkDone() {
+    public boolean getIsDone() {
         return isDone;
     }
 
