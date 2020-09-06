@@ -11,10 +11,6 @@ public class HomeScreenViewModel extends Observable implements IViewModel {
         dbManager = dbM;
     }
 
-    public UserDBManager getDB(){
-        return dbManager;
-    }
-
     @Override
     public void openDB() {
         dbManager.openDB();
@@ -24,6 +20,5 @@ public class HomeScreenViewModel extends Observable implements IViewModel {
     public void closeDB() {
         dbManager.closeDB();
     }
-
 
 }

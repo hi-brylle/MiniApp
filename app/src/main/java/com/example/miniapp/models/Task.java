@@ -8,8 +8,8 @@ public class Task {
     private String task;
     private Date dateCreated;
     private Date dateStart;
-    private Boolean isDone;
-    private Boolean isInProgress;
+    private boolean isDone;
+    private boolean isInProgress;
     private ArrayList<URI> imageURIs;
 
     public Task(String task, Date created, Date start){

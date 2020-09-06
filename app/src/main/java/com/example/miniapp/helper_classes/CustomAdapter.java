@@ -1,5 +1,6 @@
 package com.example.miniapp.helper_classes;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     public CustomAdapter(ArrayList<Task> list){
         if (list.isEmpty()){
+            Log.v("MY TAG", "list is empty");
             tasksList = new ArrayList<>();
         } else {
             tasksList = list;

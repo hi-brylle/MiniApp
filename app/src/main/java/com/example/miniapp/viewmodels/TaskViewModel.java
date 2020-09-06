@@ -4,7 +4,6 @@ import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.models.Task;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Observable;
 
 public class TaskViewModel extends Observable {
@@ -23,8 +22,6 @@ public class TaskViewModel extends Observable {
     }
 
     public void submit(String task, Date created, Date start){
-        Task newTask = new Task(task, created, start);
-
-        dbManager.create(newTask);
+        dbManager.create(new Task(task, created, start));
     }
 }

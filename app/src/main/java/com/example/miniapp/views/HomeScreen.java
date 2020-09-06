@@ -37,14 +37,17 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra("userEmail");
-        homeScreenViewModel = new HomeScreenViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
+        UserDBManager userDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
+        homeScreenViewModel = new HomeScreenViewModel(userDBManager);
         homeScreenViewModel.addObserver(this);
+        homeScreenViewModel.openDB();
 
         recViewTaskList = findViewById(R.id.recycler_view_task_list);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recViewTaskList.setLayoutManager(linearLayoutManager);
-        customAdapter = new CustomAdapter(new ArrayList<Task>());
+        customAdapter = new CustomAdapter(userDBManager.readAll());
+//        customAdapter = new CustomAdapter(new ArrayList<Task>());
         recViewTaskList.setAdapter(customAdapter);
 
         buttonPopupMenu = findViewById(R.id.button_popup_menu);
