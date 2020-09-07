@@ -12,12 +12,10 @@ import android.widget.Button;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
-import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -37,17 +35,16 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra("userEmail");
-        UserDBManager userDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
-        homeScreenViewModel = new HomeScreenViewModel(userDBManager);
+        homeScreenViewModel = new HomeScreenViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
         homeScreenViewModel.addObserver(this);
         homeScreenViewModel.openDB();
 
         recViewTaskList = findViewById(R.id.recycler_view_task_list);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        customAdapter = new CustomAdapter(homeScreenViewModel);
+        customAdapter.initList();
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recViewTaskList.setLayoutManager(linearLayoutManager);
-        customAdapter = new CustomAdapter(userDBManager.readAll());
-//        customAdapter = new CustomAdapter(new ArrayList<Task>());
         recViewTaskList.setAdapter(customAdapter);
 
         buttonPopupMenu = findViewById(R.id.button_popup_menu);

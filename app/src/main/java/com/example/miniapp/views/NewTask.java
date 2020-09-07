@@ -63,9 +63,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
         buttonSaveTask = findViewById(R.id.button_save_task);
 
-        // this StringExtra will never be null, so use of Bundle getExtras is not needed
         String dbName = getIntent().getStringExtra("userEmail");
-        // manual DI
         taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
         taskViewModel.addObserver(this);
 
@@ -105,8 +103,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     @Override
     public void onValidationSucceeded() {
-//        Toast.makeText(this, "valid stuff, into the DB nowwww", Toast.LENGTH_SHORT).show();
-        task = String.valueOf(editTextTask.getText());
         saveTask();
     }
 
@@ -188,11 +184,14 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     private void saveTask() {
+        task = String.valueOf(editTextTask.getText());
         dateCreated = Calendar.getInstance().getTime();
-        Log.v("mNewTask.saveTask()", "Task: " + task);
-        Log.v("mNewTask.saveTask()", "Created: " + dateCreated);
-        Log.v("mNewTask.saveTask()", "Start: " + dateStart);
         taskViewModel.submit(task, dateCreated, dateStart);
+
+        Log.v("MY TAG", "Task: " + task);
+        Log.v("MY TAG", "Created: " + dateCreated);
+        Log.v("MY TAG", "Start: " + dateStart);
+
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
         // TODO: Exit this Activity, go back to HomeScreen
     }

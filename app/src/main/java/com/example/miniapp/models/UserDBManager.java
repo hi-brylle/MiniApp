@@ -5,6 +5,7 @@ import android.util.Log;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
+import com.couchbase.lite.Expression;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
@@ -13,31 +14,25 @@ import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class UserDBManager extends DBManager {
     public UserDBManager(String dbName, DatabaseConfiguration config){
         super(dbName, config);
     }
 
-    public void create(Task newTask) {
+    public void create(String task, Date dateCreated, Date dateStart){
         MutableDocument doc = new MutableDocument();
-//        doc.setString("task", newTask.getTask());
-//        doc.setDate("dateCreated", newTask.getDateCreated());
-//        doc.setDate("dateStart", newTask.getDateStart());
-//        doc.setBoolean("isDone", newTask.getIsDone());
-//        doc.setBoolean("isInProgress", newTask.getIsInProgress());
+        doc.setString("task", task);
+        doc.setString("dateCreated", String.valueOf(dateCreated));
+        doc.setString("dateStart", String.valueOf(dateStart));
+        doc.setString("isDone", String.valueOf(false));
+        doc.setString("isInProgress", String.valueOf(false));
 
-        Log.v("mUserDBManager.create", "task inserted: " + newTask.getTask());
-        Log.v("mUserDBManager.create", "date created inserted: " + newTask.getDateCreated());
-        Log.v("mUserDBManager.create", "date start inserted: " + newTask.getDateStart());
-
-        doc.setString("task", newTask.getTask());
-        doc.setString("dateCreated", String.valueOf(newTask.getDateCreated()));
-        doc.setString("dateStart", String.valueOf(newTask.getDateStart()));
-        doc.setString("isDone", String.valueOf(newTask.getIsDone()));
-        doc.setString("isInProgress", String.valueOf(newTask.getIsInProgress()));
+        Log.v("mUserDBManager.create", "task inserted: " + task);
+        Log.v("mUserDBManager.create", "date created inserted: " + dateCreated);
+        Log.v("mUserDBManager.create", "date start inserted: " + dateStart);
 
         try {
             currentDatabase.save(doc);
@@ -49,50 +44,33 @@ public class UserDBManager extends DBManager {
     public ArrayList<Task> readAll(){
         ArrayList<Task> tasks = new ArrayList<>();
         Query allQuery = QueryBuilder.select(SelectResult.all())
-                            .from(DataSource.database(currentDatabase));
+                            .from(DataSource.database(currentDatabase))
+                            .where(Expression.property("task").equalTo(Expression.string("u1 t1"))
+                                    .add(Expression.property("task").equalTo(Expression.string("u1 t2"))));
 
         exitLabel:
         try {
             ResultSet results = allQuery.execute();
 
             if (results == null){
+                Log.v("MY TAG", "results are null ffs");
                 break exitLabel;
             }
 
-            Log.v("MY TAG", "data from: " + currentDatabase.getName());
-            for(Result result : results){
-
-//                String task = result.getString("task");
-//                Date dateCreated = result.getDate("dateCreated");
-//                Date dateStart = result.getDate("dateStart");
-//                boolean isDone = result.getBoolean("isDone");
-//                boolean isInProgress = result.getBoolean("isInProgress");
-
-                // TODO: get back to work here
-                String task = result.getString("task");
-                String dateCreated = result.getString("dateCreated");
-                String dateStart = result.getString("dateStart");
-                String isDone = result.getString("isDone");
-                String isInProgress = result.getString("isInProgress");
-
-                Log.v("mUserDBManager.readAll", "task: " + task);
-                Log.v("mUserDBManager.readAll", "date created: " + dateCreated);
-                Log.v("mUserDBManager.readAll", "date start: " + dateStart);
-
-                Date dummyDates = Calendar.getInstance().getTime();
-                Task newTask = new Task(task, dummyDates, dummyDates);
-//                newTask.setDone(isDone);
-//                newTask.setInProgress(isInProgress);
-
-                tasks.add(newTask);
+            Log.v("mUserDBManager.readAll", "data from: " + currentDatabase.getName());
+            List<Result> resultList = results.allResults();
+            for(Result result : resultList){
+                Log.v("MY TAG", "has task? " + result.contains("task"));
+                Log.v("MY TAG", "has created? " + result.contains("dateCreated"));
+                Log.v("MY TAG", "has start? " + result.contains("dateStart"));
             }
+
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
 
         return tasks;
     }
-
 
 
 }

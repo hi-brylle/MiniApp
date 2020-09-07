@@ -11,21 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.miniapp.R;
 import com.example.miniapp.models.Task;
+import com.example.miniapp.viewmodels.HomeScreenViewModel;
 
 import java.util.ArrayList;
 
-
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
-
+    private HomeScreenViewModel homeScreenViewModel;
     private ArrayList<Task> tasksList;
 
-    public CustomAdapter(ArrayList<Task> list){
-        if (list.isEmpty()){
-            Log.v("MY TAG", "list is empty");
+    public CustomAdapter(HomeScreenViewModel homeScreenViewModel){
+        this.homeScreenViewModel = homeScreenViewModel;
+    }
+
+    public void initList() {
+        if (tasksList == null){
             tasksList = new ArrayList<>();
-        } else {
-            tasksList = list;
         }
+        tasksList = homeScreenViewModel.readAll();
     }
 
     @NonNull

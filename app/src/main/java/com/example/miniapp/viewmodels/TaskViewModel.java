@@ -22,6 +22,6 @@ public class TaskViewModel extends Observable {
     }
 
     public void submit(String task, Date created, Date start){
-        dbManager.create(new Task(task, created, start));
+        dbManager.create(task, created, start);
     }
 }

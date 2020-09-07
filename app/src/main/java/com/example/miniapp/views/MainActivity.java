@@ -162,7 +162,9 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void login() {
-        Intent intent = new Intent(MainActivity.this, HomeScreen.class);
+        // TODO: FIX THE QUERY OF THE DB
+        //  so we can resume going to HomeScreen
+        Intent intent = new Intent(MainActivity.this, NewTask.class);
         // userEmail shall also be the name of the user-specific database
         intent.putExtra("userEmail", String.valueOf(editTextEmail.getText()));
         startActivity(intent);
