@@ -49,8 +49,7 @@ public class LoginViewModel extends Observable implements IViewModel {
         }
     }
 
-
     public void register(String email, String password) {
-        dbManager.create(email, password);
+        dbManager.register(email, password);
     }
 }

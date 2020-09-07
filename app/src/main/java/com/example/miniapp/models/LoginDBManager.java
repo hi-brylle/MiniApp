@@ -21,7 +21,7 @@ public class LoginDBManager extends DBManager {
         dbToUseOrMake = "users_login";
     }
 
-    public void create(String email, String password) {
+    public void register(String email, String password) {
         MutableDocument doc = new MutableDocument();
         doc.setString("email", email);
         doc.setString("hash", PasswordHash.hash(password));
@@ -34,6 +34,30 @@ public class LoginDBManager extends DBManager {
     }
 
     public boolean isEmailRegistered(String email) {
+       EmailRegisteredRunnable emailRegisteredRunnable =  new EmailRegisteredRunnable(email);
+       Thread emailThread = new Thread(emailRegisteredRunnable);
+       emailThread.start();
+        try {
+            emailThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return emailRegisteredRunnable.isRegistered();
+    }
+
+    public boolean verifyPassword(String email, String password) {
+        VerifyPasswordRunnable verifyPasswordRunnable = new VerifyPasswordRunnable(email, password);
+        Thread passwordThread = new Thread(verifyPasswordRunnable);
+        passwordThread.start();
+        try {
+            passwordThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return verifyPasswordRunnable.isCorrect();
+    }
+
+    private boolean OnThreadIsEmailRegistered(String email) {
         boolean isEmailRegistered = false;
 
         Query emailQuery = QueryBuilder.select(SelectResult.property("email"))
@@ -65,7 +89,7 @@ public class LoginDBManager extends DBManager {
     }
 
     // TODO: should be done server-side
-    public boolean verifyPassword(String email, String password) {
+    private boolean onThreadVerifyPassword(String email, String password) {
         boolean isPasswordCorrect = false;
         Query hashQuery = QueryBuilder.select(SelectResult.property("email"), SelectResult.property("hash"))
                         .from(DataSource.database(currentDatabase))
@@ -89,5 +113,41 @@ public class LoginDBManager extends DBManager {
         return isPasswordCorrect;
     }
 
+    private class EmailRegisteredRunnable implements Runnable {
+        private String email;
+        private boolean isEmailRegistered;
+        public EmailRegisteredRunnable(String email){
+            this.email = email;
+        }
 
+        @Override
+        public void run() {
+            isEmailRegistered = OnThreadIsEmailRegistered(email);
+        }
+
+        // call only after run()
+        boolean isRegistered(){
+            return isEmailRegistered;
+        }
+    }
+
+    private class VerifyPasswordRunnable implements Runnable {
+        private String email;
+        private String password;
+        private boolean isPasswordCorrect;
+        public VerifyPasswordRunnable(String email, String password){
+            this.email = email;
+            this.password = password;
+        }
+
+        @Override
+        public void run() {
+            isPasswordCorrect = onThreadVerifyPassword(email, password);
+        }
+
+        // call only after run()
+        boolean isCorrect(){
+            return isPasswordCorrect;
+        }
+    }
 }

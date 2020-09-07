@@ -23,8 +23,6 @@ import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 
-import org.json.JSONException;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
