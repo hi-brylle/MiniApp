@@ -58,7 +58,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     private NotificationManager notificationManager;
     private static final int NOTIFICATION_ID = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +97,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         });
 
         createNotificationChannel();
-        getNotificationBuilder();
     }
 
     @Override
@@ -128,7 +126,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     private NotificationCompat.Builder getNotificationBuilder(){
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("You've been notified!")
-                .setContentText("This is your notification text");
+                .setContentText("This is your notification text")
+                .setSmallIcon(R.drawable.ic_alarm_clock);
 
         return notifyBuilder;
     }
