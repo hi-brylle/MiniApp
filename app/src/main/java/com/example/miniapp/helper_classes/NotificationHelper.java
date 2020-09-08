@@ -32,17 +32,19 @@ public class NotificationHelper extends ContextWrapper {
         }
     }
 
-    private NotificationCompat.Builder getNotificationBuilder(){
+    private NotificationCompat.Builder getNotificationBuilder(String task){
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                .setContentTitle("You've been notified!")
-                .setContentText("This is your notification text")
+                .setContentTitle("To-do:")
+                .setContentText(task)
                 .setSmallIcon(R.drawable.ic_alarm_clock);
 
         return notifyBuilder;
     }
 
-    public void sendNotification() {
-        NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
+
+    // TODO: add pending intent to do something when notification is clicked
+    public void sendNotification(String task) {
+        NotificationCompat.Builder notifyBuilder = getNotificationBuilder(task);
         notificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
 }

@@ -1,14 +1,13 @@
 package com.example.miniapp.views;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.graphics.Color;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,14 +19,13 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
-import com.example.miniapp.helper_classes.NotificationHelper;
+import com.example.miniapp.helper_classes.BroadcastHelper;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
-import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,16 +35,12 @@ import java.util.Observer;
 public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Observer, Validator.ValidationListener {
 
     private Validator validator;
-
     @NotEmpty
     private EditText editTextTask;
-
     @NotEmpty
     private EditText editTextSelectDate;
-
     @NotEmpty
     private EditText editTextSelectTime;
-
     private Button buttonSaveTask;
 
     private TaskViewModel taskViewModel;
@@ -55,7 +49,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     Date dateStart;
     Date dateCreated;
 
-    NotificationHelper notificationHelper;
+    AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +74,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                 openDatePickerDialog();
             }
         });
-
         editTextSelectTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,13 +88,13 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             }
         });
 
-        notificationHelper = new NotificationHelper(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         taskViewModel.openDB();
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
     @Override
@@ -150,21 +143,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         timePickerDialog.show();
     }
 
-    String dateRepresentation(int year, int month, int day){
-        // needs localization
-        String monthName = new DateFormatSymbols().getMonths()[month];
-
-        return day + " " + monthName + " " + year;
-    }
-
-    String timeRepresentation(int hr, int min){
-        String hour = hr < 10 ? "0" + hr : String.valueOf(hr);
-        String minute = min < 10 ? "0" + min : String.valueOf(min);
-        String xm = hr < 12 ? "AM" : "PM";
-
-        return hour + ":" + minute + " " + xm;
-    }
-
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         if (dateStart == null){
@@ -176,7 +154,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         calendar.set(Calendar.DAY_OF_MONTH, i2);
         dateStart = calendar.getTime();
 
-        editTextSelectDate.setText(dateRepresentation(i, i1, i2));
+        editTextSelectDate.setText(TaskViewModel.dateRepresentation(i, i1, i2));
     }
 
     @Override
@@ -189,7 +167,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         calendar.set(Calendar.MINUTE, i1);
         dateStart = calendar.getTime();
 
-        editTextSelectTime.setText(timeRepresentation(i, i1));
+        editTextSelectTime.setText(TaskViewModel.timeRepresentation(i, i1));
     }
 
     private void saveTask() {
@@ -204,8 +182,21 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
         // TODO: Exit this Activity, go back to HomeScreen
 
-        notificationHelper.sendNotification();
+        startAlert(task);
     }
+
+    private void startAlert(String task) {
+        Intent notificationIntent = new Intent(NewTask.this, BroadcastHelper.class);
+        notificationIntent.putExtra("task", task);
+        PendingIntent broadcastIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, notificationIntent, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, broadcastIntent);
+        } else{
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, broadcastIntent);
+        }
+
+    }
+
 
     @Override
     public void update(Observable observable, Object o) {
