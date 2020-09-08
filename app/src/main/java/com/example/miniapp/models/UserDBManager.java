@@ -41,6 +41,7 @@ public class UserDBManager extends DBManager {
         ReadAllRunnable readAllRunnable = new ReadAllRunnable();
         Thread readAllThread = new Thread(readAllRunnable);
         readAllThread.start();
+        // TODO: make UI put up a loading screen, or use a live query, or something
         try {
             readAllThread.join();
         } catch (InterruptedException e) {
