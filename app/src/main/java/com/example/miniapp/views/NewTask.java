@@ -2,12 +2,9 @@ package com.example.miniapp.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +16,7 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
-import com.example.miniapp.helper_classes.BroadcastHelper;
+import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -48,8 +45,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     String task;
     Date dateStart;
     Date dateCreated;
-
-    AlarmManager alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +89,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     protected void onStart() {
         super.onStart();
         taskViewModel.openDB();
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
     @Override
@@ -182,20 +176,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
         // TODO: Exit this Activity, go back to HomeScreen
 
-        startAlert(task);
     }
 
-    private void startAlert(String task) {
-        Intent notificationIntent = new Intent(NewTask.this, BroadcastHelper.class);
-        notificationIntent.putExtra("task", task);
-        PendingIntent broadcastIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, notificationIntent, 0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, broadcastIntent);
-        } else{
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, broadcastIntent);
-        }
-
-    }
 
 
     @Override

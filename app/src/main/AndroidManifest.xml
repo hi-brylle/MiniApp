@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.miniapp">
 
-    <uses-permission android:name="android.permission.SET_ALARM"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,10 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".helper_classes.AlarmService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" >
+            <intent-filter>
+                <action android:name="com.example.miniapp.alarmservice" />
+            </intent-filter>
+        </service>
+
         <receiver
             android:name=".helper_classes.BroadcastHelper"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
 
         <activity android:name=".views.NewTask" />
         <activity android:name=".views.HomeScreen" />

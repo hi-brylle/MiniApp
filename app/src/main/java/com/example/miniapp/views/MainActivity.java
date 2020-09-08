@@ -51,12 +51,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: check if user is logged in (if yes, go to HomeScreen; else, stay here)
-
-        // this closes the app when the Back button is pressed in Home Screen
-        if (getIntent().getBooleanExtra("EXIT", false)){
-            finish();
-        }
+        preActivity();
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -92,16 +87,36 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         });
     }
 
+    private void preActivity() {
+        // TODO: add sharedPref check here
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
+
         loginViewModel.openDB();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // this closes the app when the Back button is pressed in Home Screen
+        if (getIntent().getBooleanExtra("EXIT", false)){
+            finish();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         loginViewModel.closeDB();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override
@@ -162,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     private void login() {
         // TODO: FIX THE QUERY OF THE DB
         //  so we can resume going to HomeScreen
-        Intent intent = new Intent(MainActivity.this, NewTask.class);
+        Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         // userEmail shall also be the name of the user-specific database
         intent.putExtra("userEmail", String.valueOf(editTextEmail.getText()));
         startActivity(intent);

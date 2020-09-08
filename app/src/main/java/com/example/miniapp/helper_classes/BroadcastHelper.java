@@ -10,6 +10,4 @@ public class BroadcastHelper extends BroadcastReceiver {
         NotificationHelper notificationHelper = new NotificationHelper(context);
         notificationHelper.sendNotification(intent.getStringExtra("task"));
     }
-
-
 }

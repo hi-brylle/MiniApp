@@ -1,10 +1,12 @@
 package com.example.miniapp.models;
 
+import android.icu.util.IslamicCalendar;
 import android.util.Log;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
+import com.couchbase.lite.Dictionary;
 import com.couchbase.lite.Expression;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
@@ -14,6 +16,7 @@ import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -44,9 +47,7 @@ public class UserDBManager extends DBManager {
     public ArrayList<Task> readAll(){
         ArrayList<Task> tasks = new ArrayList<>();
         Query allQuery = QueryBuilder.select(SelectResult.all())
-                            .from(DataSource.database(currentDatabase))
-                            .where(Expression.property("task").equalTo(Expression.string("u1 t1"))
-                                    .add(Expression.property("task").equalTo(Expression.string("u1 t2"))));
+                            .from(DataSource.database(currentDatabase));
 
         exitLabel:
         try {
@@ -57,12 +58,17 @@ public class UserDBManager extends DBManager {
                 break exitLabel;
             }
 
-            Log.v("mUserDBManager.readAll", "data from: " + currentDatabase.getName());
-            List<Result> resultList = results.allResults();
-            for(Result result : resultList){
-                Log.v("MY TAG", "has task? " + result.contains("task"));
-                Log.v("MY TAG", "has created? " + result.contains("dateCreated"));
-                Log.v("MY TAG", "has start? " + result.contains("dateStart"));
+            for(Result result: results){
+                Dictionary all = result.getDictionary(currentDatabase.getName());
+                String task = all.getString("task");
+                String dateCreated = all.getString("dateCreated");
+                String dateStart = all.getString("dateStart");
+
+                Log.v("MY TAG", "date created: " + dateCreated);
+                Log.v("MY TAG", "date start: " + dateStart);
+
+                Date dummyDates = Calendar.getInstance().getTime();
+                tasks.add(new Task(task, dummyDates, dummyDates));
             }
 
         } catch (CouchbaseLiteException e) {
