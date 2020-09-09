@@ -25,10 +25,9 @@ public class UserDBManager extends DBManager {
     public void create(String task, Date dateCreated, Date dateStart){
         MutableDocument doc = new MutableDocument();
         doc.setString("task", task);
-        doc.setString("dateCreated", String.valueOf(dateCreated));
-        doc.setString("dateStart", String.valueOf(dateStart));
-        doc.setString("isDone", String.valueOf(false));
-        doc.setString("isInProgress", String.valueOf(false));
+        doc.setDate("dateCreated", dateCreated);
+        doc.setDate("dateStart", dateStart);
+        doc.setBoolean("isDone", false);
 
         try {
             currentDatabase.save(doc);
@@ -61,19 +60,19 @@ public class UserDBManager extends DBManager {
             ResultSet results = allQuery.execute();
 
             if (results == null){
-                Log.v("MY TAG", "results are null ffs");
                 break exitLabel;
             }
 
             for(Result result: results){
                 Dictionary all = result.getDictionary(currentDatabase.getName());
                 String task = all.getString("task");
-                String dateCreated = all.getString("dateCreated");
-                String dateStart = all.getString("dateStart");
+                Date dateCreated = all.getDate("dateCreated");
+                Date dateStart = all.getDate("dateStart");
+                boolean isDone = all.getBoolean("isDone");
 
-                // TODO: parse strings back as dates, or change how they are inputted to the DB
-                Date dummyDates = Calendar.getInstance().getTime();
-                tasks.add(new Task(task, dummyDates, dummyDates));
+                Task t = new Task(task, dateCreated, dateStart);
+                t.setDone(isDone);
+                tasks.add(t);
             }
 
         } catch (CouchbaseLiteException e) {
