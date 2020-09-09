@@ -13,22 +13,25 @@ import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements Observer {
     private UserDBManager userDBManager;
     public ArrayList<Task> tasksList;
 
     public CustomAdapter(UserDBManager userDBManager){
         this.userDBManager = userDBManager;
+        userDBManager.addObserver(this);
     }
 
-    public void initUpdateList() {
+    public void updateList() {
         userDBManager.openDB();
         if (tasksList == null){
             tasksList = new ArrayList<>();
         }
 
-        userDBManager.listenForDBChanges(this);
+        userDBManager.updateListForChanges(tasksList);
     }
 
     @NonNull
@@ -55,10 +58,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public void remove(Task task){
-        int position = tasksList.indexOf(task);
-        tasksList.remove(position);
-        notifyItemRemoved(position);
+    @Override
+    public void update(Observable observable, Object o) {
+        notifyDataSetChanged();
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {

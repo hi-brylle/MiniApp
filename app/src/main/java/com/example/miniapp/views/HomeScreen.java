@@ -28,7 +28,6 @@ public class HomeScreen extends AppCompatActivity implements Observer {
     private FloatingActionButton fabNewTask;
 
     private HomeScreenViewModel homeScreenViewModel;
-    private UserDBManager commonUserDBManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +35,12 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra("userEmail");
-        commonUserDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
-        homeScreenViewModel = new HomeScreenViewModel(commonUserDBManager);
+        homeScreenViewModel = new HomeScreenViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
         homeScreenViewModel.addObserver(this);
 
         recViewTaskList = findViewById(R.id.recycler_view_task_list);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        customAdapter = new CustomAdapter(commonUserDBManager);
-        customAdapter.initUpdateList();
+        customAdapter = new CustomAdapter(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recViewTaskList.setLayoutManager(linearLayoutManager);
         recViewTaskList.setAdapter(customAdapter);
@@ -66,6 +63,7 @@ public class HomeScreen extends AppCompatActivity implements Observer {
     protected void onStart() {
         super.onStart();
         homeScreenViewModel.openDB();
+        customAdapter.updateList();
     }
 
     @Override
