@@ -14,7 +14,6 @@ import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 public class UserDBManager extends DBManager {

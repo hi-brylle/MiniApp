@@ -172,8 +172,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         Log.v("MY TAG", "Start: " + dateStart);
 
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
-        // TODO: Exit this Activity, go back to HomeScreen
 
+        finish();
     }
 
 
