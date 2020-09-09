@@ -7,10 +7,10 @@
     tools:context=".views.HomeScreen">
 
     <Button
-        android:id="@+id/button_popup_menu"
+        android:id="@+id/button_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Menu"
+        android:text="Logout"
         android:textAllCaps="false"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -19,7 +19,7 @@
         android:id="@+id/recycler_view_task_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/button_popup_menu"
+        android:layout_below="@id/button_logout"
         android:scrollbars="vertical" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

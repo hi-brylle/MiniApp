@@ -25,8 +25,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         userDBManager.addObserver(this);
     }
 
-    public void updateList() {
+    public void openDB(){
         userDBManager.openDB();
+    }
+
+    public void closeDB(){
+        userDBManager.closeDB();
+    }
+
+    public void updateList() {
         if (tasksList == null){
             tasksList = new ArrayList<>();
         }

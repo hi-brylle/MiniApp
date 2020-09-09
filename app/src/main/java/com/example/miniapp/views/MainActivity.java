@@ -30,16 +30,16 @@ import java.util.Observer;
 public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, Observer {
 
     // SharedPreferences used to track login status of users for auto-login checking
-    private static final String LOGGED_IN_USERS = "loggedInUsers";
-    private static final String LOGGED_IN_USERNAME = "loggedInUsername";
+    private static final String LOGGED_IN_USERNAME = "loggedInUser";
     private static SharedPreferences userLoginTrackerSharedPref;
+    private String emailFromSP;
 
     private Validator validator;
     @NotEmpty
     @Email(message = "Invalid Email")
     private EditText editTextEmail;
     @Password(scheme = Password.Scheme.ANY, message = "Password must be at least 6 characters")
-    private EditText ediTextPassword;
+    private EditText editTextPassword;
     private Button buttonSignIn;
     private Button buttonSignInGoogle;
     private Button buttonSignInFacebook;
@@ -51,13 +51,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        preActivity();
-
         validator = new Validator(this);
         validator.setValidationListener(this);
 
         editTextEmail = findViewById(R.id.edit_text_email);
-        ediTextPassword = findViewById(R.id.edit_text_password);
+        editTextPassword = findViewById(R.id.edit_text_password);
         buttonSignIn = findViewById(R.id.button_sign_in);
         buttonSignInGoogle = findViewById(R.id.button_sign_in_google);
         buttonSignInFacebook = findViewById(R.id.button_sign_in_facebook);
@@ -87,22 +85,35 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         });
     }
 
-    private void preActivity() {
-        // TODO: add sharedPref check here
+    private void checkSharedPrefs() {
+        userLoginTrackerSharedPref = getSharedPreferences(LOGGED_IN_USERNAME, MODE_PRIVATE);
+        emailFromSP = userLoginTrackerSharedPref.getString("email", "");
+        String password = userLoginTrackerSharedPref.getString("password", "");
+        if (emailFromSP.equals("") || password.equals("")){
+            // if sharedpref has been emptied (indicating logging out), continue this activity
+            return;
+        } else {
+            Log.v("MY TAG", "called from sharedprefsss");
+            login(emailFromSP, true);
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         loginViewModel.openDB();
+        Log.v("MY TAG", "onStart called");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v("MY TAG", "onResume called");
         // this closes the app when the Back button is pressed in Home Screen
         if (getIntent().getBooleanExtra("EXIT", false)){
             finish();
+        } else{
+            checkSharedPrefs();
         }
     }
 
@@ -120,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void onValidationSucceeded() {
-        loginViewModel.verify(String.valueOf(editTextEmail.getText()), String.valueOf(ediTextPassword.getText()));
+        loginViewModel.verify(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
     }
 
     @Override
@@ -144,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         // 1: email is registered, password is correct
         // -1: email is registered, password is incorrect
         int loginStatus = (int) o;
-        Log.v("MY TAG", "received status: " + loginStatus);
         handleLoginStatus(loginStatus);
     }
 
@@ -152,15 +162,15 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         switch (loginStatus){
             // register email
             case 0:
-                loginViewModel.register(String.valueOf(editTextEmail.getText()), String.valueOf(ediTextPassword.getText()));
-                login();
-                // TODO: set SharedPref to be logged in for this email
+                loginViewModel.register(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
+                setAlwaysLoggedIn();
+                login(String.valueOf(editTextEmail.getText()), false);
                 break;
 
             // password correct
             case 1:
-                login();
-                // TODO: set SharedPref to be logged in for this email
+                setAlwaysLoggedIn();
+                login(String.valueOf(editTextEmail.getText()), false);
                 break;
 
             // password incorrect
@@ -173,13 +183,20 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         }
     }
 
-    private void login() {
-        // TODO: FIX THE QUERY OF THE DB
-        //  so we can resume going to HomeScreen
+    private void login(String userExtra, boolean autoLogIn) {
         Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         // userEmail shall also be the name of the user-specific database
-        intent.putExtra("userEmail", String.valueOf(editTextEmail.getText()));
+        intent.putExtra("userEmail", userExtra);
+        intent.putExtra("autoLogin", autoLogIn);
         startActivity(intent);
+    }
+
+    private void setAlwaysLoggedIn(){
+        userLoginTrackerSharedPref = getSharedPreferences(LOGGED_IN_USERNAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = userLoginTrackerSharedPref.edit();
+        editor.putString("email", String.valueOf(editTextEmail.getText()));
+        editor.putString("password", String.valueOf(editTextPassword.getText())); // IS THIS SECURE?? NO, IT'S NOT
+        editor.apply();
     }
 
     private void passwordEmailMismatchDialog() {
@@ -192,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                         // we don't need to clear out the email for extra security
                         // I mean, this is just a task notifier app
                         // editTextEmail.setText("");
-                        ediTextPassword.setText("");
+                        editTextPassword.setText("");
                     }
                 });
         AlertDialog alert = builder.create();

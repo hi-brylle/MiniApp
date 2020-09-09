@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,10 +26,8 @@ public class HomeScreen extends AppCompatActivity implements Observer {
     private LinearLayoutManager linearLayoutManager;
     private CustomAdapter customAdapter;
 
-    private Button buttonPopupMenu;
+    private Button buttonLogout;
     private FloatingActionButton fabNewTask;
-
-    private HomeScreenViewModel homeScreenViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +35,19 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra("userEmail");
-        homeScreenViewModel = new HomeScreenViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
-        homeScreenViewModel.addObserver(this);
+
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        customAdapter = new CustomAdapter(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
+        customAdapter.openDB();
+        customAdapter.updateList();
 
         recViewTaskList = findViewById(R.id.recycler_view_task_list);
-        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        customAdapter = new CustomAdapter(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recViewTaskList.setLayoutManager(linearLayoutManager);
         recViewTaskList.setAdapter(customAdapter);
 
-        buttonPopupMenu = findViewById(R.id.button_popup_menu);
+        buttonLogout = findViewById(R.id.button_logout);
         fabNewTask = findViewById(R.id.fab_new_task);
 
         fabNewTask.setOnClickListener(new View.OnClickListener() {
@@ -57,24 +59,49 @@ public class HomeScreen extends AppCompatActivity implements Observer {
             }
         });
 
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences userLoginTrackerSharedPref = getSharedPreferences("loggedInUser", MODE_PRIVATE);
+                SharedPreferences.Editor editor = userLoginTrackerSharedPref.edit();
+                editor.putString("email", "");
+                editor.putString("password", "");
+                editor.apply();
+
+                exitApp();
+            }
+        });
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        homeScreenViewModel.openDB();
-        customAdapter.updateList();
+        customAdapter.openDB();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        homeScreenViewModel.closeDB();
+        customAdapter.closeDB();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        // TODO: FIX here, app not exiting for some reason
+//        if(getIntent().getBooleanExtra("autoLogIn", false)){
+//            exitApp();
+//        }
+        Log.v("MY TAG", "SHOULD BE EXITING NOW");
+        exitApp();
+    }
+
+    private void exitApp(){
         Intent intent = new Intent(HomeScreen.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);
