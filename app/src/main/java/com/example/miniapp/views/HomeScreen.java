@@ -93,10 +93,6 @@ public class HomeScreen extends AppCompatActivity implements Observer {
 
     @Override
     public void onBackPressed() {
-        // TODO: FIX here, app not exiting for some reason
-//        if(getIntent().getBooleanExtra("autoLogIn", false)){
-//            exitApp();
-//        }
         Log.v("MY TAG", "SHOULD BE EXITING NOW");
         exitApp();
     }

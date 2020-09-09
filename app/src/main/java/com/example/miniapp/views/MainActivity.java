@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             return;
         } else {
             Log.v("MY TAG", "called from sharedprefsss");
-            login(emailFromSP, true);
+            login(emailFromSP);
         }
     }
 
@@ -164,13 +164,13 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             case 0:
                 loginViewModel.register(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
                 setAlwaysLoggedIn();
-                login(String.valueOf(editTextEmail.getText()), false);
+                login(String.valueOf(editTextEmail.getText()));
                 break;
 
             // password correct
             case 1:
                 setAlwaysLoggedIn();
-                login(String.valueOf(editTextEmail.getText()), false);
+                login(String.valueOf(editTextEmail.getText()));
                 break;
 
             // password incorrect
@@ -183,11 +183,10 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         }
     }
 
-    private void login(String userExtra, boolean autoLogIn) {
+    private void login(String userExtra) {
         Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         // userEmail shall also be the name of the user-specific database
         intent.putExtra("userEmail", userExtra);
-        intent.putExtra("autoLogin", autoLogIn);
         startActivity(intent);
     }
 
