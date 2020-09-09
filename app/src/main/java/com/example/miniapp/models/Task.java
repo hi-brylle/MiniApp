@@ -9,7 +9,6 @@ public class Task {
     private Date dateCreated;
     private Date dateStart;
     private boolean isDone;
-    private boolean isInProgress;
     private ArrayList<URI> imageURIs;
 
     public Task(String task, Date created, Date start){
@@ -17,15 +16,10 @@ public class Task {
         this.dateCreated = created;
         this.dateStart = start;
         this.isDone = false;
-        this.isInProgress = false;
     }
 
     public void setDone(boolean m){
         isDone = m;
-    }
-
-    public void setInProgress(boolean p){
-        isInProgress = p;
     }
 
     protected void addImageURI(URI imgURI){
@@ -49,9 +43,5 @@ public class Task {
 
     public boolean getIsDone() {
         return isDone;
-    }
-
-    public boolean getIsInProgress() {
-        return isInProgress;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.miniapp.helper_classes;
 
-import android.util.Log;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         if (tasksList == null){
             tasksList = new ArrayList<>();
         }
-        tasksList = homeScreenViewModel.readAll();
+
+        new CustomAsync().execute();
+//        tasksList = homeScreenViewModel.readAll();
     }
 
     @NonNull
@@ -75,5 +77,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             textViewTaskRow = itemView.findViewById(R.id.text_view_task_row);
             textViewDateRow = itemView.findViewById(R.id.text_view_date_row);
         }
+    }
+
+    private class CustomAsync extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            tasksList = homeScreenViewModel.readAll();
+            return null;
+        }
+
     }
 }
