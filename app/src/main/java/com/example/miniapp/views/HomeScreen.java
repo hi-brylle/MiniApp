@@ -62,18 +62,10 @@ public class HomeScreen extends AppCompatActivity implements Observer {
 
     }
 
-    // TODO: update custom adapter here of additions
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Toast.makeText(this, "onResume called", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
         homeScreenViewModel.openDB();
-        Toast.makeText(this, "onStart called", Toast.LENGTH_SHORT).show();
     }
 
     @Override

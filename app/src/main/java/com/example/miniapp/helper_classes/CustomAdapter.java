@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
     private HomeScreenViewModel homeScreenViewModel;
-    private ArrayList<Task> tasksList;
+    public ArrayList<Task> tasksList;
 
     public CustomAdapter(HomeScreenViewModel homeScreenViewModel){
         this.homeScreenViewModel = homeScreenViewModel;
@@ -28,8 +28,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             tasksList = new ArrayList<>();
         }
 
-        new CustomAsync().execute();
-//        tasksList = homeScreenViewModel.readAll();
+        // new CustomAsync().execute();
+        homeScreenViewModel.listen(CustomAdapter.this);
+
     }
 
     @NonNull
@@ -54,11 +55,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-    }
-
-    public void insert(int position, Task task){
-        tasksList.add(position, task);
-        notifyItemInserted(position);
     }
 
     public void remove(Task task){

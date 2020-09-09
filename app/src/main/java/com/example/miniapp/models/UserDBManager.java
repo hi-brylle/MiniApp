@@ -6,12 +6,16 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Dictionary;
+import com.couchbase.lite.ListenerToken;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
+import com.couchbase.lite.QueryChange;
+import com.couchbase.lite.QueryChangeListener;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
+import com.example.miniapp.helper_classes.CustomAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,5 +103,40 @@ public class UserDBManager extends DBManager {
         }
     }
 
+    public void listenForDBChanges(CustomAdapter customAdapter){
+        customAdapter.tasksList.clear();
+        Query changesQuery = QueryBuilder.select(SelectResult.all())
+                        .from(DataSource.database(currentDatabase));
+
+        ListenerToken listenerToken = changesQuery.addChangeListener(new QueryChangeListener() {
+            @Override
+            public void changed(QueryChange change) {
+                for (Result result : change.getResults()) {
+                    Log.v("MY TAG", "results: " + result.getKeys());
+
+                    Dictionary all = result.getDictionary(currentDatabase.getName());
+                    String task = all.getString("task");
+                    Date dateCreated = all.getDate("dateCreated");
+                    Date dateStart = all.getDate("dateStart");
+                    boolean isDone = all.getBoolean("isDone");
+
+                    Task t = new Task(task, dateCreated, dateStart);
+                    t.setDone(isDone);
+
+                    customAdapter.tasksList.add(t);
+
+                    customAdapter.notifyDataSetChanged();
+
+
+                }
+            }
+        });
+
+        try {
+            changesQuery.execute();
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

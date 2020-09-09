@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Override
     protected void onStart() {
         super.onStart();
-
         loginViewModel.openDB();
     }
 
@@ -186,11 +185,13 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     private void passwordEmailMismatchDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Sign In Failed")
-                .setMessage("Your email or password is incorrect.")
+                .setMessage("Your password is incorrect.")
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        editTextEmail.setText("");
+                        // we don't need to clear out the email for extra security
+                        // I mean, this is just a task notifier app
+                        // editTextEmail.setText("");
                         ediTextPassword.setText("");
                     }
                 });

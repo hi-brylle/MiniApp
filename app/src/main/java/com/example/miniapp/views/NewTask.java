@@ -96,6 +96,12 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+    @Override
     public void onValidationSucceeded() {
         saveTask();
     }
