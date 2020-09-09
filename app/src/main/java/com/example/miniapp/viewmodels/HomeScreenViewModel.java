@@ -1,10 +1,8 @@
 package com.example.miniapp.viewmodels;
 
 import com.example.miniapp.helper_classes.CustomAdapter;
-import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
 public class HomeScreenViewModel extends Observable implements IViewModel {
@@ -24,9 +22,6 @@ public class HomeScreenViewModel extends Observable implements IViewModel {
         dbManager.closeDB();
     }
 
-    public ArrayList<Task> readAll() {
-        return dbManager.readAll();
-    }
     public void listen(CustomAdapter customAdapter){
         dbManager.listenForDBChanges(customAdapter);
     }

@@ -39,70 +39,6 @@ public class UserDBManager extends DBManager {
         }
     }
 
-    public ArrayList<Task> readAll(){
-        ReadAllRunnable readAllRunnable = new ReadAllRunnable();
-        Thread readAllThread = new Thread(readAllRunnable);
-        readAllThread.start();
-        // TODO: make UI put up a loading screen, or use a live query, or something
-        try {
-            readAllThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return readAllRunnable.getTasks();
-    }
-
-    private ArrayList<Task> onThreadReadAll(){
-        ArrayList<Task> tasks = new ArrayList<>();
-        Query allQuery = QueryBuilder.select(SelectResult.all())
-                            .from(DataSource.database(currentDatabase));
-
-        exitLabel:
-        try {
-            ResultSet results = allQuery.execute();
-
-            if (results == null){
-                break exitLabel;
-            }
-
-            for(Result result: results){
-                Dictionary all = result.getDictionary(currentDatabase.getName());
-                String task = all.getString("task");
-                Date dateCreated = all.getDate("dateCreated");
-                Date dateStart = all.getDate("dateStart");
-                boolean isDone = all.getBoolean("isDone");
-
-                Task t = new Task(task, dateCreated, dateStart);
-                t.setDone(isDone);
-                tasks.add(t);
-            }
-
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-
-        return tasks;
-    }
-
-    private class ReadAllRunnable implements Runnable {
-        ArrayList<Task> tasks;
-
-        ReadAllRunnable(){
-            tasks = new ArrayList<>();
-        }
-
-        @Override
-        public void run() {
-            tasks = onThreadReadAll();
-        }
-
-        // call only after run
-        ArrayList<Task> getTasks(){
-            return tasks;
-        }
-    }
-
     public void listenForDBChanges(CustomAdapter customAdapter){
         customAdapter.tasksList.clear();
         Query changesQuery = QueryBuilder.select(SelectResult.all())
@@ -126,7 +62,6 @@ public class UserDBManager extends DBManager {
                     customAdapter.tasksList.add(t);
 
                     customAdapter.notifyDataSetChanged();
-
 
                 }
             }

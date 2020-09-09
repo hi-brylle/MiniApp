@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
@@ -29,6 +28,7 @@ public class HomeScreen extends AppCompatActivity implements Observer {
     private FloatingActionButton fabNewTask;
 
     private HomeScreenViewModel homeScreenViewModel;
+    private UserDBManager commonUserDBManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +36,14 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra("userEmail");
-        homeScreenViewModel = new HomeScreenViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
+        commonUserDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
+        homeScreenViewModel = new HomeScreenViewModel(commonUserDBManager);
         homeScreenViewModel.addObserver(this);
-        homeScreenViewModel.openDB();
 
         recViewTaskList = findViewById(R.id.recycler_view_task_list);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        customAdapter = new CustomAdapter(homeScreenViewModel);
-        customAdapter.initList();
+        customAdapter = new CustomAdapter(commonUserDBManager);
+        customAdapter.initUpdateList();
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recViewTaskList.setLayoutManager(linearLayoutManager);
         recViewTaskList.setAdapter(customAdapter);

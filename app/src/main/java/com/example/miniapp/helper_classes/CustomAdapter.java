@@ -1,6 +1,5 @@
 package com.example.miniapp.helper_classes;
 
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,26 +10,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.miniapp.R;
 import com.example.miniapp.models.Task;
-import com.example.miniapp.viewmodels.HomeScreenViewModel;
+import com.example.miniapp.models.UserDBManager;
 
 import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {
-    private HomeScreenViewModel homeScreenViewModel;
+    private UserDBManager userDBManager;
     public ArrayList<Task> tasksList;
 
-    public CustomAdapter(HomeScreenViewModel homeScreenViewModel){
-        this.homeScreenViewModel = homeScreenViewModel;
+    public CustomAdapter(UserDBManager userDBManager){
+        this.userDBManager = userDBManager;
     }
 
-    public void initList() {
+    public void initUpdateList() {
+        userDBManager.openDB();
         if (tasksList == null){
             tasksList = new ArrayList<>();
         }
 
-        // new CustomAsync().execute();
-        homeScreenViewModel.listen(CustomAdapter.this);
-
+        userDBManager.listenForDBChanges(this);
     }
 
     @NonNull
@@ -75,12 +73,4 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         }
     }
 
-    private class CustomAsync extends AsyncTask<Void, Void, Void>{
-        @Override
-        protected Void doInBackground(Void... voids) {
-            tasksList = homeScreenViewModel.readAll();
-            return null;
-        }
-
-    }
 }
