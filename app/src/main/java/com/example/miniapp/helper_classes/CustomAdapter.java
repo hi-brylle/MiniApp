@@ -51,8 +51,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        holder.textViewTaskRow.setText(tasksList.get(position).getTask());
-        holder.textViewDateRow.setText(tasksList.get(position).getDateStart().toString());
+        Task task = tasksList.get(position);
+
+        holder.bind(task);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean expanded = task.isExpanded();
+                task.setExpanded(!expanded);
+                notifyItemChanged(position);
+            }
+        });
+
     }
 
     @Override
@@ -72,13 +83,29 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTaskRow;
-        public TextView textViewDateRow;
+        public TextView textViewSubDateStart;
+        private TextView textViewSubDateCreated;
+        private View subItem;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textViewTaskRow = itemView.findViewById(R.id.text_view_task_row);
-            textViewDateRow = itemView.findViewById(R.id.text_view_date_row);
+            textViewSubDateStart = itemView.findViewById(R.id.text_view_sub_date_start);
+            textViewSubDateCreated = itemView.findViewById(R.id.text_view_sub_date_created);
+            subItem = itemView.findViewById(R.id.layout_sub_items);
+        }
+
+        public void bind(Task task) {
+
+            boolean expanded = task.isExpanded();
+
+            subItem.setVisibility(expanded ? View.VISIBLE : View.GONE);
+
+            textViewTaskRow.setText(task.getTask());
+            textViewSubDateStart.setText("Start by: " + task.getDateStart());
+            textViewSubDateCreated.setText("Date created: " + task.getDateCreated());
+            // TODO: add mark done?
         }
     }
 

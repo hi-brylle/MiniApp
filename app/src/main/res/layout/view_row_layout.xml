@@ -1,23 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp" >
+    android:layout_margin="5dp"
+    android:orientation="vertical" >
 
+    <View
+        android:id="@+id/view_item_divider"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"/>
     <TextView
         android:id="@+id/text_view_task_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sample task"
+        android:text="Sample task"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/text_view_date_row"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout_sub_items"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view_task_row"
-        android:text="12 July 2019"
-        android:textSize="20sp"
-         />
+        android:orientation="vertical" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/text_view_sub_date_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date start"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/text_view_sub_date_created"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date created"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

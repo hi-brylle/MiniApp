@@ -9,6 +9,7 @@ public class Task {
     private Date dateCreated;
     private Date dateStart;
     private boolean isDone;
+    private boolean isExpanded; // for use in the recycler view only; not stored in DB
     private ArrayList<URI> imageURIs;
 
     public Task(String task, Date created, Date start){
@@ -43,5 +44,13 @@ public class Task {
 
     public boolean getIsDone() {
         return isDone;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean b){
+        isExpanded = b;
     }
 }
