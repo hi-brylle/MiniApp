@@ -77,7 +77,11 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         buttonSaveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validator.validate();
+                if(taskViewModel.isValid(dateStart)){
+                    validator.validate();
+                } else {
+                    editTextSelectTime.setError("Time cannot be from the past");
+                }
             }
         });
 
@@ -132,7 +136,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     private void openTimePickerDialog() {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 this,
                 Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
                 Calendar.getInstance().get(Calendar.MINUTE) + 5,
@@ -150,6 +153,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         calendar.set(Calendar.YEAR, i);
         calendar.set(Calendar.MONTH, i1);
         calendar.set(Calendar.DAY_OF_MONTH, i2);
+
+        // set date component of dateStart
         dateStart = calendar.getTime();
 
         editTextSelectDate.setText(TaskViewModel.dateRepresentation(i, i1, i2));
@@ -163,9 +168,20 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, i);
         calendar.set(Calendar.MINUTE, i1);
+
+        // set time component of dateStart
         dateStart = calendar.getTime();
 
-        editTextSelectTime.setText(TaskViewModel.timeRepresentation(i, i1));
+        String xm = null;
+        if (calendar.get(Calendar.AM_PM) == Calendar.AM) {
+            xm = "AM";
+        } else
+        if (calendar.get(Calendar.AM_PM) == Calendar.PM) {
+            xm = "PM";
+        }
+
+        String rep = TaskViewModel.timeRepresentation(i, i1) + xm;
+        editTextSelectTime.setText(rep);
     }
 
     private void saveTask() {

@@ -4,6 +4,7 @@ import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.models.Task;
 
 import java.text.DateFormatSymbols;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
 
@@ -22,11 +23,13 @@ public class TaskViewModel extends Observable {
     }
 
     public static String timeRepresentation(int hr, int min) {
-        String hour = hr < 10 ? "0" + hr : String.valueOf(hr);
+        String hour = String.valueOf(hr);
+        if (hr > 12){
+            hour = String.valueOf(hr - 12);
+        }
         String minute = min < 10 ? "0" + min : String.valueOf(min);
-        String xm = hr < 12 ? "AM" : "PM";
 
-        return hour + ":" + minute + " " + xm;
+        return hour + ":" + minute + " ";
     }
 
     public void openDB(){
@@ -39,5 +42,10 @@ public class TaskViewModel extends Observable {
 
     public void submit(String task, Date created, Date start){
         dbManager.create(task, created, start);
+    }
+
+    public boolean isValid(Date dateTimeSelected) {
+        Date now = Calendar.getInstance().getTime();
+        return dateTimeSelected.after(now);
     }
 }
