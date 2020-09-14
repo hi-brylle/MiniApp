@@ -1,7 +1,6 @@
 package com.example.miniapp.viewmodels;
 
 import com.example.miniapp.models.UserDBManager;
-import com.example.miniapp.models.Task;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -23,10 +22,7 @@ public class TaskViewModel extends Observable {
     }
 
     public static String timeRepresentation(int hr, int min) {
-        String hour = String.valueOf(hr);
-        if (hr > 12){
-            hour = String.valueOf(hr - 12);
-        }
+        String hour = hr > 12 ? String.valueOf(hr - 12) : String.valueOf(hr);
         String minute = min < 10 ? "0" + min : String.valueOf(min);
 
         return hour + ":" + minute + " ";
