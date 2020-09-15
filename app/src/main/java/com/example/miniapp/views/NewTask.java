@@ -172,15 +172,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         // set time component of dateStart
         dateStart = calendar.getTime();
 
-        String xm = null;
-        if (calendar.get(Calendar.AM_PM) == Calendar.AM) {
-            xm = "AM";
-        } else
-        if (calendar.get(Calendar.AM_PM) == Calendar.PM) {
-            xm = "PM";
-        }
-
-        String rep = TaskViewModel.timeRepresentation(i, i1) + xm;
+        String rep = TaskViewModel.timeRepresentation(i, i1);
         editTextSelectTime.setText(rep);
     }
 

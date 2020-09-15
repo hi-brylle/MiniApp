@@ -1,5 +1,7 @@
 package com.example.miniapp.viewmodels;
 
+import android.annotation.SuppressLint;
+
 import com.example.miniapp.models.UserDBManager;
 
 import java.text.DateFormatSymbols;
@@ -21,11 +23,13 @@ public class TaskViewModel extends Observable {
         return day + " " + monthName + " " + year;
     }
 
+    @SuppressLint("DefaultLocale")
     public static String timeRepresentation(int hr, int min) {
-        String hour = hr > 12 ? String.valueOf(hr - 12) : String.valueOf(hr);
-        String minute = min < 10 ? "0" + min : String.valueOf(min);
+        int hour = hr % 12;
+        if (hour == 0) hour = 12;
 
-        return hour + ":" + minute + " ";
+        return String.format("%02d:%02d %s", hour, min, hr < 12 ? "am" : "pm");
+
     }
 
     public void openDB(){
