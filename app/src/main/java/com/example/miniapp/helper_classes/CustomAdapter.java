@@ -72,6 +72,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     }
 
     @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
@@ -97,14 +107,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         }
 
         public void bind(Task task) {
-
             boolean expanded = task.isExpanded();
 
             subItem.setVisibility(expanded ? View.VISIBLE : View.GONE);
 
             textViewTaskRow.setText(task.getTask());
-            textViewSubDateStart.setText("Start by: " + task.getDateStart());
-            textViewSubDateCreated.setText("Date created: " + task.getDateCreated());
+            textViewSubDateStart.setText(String.format("Start by: %s", task.getDateStart()));
+            textViewSubDateCreated.setText(String.format("Date created: %s", task.getDateCreated()));
             // TODO: add mark done?
         }
     }

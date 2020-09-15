@@ -41,7 +41,6 @@ public class HomeScreen extends AppCompatActivity implements Observer {
 
         customAdapter = new CustomAdapter(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
         customAdapter.openDB();
-        customAdapter.updateList();
 
         recViewTaskList = findViewById(R.id.recycler_view_task_list);
         recViewTaskList.setLayoutManager(linearLayoutManager);
@@ -78,6 +77,7 @@ public class HomeScreen extends AppCompatActivity implements Observer {
     protected void onStart() {
         super.onStart();
         customAdapter.openDB();
+        customAdapter.updateList();
     }
 
     @Override
