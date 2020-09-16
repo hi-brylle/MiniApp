@@ -87,8 +87,7 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         customAdapter.updateList();
 
         // filter away past tasks; remaining active tasks are only the ones given an alarm
-        // TODO: fix here, it's getting an empty list for some reason
-        homeScreenViewModel.filterActiveTasks(customAdapter.getTaskList());
+        homeScreenViewModel.filterActiveTasks();
 
         // TODO: setup alarms here for every active task
     }

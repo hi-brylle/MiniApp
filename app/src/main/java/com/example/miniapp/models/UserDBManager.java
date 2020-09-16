@@ -38,42 +38,7 @@ public class UserDBManager extends DBManager {
         }
     }
 
-    public ArrayList<Task> updateListForChanges(){
-        ArrayList<Task> taskList = new ArrayList<>();
-        Query changesQuery = QueryBuilder.select(SelectResult.all())
-                .from(DataSource.database(currentDatabase));
-
-        ListenerToken listenerToken = changesQuery.addChangeListener(new QueryChangeListener() {
-            @Override
-            public void changed(QueryChange change) {
-                for (Result result : change.getResults()) {
-                    Dictionary all = result.getDictionary(currentDatabase.getName());
-                    String task = all.getString("task");
-                    Date dateCreated = all.getDate("dateCreated");
-                    Date dateStart = all.getDate("dateStart");
-                    boolean isDone = all.getBoolean("isDone");
-
-                    Task t = new Task(task, dateCreated, dateStart);
-                    t.setDone(isDone);
-
-                    taskList.add(t);
-                    setChanged();
-                    notifyObservers();
-                }
-            }
-        });
-
-
-        try {
-            changesQuery.execute();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-
-        return taskList;
-    }
-
-    public void updateListForChangesVoid(){
+    public void listenForChanges(){
         Query changesQuery = QueryBuilder.select(SelectResult.all())
                 .from(DataSource.database(currentDatabase));
 
@@ -95,7 +60,6 @@ public class UserDBManager extends DBManager {
                 }
             }
         });
-
 
         try {
             changesQuery.execute();

@@ -40,14 +40,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     public void updateList() {
         taskList.clear();
         Log.v("MY TAG", "cleared");
-        userDBManager.updateListForChangesVoid();
+        userDBManager.listenForChanges();
         Log.v("MY TAG", "updated");
-    }
-
-    public ArrayList<Task> getTaskList(){
-        Log.v("MY TAG", "another size: " + taskList.size());
-        final ArrayList<Task> clone = (ArrayList<Task>) taskList.clone();
-        return clone;
     }
 
     @NonNull
