@@ -20,10 +20,7 @@
             </intent-filter>
         </service>
 
-        <receiver
-            android:name=".helper_classes.BroadcastHelper"
-            android:enabled="true"
-            android:exported="true" />
+        <receiver android:name=".helper_classes.CustomBroadcastReceiver"/>
 
         <activity android:name=".views.NewTask" />
         <activity android:name=".views.HomeScreen" />

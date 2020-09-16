@@ -44,5 +44,14 @@
         android:text="Save Task"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/button_test_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_save_task"
+        android:layout_centerInParent="true"
+        android:text="Test Alarm"
+        android:textAllCaps="false" />
+
 
 </RelativeLayout>

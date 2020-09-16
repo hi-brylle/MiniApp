@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Color;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -13,7 +14,6 @@ import com.example.miniapp.R;
 public class NotificationHelper extends ContextWrapper {
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     private NotificationManager notificationManager;
-    private static final int NOTIFICATION_ID = 0;
 
     public NotificationHelper(Context base) {
         super(base);
@@ -43,8 +43,11 @@ public class NotificationHelper extends ContextWrapper {
 
 
     // TODO: add pending intent to do something when notification is clicked
-    public void sendNotification(String task) {
+    public void sendNotification(int notificationID, String task) {
+        if (notificationID == 0){
+            Log.v("MY TAG", "Error in sending notification");
+        }
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder(task);
-        notificationManager.notify(NOTIFICATION_ID, notifyBuilder.build());
+        notificationManager.notify(notificationID, notifyBuilder.build());
     }
 }

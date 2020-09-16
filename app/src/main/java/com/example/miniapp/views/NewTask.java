@@ -2,8 +2,11 @@ package com.example.miniapp.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
+import com.example.miniapp.helper_classes.CustomBroadcastReceiver;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -37,6 +41,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     @NotEmpty
     private EditText editTextSelectTime;
     private Button buttonSaveTask;
+    private Button buttonTestAlarm;
 
     private TaskViewModel taskViewModel;
 
@@ -85,6 +90,27 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             }
         });
 
+        buttonTestAlarm = findViewById(R.id.button_test_alarm);
+        buttonTestAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wrappedAlarm(60, 0,"60s alive");
+                wrappedAlarm(120, 1, "120s alive");
+            }
+        });
+
+    }
+
+    public void wrappedAlarm(int seconds, int notificationID, String task){
+        Toast.makeText(NewTask.this, "Alarm Set!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(NewTask.this, CustomBroadcastReceiver.class);
+        intent.putExtra("task", task);
+        intent.putExtra("notificationID", notificationID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(NewTask.this, notificationID, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long timeAtButtonClick = System.currentTimeMillis();
+        long timeInMS = 1000 * seconds;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick + timeInMS, pendingIntent);
     }
 
     @Override
@@ -102,7 +128,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
     }
 
     @Override

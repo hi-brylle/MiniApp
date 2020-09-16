@@ -1,5 +1,7 @@
 package com.example.miniapp.models;
 
+import android.util.Log;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
@@ -24,6 +26,7 @@ public abstract class DBManager extends Observable {
         // open database or create it if it doesn't exist
         try {
             currentDatabase = new Database(dbToUseOrMake, config);
+            Log.v("MY TAG", "opened " + currentDatabase.getName());
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
@@ -32,6 +35,7 @@ public abstract class DBManager extends Observable {
     public void closeDB() {
         try {
             currentDatabase.close();
+            Log.v("MY TAG", "closed " + currentDatabase.getName());
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }

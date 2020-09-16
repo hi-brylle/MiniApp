@@ -1,5 +1,6 @@
 package com.example.miniapp.helper_classes;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,14 @@ import java.util.Observer;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements Observer {
     private UserDBManager userDBManager;
-    public ArrayList<Task> tasksList;
+    public ArrayList<Task> taskList;
 
     public CustomAdapter(UserDBManager userDBManager){
         this.userDBManager = userDBManager;
         userDBManager.addObserver(this);
+        if (taskList == null){
+            taskList = new ArrayList<>();
+        }
     }
 
     public void openDB(){
@@ -34,11 +38,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     }
 
     public void updateList() {
-        if (tasksList == null){
-            tasksList = new ArrayList<>();
-        }
+        taskList.clear();
+        Log.v("MY TAG", "cleared");
+        userDBManager.updateListForChangesVoid();
+        Log.v("MY TAG", "updated");
+    }
 
-        userDBManager.updateListForChanges(tasksList);
+    public ArrayList<Task> getTaskList(){
+        Log.v("MY TAG", "another size: " + taskList.size());
+        final ArrayList<Task> clone = (ArrayList<Task>) taskList.clone();
+        return clone;
     }
 
     @NonNull
@@ -51,7 +60,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        Task task = tasksList.get(position);
+        Task task = taskList.get(position);
 
         holder.bind(task);
 
@@ -68,7 +77,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     @Override
     public int getItemCount() {
-        return tasksList.size();
+        return taskList.size();
     }
 
     @Override
@@ -88,7 +97,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     @Override
     public void update(Observable observable, Object o) {
+        taskList.add((Task) o);
         notifyDataSetChanged();
+        Log.v("MY TAG", "CA update count: " + taskList.size());
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {

@@ -29,12 +29,17 @@ public class HomeScreen extends AppCompatActivity implements Observer {
     private Button buttonLogout;
     private FloatingActionButton fabNewTask;
 
+    private HomeScreenViewModel homeScreenViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra("userEmail");
+
+        homeScreenViewModel = new HomeScreenViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
+        homeScreenViewModel.openDB(); // TODO: careful here
 
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -77,7 +82,15 @@ public class HomeScreen extends AppCompatActivity implements Observer {
     protected void onStart() {
         super.onStart();
         customAdapter.openDB();
+
+        // updates items to be shown in the RecyclerView
         customAdapter.updateList();
+
+        // filter away past tasks; remaining active tasks are only the ones given an alarm
+        // TODO: fix here, it's getting an empty list for some reason
+        homeScreenViewModel.filterActiveTasks(customAdapter.getTaskList());
+
+        // TODO: setup alarms here for every active task
     }
 
     @Override

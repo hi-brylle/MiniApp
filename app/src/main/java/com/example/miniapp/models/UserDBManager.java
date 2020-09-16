@@ -1,5 +1,8 @@
 package com.example.miniapp.models;
 
+import android.util.Log;
+import android.widget.ArrayAdapter;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
@@ -35,10 +38,10 @@ public class UserDBManager extends DBManager {
         }
     }
 
-    public void updateListForChanges(ArrayList<Task> tasksList){
-        tasksList.clear();
+    public ArrayList<Task> updateListForChanges(){
+        ArrayList<Task> taskList = new ArrayList<>();
         Query changesQuery = QueryBuilder.select(SelectResult.all())
-                        .from(DataSource.database(currentDatabase));
+                .from(DataSource.database(currentDatabase));
 
         ListenerToken listenerToken = changesQuery.addChangeListener(new QueryChangeListener() {
             @Override
@@ -53,13 +56,46 @@ public class UserDBManager extends DBManager {
                     Task t = new Task(task, dateCreated, dateStart);
                     t.setDone(isDone);
 
-                    tasksList.add(t);
-
+                    taskList.add(t);
                     setChanged();
                     notifyObservers();
                 }
             }
         });
+
+
+        try {
+            changesQuery.execute();
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+
+        return taskList;
+    }
+
+    public void updateListForChangesVoid(){
+        Query changesQuery = QueryBuilder.select(SelectResult.all())
+                .from(DataSource.database(currentDatabase));
+
+        ListenerToken listenerToken = changesQuery.addChangeListener(new QueryChangeListener() {
+            @Override
+            public void changed(QueryChange change) {
+                for (Result result : change.getResults()) {
+                    Dictionary all = result.getDictionary(currentDatabase.getName());
+                    String task = all.getString("task");
+                    Date dateCreated = all.getDate("dateCreated");
+                    Date dateStart = all.getDate("dateStart");
+                    boolean isDone = all.getBoolean("isDone");
+
+                    Task t = new Task(task, dateCreated, dateStart);
+                    t.setDone(isDone);
+
+                    setChanged();
+                    notifyObservers(t);
+                }
+            }
+        });
+
 
         try {
             changesQuery.execute();
@@ -67,4 +103,5 @@ public class UserDBManager extends DBManager {
             e.printStackTrace();
         }
     }
+
 }
