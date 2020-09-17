@@ -39,9 +39,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     public void updateList() {
         taskList.clear();
-        Log.v("MY TAG", "cleared");
         userDBManager.listenForChanges();
-        Log.v("MY TAG", "updated");
     }
 
     @NonNull
@@ -93,7 +91,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     public void update(Observable observable, Object o) {
         taskList.add((Task) o);
         notifyDataSetChanged();
-        Log.v("MY TAG", "CA update count: " + taskList.size());
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {

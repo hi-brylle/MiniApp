@@ -94,8 +94,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         buttonTestAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                wrappedAlarm(60, 0,"60s alive");
-                wrappedAlarm(120, 1, "120s alive");
+                wrappedAlarm(60, 1,"60s alive");
+                wrappedAlarm(120, 2, "120s alive");
             }
         });
 

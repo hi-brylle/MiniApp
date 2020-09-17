@@ -5,27 +5,19 @@ import android.util.Log;
 import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
 public class HomeScreenViewModel extends Observable implements IViewModel, Observer {
     private UserDBManager userDBManager;
-    private ArrayList<Task> taskList;
-    private ArrayList<Task> activeTasks;
 
     public HomeScreenViewModel(UserDBManager userDBManager){
         this.userDBManager = userDBManager;
         userDBManager.addObserver(this);
-        if (taskList == null){
-            taskList = new ArrayList<>();
-        }
-        if (activeTasks == null){
-            activeTasks = new ArrayList<>();
-        }
     }
 
     @Override
@@ -39,8 +31,7 @@ public class HomeScreenViewModel extends Observable implements IViewModel, Obser
     }
 
     public void filterActiveTasks(){
-        activeTasks.clear();
-        userDBManager.listenForChanges();
+//        userDBManager.listenForChanges();
     }
 
     @Override
@@ -48,8 +39,14 @@ public class HomeScreenViewModel extends Observable implements IViewModel, Obser
         Task justAdded = (Task) o;
         Date now = Calendar.getInstance().getTime();
         if (justAdded.getDateStart().after(now)){
-            activeTasks.add(justAdded);
             Log.v("MY TAG", "active added: " + justAdded.getTask());
+            String task = justAdded.getTask();
+            Date dateStart = justAdded.getDateStart();
+            HashMap<String, Object> alarmPair = new HashMap<>();
+            alarmPair.put("task", task);
+            alarmPair.put("dateStart", dateStart);
+            setChanged();
+            notifyObservers(alarmPair);
         }
     }
 }
