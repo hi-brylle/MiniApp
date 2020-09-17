@@ -5,10 +5,14 @@ import android.util.Log;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
+import com.example.miniapp.helper_classes.IPublisher;
+import com.example.miniapp.helper_classes.ISubscriber;
 
-import java.util.Observable;
+import java.util.ArrayList;
 
-public abstract class DBManager extends Observable implements IDBManager {
+// TODO: remove Observable and implement own Observer pattern
+public abstract class DBManager implements IDBManager, IPublisher {
+    ArrayList<ISubscriber> listeners;
     protected Database currentDatabase;    // open one database per session (yeah?)
     protected String dbToUseOrMake;         // DB name to use or make for current session
     protected DatabaseConfiguration config;
@@ -41,5 +45,19 @@ public abstract class DBManager extends Observable implements IDBManager {
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void addSub(ISubscriber subscriber){
+        if (listeners == null){
+            listeners = new ArrayList<>();
+        }
+
+        listeners.add(subscriber);
+    }
+
+    @Override
+    public void removeSub(ISubscriber subscriber){
+        listeners.remove(subscriber);
     }
 }

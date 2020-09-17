@@ -1,6 +1,5 @@
 package com.example.miniapp.helper_classes;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +13,15 @@ import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.HashMap;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements Observer {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements ISubscriber {
     private UserDBManager userDBManager;
     public ArrayList<Task> taskList;
 
     public CustomAdapter(UserDBManager userDBManager){
         this.userDBManager = userDBManager;
-        userDBManager.addObserver(this);
+        this.userDBManager.addSub(this);
         if (taskList == null){
             taskList = new ArrayList<>();
         }
@@ -88,12 +86,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     }
 
     @Override
-    public void update(Observable observable, Object o) {
-        taskList.add((Task) o);
+    public void update(Task t) {
+        taskList.add(t);
         notifyDataSetChanged();
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void update(HashMap<String, Object> alarmPair) {
+
+    }
+
+    public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTaskRow;
         public TextView textViewSubDateStart;
         private TextView textViewSubDateCreated;

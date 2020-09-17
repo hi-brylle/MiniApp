@@ -2,7 +2,8 @@ package com.example.miniapp.viewmodels;
 
 import android.util.Log;
 
-import com.example.miniapp.models.IUserDBManager;
+import com.example.miniapp.helper_classes.IPublisher;
+import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
@@ -10,15 +11,18 @@ import java.util.Calendar;
 import java.util.Date;
 
 import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
 
-public class HomeScreenViewModel extends Observable implements IViewModel, Observer {
+public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher {
     private UserDBManager dbManager;
+    ISubscriber homeScreenView;
 
-    public HomeScreenViewModel(UserDBManager dbManager){
+    public HomeScreenViewModel(ISubscriber homeScreenView,UserDBManager dbManager){
         this.dbManager = dbManager;
-        dbManager.addObserver(this);
+        // subscribe to changes in the DB
+        this.dbManager.addSub(this);
+
+        // publish changes to HomeScreenActivity
+        this.addSub(homeScreenView);
     }
 
     @Override
@@ -35,19 +39,45 @@ public class HomeScreenViewModel extends Observable implements IViewModel, Obser
 //        userDBManager.listenForChanges();
     }
 
+
+
     @Override
-    public void update(Observable observable, Object o) {
-        Task justAdded = (Task) o;
+    public void update(Task t) {
         Date now = Calendar.getInstance().getTime();
-        if (justAdded.getDateStart().after(now)){
-            Log.v("MY TAG", "active added: " + justAdded.getTask());
-            String task = justAdded.getTask();
-            Date dateStart = justAdded.getDateStart();
+        if (t.getDateStart().after(now)){
+            Log.v("MY TAG", "active added: " + t.getTask());
+            String task = t.getTask();
+            Date dateStart = t.getDateStart();
             HashMap<String, Object> alarmPair = new HashMap<>();
             alarmPair.put("task", task);
             alarmPair.put("dateStart", dateStart);
-            setChanged();
-            notifyObservers(alarmPair);
+
+            notifySubs(alarmPair);
         }
+    }
+
+    @Override
+    public void update(HashMap<String, Object> alarmPair) {
+
+    }
+
+    @Override
+    public void addSub(ISubscriber subscriber) {
+        homeScreenView = subscriber;
+    }
+
+    @Override
+    public void removeSub(ISubscriber subscriber) {
+
+    }
+
+    @Override
+    public void notifySubs(Task t) {
+
+    }
+
+    @Override
+    public void notifySubs(HashMap<String, Object> alarmPair) {
+        homeScreenView.update(alarmPair);
     }
 }

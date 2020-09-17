@@ -12,24 +12,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
 import com.example.miniapp.helper_classes.CustomBroadcastReceiver;
-import com.example.miniapp.models.IUserDBManager;
+import com.example.miniapp.helper_classes.ISubscriber;
+import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
-import com.example.miniapp.viewmodels.IViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Observable;
-import java.util.Observer;
 
-public class HomeScreen extends AppCompatActivity implements Observer {
+public class HomeScreen extends AppCompatActivity implements ISubscriber {
     private RecyclerView recViewTaskList;
     private LinearLayoutManager linearLayoutManager;
     private CustomAdapter customAdapter;
@@ -38,7 +35,6 @@ public class HomeScreen extends AppCompatActivity implements Observer {
     private FloatingActionButton fabNewTask;
 
     private HomeScreenViewModel homeScreenViewModel;
-    private UserDBManager sharedDBManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +42,10 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra("userEmail");
-        sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
+        UserDBManager sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
 
-        homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
+        homeScreenViewModel = new HomeScreenViewModel(this, sharedDBManager);
         homeScreenViewModel.openDB();
-        homeScreenViewModel.addObserver(this);
 
         customAdapter = new CustomAdapter(sharedDBManager);
         customAdapter.openDB();
@@ -120,16 +115,13 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         exitApp();
     }
 
-    private void exitApp(){
-        Intent intent = new Intent(HomeScreen.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("EXIT", true);
-        startActivity(intent);
+    @Override
+    public void update(Task t) {
+
     }
 
     @Override
-    public void update(Observable observable, Object o) {
-        HashMap<String, Object> alarmPair = (HashMap<String, Object>) o;
+    public void update(HashMap<String, Object> alarmPair) {
         Date dateStart = (Date) alarmPair.get("dateStart");
         String task = (String) alarmPair.get("task");
         Log.v("MY TAG", "date start: " + dateStart);
@@ -142,6 +134,13 @@ public class HomeScreen extends AppCompatActivity implements Observer {
 
         // TODO: record these before setting an alarm, for cancel purposes
         setAlarm(task, unixTimestamp, notificationID);
+    }
+
+    private void exitApp(){
+        Intent intent = new Intent(HomeScreen.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("EXIT", true);
+        startActivity(intent);
     }
 
     public void setAlarm(String task, long unixTimestamp, int notificationID){
