@@ -95,7 +95,7 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber {
         customAdapter.updateList();
 
         // filter away past tasks; remaining active tasks are only the ones given an alarm
-        homeScreenViewModel.filterActiveTasks();
+        // homeScreenViewModel.filterActiveTasks();
     }
 
     @Override
@@ -134,6 +134,11 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber {
 
         // TODO: record these before setting an alarm, for cancel purposes
         setAlarm(task, unixTimestamp, notificationID);
+    }
+
+    @Override
+    public void update(int loginStatus) {
+
     }
 
     private void exitApp(){

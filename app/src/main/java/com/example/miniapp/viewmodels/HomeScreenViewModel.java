@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher {
     private UserDBManager dbManager;
-    ISubscriber homeScreenView;
+    private ISubscriber homeScreenView;
 
     public HomeScreenViewModel(ISubscriber homeScreenView,UserDBManager dbManager){
         this.dbManager = dbManager;
@@ -34,12 +34,6 @@ public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher 
     public void closeDB() {
         dbManager.closeDB();
     }
-
-    public void filterActiveTasks(){
-//        userDBManager.listenForChanges();
-    }
-
-
 
     @Override
     public void update(Task t) {
@@ -62,6 +56,11 @@ public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher 
     }
 
     @Override
+    public void update(int loginStatus) {
+
+    }
+
+    @Override
     public void addSub(ISubscriber subscriber) {
         homeScreenView = subscriber;
     }
@@ -79,5 +78,10 @@ public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher 
     @Override
     public void notifySubs(HashMap<String, Object> alarmPair) {
         homeScreenView.update(alarmPair);
+    }
+
+    @Override
+    public void notifySubs(int loginStatus) {
+
     }
 }

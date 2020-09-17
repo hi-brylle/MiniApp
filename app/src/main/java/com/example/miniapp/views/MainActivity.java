@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
+import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.models.ILoginDBManager;
 import com.example.miniapp.models.LoginDBManager;
+import com.example.miniapp.models.Task;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
@@ -24,11 +26,12 @@ import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, Observer {
+public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, ISubscriber {
 
     // SharedPreferences used to track login status of users for auto-login checking
     private static final String LOGGED_IN_USERNAME = "loggedInUser";
@@ -57,8 +60,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         editTextPassword = findViewById(R.id.edit_text_password);
         buttonSignIn = findViewById(R.id.button_sign_in);
 
-        loginViewModel = new LoginViewModel(new LoginDBManager(new DatabaseConfiguration(getApplicationContext())));
-        loginViewModel.addObserver(this);
+        loginViewModel = new LoginViewModel(this, new LoginDBManager(new DatabaseConfiguration(getApplicationContext())));
 
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,16 +133,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         }
     }
 
-    @Override
-    public void update(Observable observable, Object o) {
-        // the following integers are used for the login status
-        // 0: email is not registered
-        // 1: email is registered, password is correct
-        // -1: email is registered, password is incorrect
-        int loginStatus = (int) o;
-        handleLoginStatus(loginStatus);
-    }
-
     private void handleLoginStatus(int loginStatus) {
         switch (loginStatus){
             // register email
@@ -196,5 +188,20 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void update(Task t) {
+
+    }
+
+    @Override
+    public void update(HashMap<String, Object> alarmPair) {
+
+    }
+
+    @Override
+    public void update(int loginStatus) {
+        handleLoginStatus(loginStatus);
     }
 }

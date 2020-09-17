@@ -7,4 +7,5 @@ import java.util.HashMap;
 public interface ISubscriber {
     void update(Task t);
     void update(HashMap<String, Object> alarmPair);
+    void update(int loginStatus);
 }

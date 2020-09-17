@@ -79,4 +79,9 @@ public class UserDBManager extends DBManager implements IUserDBManager {
     public void notifySubs(HashMap<String, Object> alarmPair) {
 
     }
+
+    @Override
+    public void notifySubs(int loginStatus) {
+
+    }
 }

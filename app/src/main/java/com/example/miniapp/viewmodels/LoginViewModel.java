@@ -2,15 +2,22 @@ package com.example.miniapp.viewmodels;
 
 import android.util.Log;
 
+import com.example.miniapp.helper_classes.IPublisher;
+import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.models.ILoginDBManager;
+import com.example.miniapp.models.Task;
 
-import java.util.Observable;
+import java.util.HashMap;
 
-public class LoginViewModel extends Observable implements IViewModel {
+public class LoginViewModel implements IViewModel, IPublisher {
     private ILoginDBManager dbManager;
+    private ISubscriber loginView;
 
-    public LoginViewModel(ILoginDBManager dbManager){
+    public LoginViewModel(ISubscriber loginView, ILoginDBManager dbManager){
         this.dbManager = dbManager;
+
+        // publish changes to MainActivity (login)
+        this.addSub(loginView);
     }
 
     @Override
@@ -37,19 +44,42 @@ public class LoginViewModel extends Observable implements IViewModel {
         // 1: email is registered, password is correct
         // -1: email is registered, password is incorrect
         if (!isEmailRegistered) {
-            setChanged();
-            notifyObservers(0);
+            notifySubs(0);
         } else {
-            setChanged();
             if (isPasswordCorrect) {
-                notifyObservers(1);
+                notifySubs(1);
             } else {
-                notifyObservers(-1);
+                notifySubs(-1);
             }
         }
     }
 
     public void register(String email, String password) {
         dbManager.register(email, password);
+    }
+
+    @Override
+    public void addSub(ISubscriber subscriber) {
+        loginView = subscriber;
+    }
+
+    @Override
+    public void removeSub(ISubscriber subscriber) {
+
+    }
+
+    @Override
+    public void notifySubs(Task t) {
+
+    }
+
+    @Override
+    public void notifySubs(HashMap<String, Object> alarmPair) {
+
+    }
+
+    @Override
+    public void notifySubs(int loginStatus) {
+        loginView.update(loginStatus);
     }
 }

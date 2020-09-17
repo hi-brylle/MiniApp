@@ -128,6 +128,11 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
 
     }
 
+    @Override
+    public void notifySubs(int loginStatus) {
+
+    }
+
     private class EmailRegisteredRunnable implements Runnable {
         private String email;
         private boolean isEmailRegistered;

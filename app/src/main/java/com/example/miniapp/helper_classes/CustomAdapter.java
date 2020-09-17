@@ -96,6 +96,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     }
 
+    @Override
+    public void update(int loginStatus) {
+
+    }
+
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTaskRow;
         public TextView textViewSubDateStart;
