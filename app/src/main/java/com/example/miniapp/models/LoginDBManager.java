@@ -14,13 +14,14 @@ import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 import com.example.miniapp.helper_classes.PasswordHash;
 
-public class LoginDBManager extends DBManager {
+public class LoginDBManager extends DBManager implements ILoginDBManager{
     public LoginDBManager(DatabaseConfiguration config){
         super();
         this.config = config;
         dbToUseOrMake = "users_login";
     }
 
+    @Override
     public void register(String email, String password) {
         MutableDocument doc = new MutableDocument();
         doc.setString("email", email);
@@ -33,6 +34,7 @@ public class LoginDBManager extends DBManager {
         }
     }
 
+    @Override
     public boolean isEmailRegistered(String email) {
        EmailRegisteredRunnable emailRegisteredRunnable =  new EmailRegisteredRunnable(email);
        Thread emailThread = new Thread(emailRegisteredRunnable);
@@ -45,7 +47,8 @@ public class LoginDBManager extends DBManager {
         return emailRegisteredRunnable.isRegistered();
     }
 
-    public boolean verifyPassword(String email, String password) {
+    @Override
+    public boolean verifyCredentials(String email, String password) {
         VerifyPasswordRunnable verifyPasswordRunnable = new VerifyPasswordRunnable(email, password);
         Thread passwordThread = new Thread(verifyPasswordRunnable);
         passwordThread.start();

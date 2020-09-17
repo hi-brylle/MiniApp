@@ -18,8 +18,10 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
 import com.example.miniapp.helper_classes.CustomBroadcastReceiver;
+import com.example.miniapp.models.IUserDBManager;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
+import com.example.miniapp.viewmodels.IViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;

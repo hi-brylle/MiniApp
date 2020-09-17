@@ -8,8 +8,8 @@ import com.couchbase.lite.DatabaseConfiguration;
 
 import java.util.Observable;
 
-public abstract class DBManager extends Observable {
-    protected  Database currentDatabase;    // open one database per session (yeah?)
+public abstract class DBManager extends Observable implements IDBManager {
+    protected Database currentDatabase;    // open one database per session (yeah?)
     protected String dbToUseOrMake;         // DB name to use or make for current session
     protected DatabaseConfiguration config;
 
@@ -22,6 +22,7 @@ public abstract class DBManager extends Observable {
         this.config = config;
     }
 
+    @Override
     public void openDB() {
         // open database or create it if it doesn't exist
         try {
@@ -32,6 +33,7 @@ public abstract class DBManager extends Observable {
         }
     }
 
+    @Override
     public void closeDB() {
         try {
             currentDatabase.close();

@@ -15,11 +15,12 @@ import com.couchbase.lite.SelectResult;
 
 import java.util.Date;
 
-public class UserDBManager extends DBManager {
+public class UserDBManager extends DBManager implements IUserDBManager {
     public UserDBManager(String dbName, DatabaseConfiguration config){
         super(dbName, config);
     }
 
+    @Override
     public void create(String task, Date dateCreated, Date dateStart){
         MutableDocument doc = new MutableDocument();
         doc.setString("task", task);
@@ -34,6 +35,7 @@ public class UserDBManager extends DBManager {
         }
     }
 
+    @Override
     public void listenForChanges(){
         Query changesQuery = QueryBuilder.select(SelectResult.all())
                 .from(DataSource.database(currentDatabase));

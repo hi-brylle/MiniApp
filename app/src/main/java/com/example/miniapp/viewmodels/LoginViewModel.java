@@ -2,15 +2,15 @@ package com.example.miniapp.viewmodels;
 
 import android.util.Log;
 
-import com.example.miniapp.models.LoginDBManager;
+import com.example.miniapp.models.ILoginDBManager;
 
 import java.util.Observable;
 
 public class LoginViewModel extends Observable implements IViewModel {
-    private LoginDBManager dbManager;
+    private ILoginDBManager dbManager;
 
-    public LoginViewModel(LoginDBManager dbM){
-        dbManager = dbM;
+    public LoginViewModel(ILoginDBManager dbManager){
+        this.dbManager = dbManager;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class LoginViewModel extends Observable implements IViewModel {
         Boolean isPasswordCorrect = null;
         Log.v("MY TAG", "email reg: " + isEmailRegistered);
         if (isEmailRegistered){
-            isPasswordCorrect = dbManager.verifyPassword(email, password);
+            isPasswordCorrect = dbManager.verifyCredentials(email, password);
             Log.v("MY TAG", "password correct: " + isPasswordCorrect);
         }
 

@@ -2,6 +2,7 @@ package com.example.miniapp.viewmodels;
 
 import android.util.Log;
 
+import com.example.miniapp.models.IUserDBManager;
 import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
@@ -13,21 +14,21 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class HomeScreenViewModel extends Observable implements IViewModel, Observer {
-    private UserDBManager userDBManager;
+    private UserDBManager dbManager;
 
-    public HomeScreenViewModel(UserDBManager userDBManager){
-        this.userDBManager = userDBManager;
-        userDBManager.addObserver(this);
+    public HomeScreenViewModel(UserDBManager dbManager){
+        this.dbManager = dbManager;
+        dbManager.addObserver(this);
     }
 
     @Override
     public void openDB() {
-        userDBManager.openDB();
+        dbManager.openDB();
     }
 
     @Override
     public void closeDB() {
-        userDBManager.closeDB();
+        dbManager.closeDB();
     }
 
     public void filterActiveTasks(){

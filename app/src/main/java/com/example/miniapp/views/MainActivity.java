@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
+import com.example.miniapp.models.ILoginDBManager;
 import com.example.miniapp.models.LoginDBManager;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
