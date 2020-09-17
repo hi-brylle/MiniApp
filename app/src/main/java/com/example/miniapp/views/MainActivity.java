@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Password(scheme = Password.Scheme.ANY, message = "Password must be at least 6 characters")
     private EditText editTextPassword;
     private Button buttonSignIn;
-    private Button buttonSignInGoogle;
-    private Button buttonSignInFacebook;
 
     private LoginViewModel loginViewModel;
 
@@ -57,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
         buttonSignIn = findViewById(R.id.button_sign_in);
-        buttonSignInGoogle = findViewById(R.id.button_sign_in_google);
-        buttonSignInFacebook = findViewById(R.id.button_sign_in_facebook);
 
         loginViewModel = new LoginViewModel(new LoginDBManager(new DatabaseConfiguration(getApplicationContext())));
         loginViewModel.addObserver(this);
@@ -67,20 +63,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             @Override
             public void onClick(View view) {
                 validator.validate();
-            }
-        });
-
-        buttonSignInGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Activity for Google log in...", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        buttonSignInFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Activity for FB log in...", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -93,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             // if sharedpref has been emptied (indicating logging out), continue this activity
             return;
         } else {
-            Log.v("MY TAG", "called from sharedprefsss");
+            Log.v("MY TAG", "auto login");
             login(emailFromSP);
         }
     }

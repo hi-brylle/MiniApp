@@ -32,31 +32,4 @@
         android:text="Sign in"
         android:textAllCaps="false"/>
 
-    <TextView
-        android:id="@+id/text_view_or"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button_sign_in"
-        android:layout_centerInParent="true"
-        android:text="OR"
-        android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/button_sign_in_google"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_or"
-        android:layout_centerInParent="true"
-        android:text="Sign in using Google"
-        android:textAllCaps="false"/>
-
-    <Button
-        android:id="@+id/button_sign_in_facebook"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_sign_in_google"
-        android:layout_centerInParent="true"
-        android:text="Sign in using Facebook"
-        android:textAllCaps="false"/>
-
 </RelativeLayout>

@@ -41,6 +41,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     @NotEmpty
     private EditText editTextSelectTime;
     private Button buttonSaveTask;
+
+    // TODO: remove block later
     private Button buttonTestAlarm;
 
     private TaskViewModel taskViewModel;
@@ -90,6 +92,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             }
         });
 
+        // TODO: remove block later
         buttonTestAlarm = findViewById(R.id.button_test_alarm);
         buttonTestAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +104,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     }
 
+    // TODO: remove block later
     public void wrappedAlarm(int seconds, int notificationID, String task){
         Toast.makeText(NewTask.this, "Alarm Set!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(NewTask.this, CustomBroadcastReceiver.class);

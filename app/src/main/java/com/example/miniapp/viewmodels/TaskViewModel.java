@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.Observable;
 
 public class TaskViewModel extends Observable {
-    private UserDBManager dbManager;
+    private UserDBManager userDBManager;
 
     public TaskViewModel(UserDBManager dbM){
-        dbManager = dbM;
+        userDBManager = dbM;
     }
 
     public static String  dateRepresentation(int year, int month, int day) {
@@ -33,15 +33,15 @@ public class TaskViewModel extends Observable {
     }
 
     public void openDB(){
-        dbManager.openDB();
+        userDBManager.openDB();
     }
 
     public void closeDB(){
-        dbManager.closeDB();
+        userDBManager.closeDB();
     }
 
     public void submit(String task, Date created, Date start){
-        dbManager.create(task, created, start);
+        userDBManager.create(task, created, start);
     }
 
     public boolean isValid(Date dateTimeSelected) {

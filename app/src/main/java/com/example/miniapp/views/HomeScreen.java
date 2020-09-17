@@ -44,19 +44,17 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra("userEmail");
-
         sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
-        //homeScreenViewModel = new HomeScreenViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
+
         homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
-        homeScreenViewModel.openDB(); // TODO: careful here
+        homeScreenViewModel.openDB();
         homeScreenViewModel.addObserver(this);
+
+        customAdapter = new CustomAdapter(sharedDBManager);
+        customAdapter.openDB();
 
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        //customAdapter = new CustomAdapter(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
-        customAdapter = new CustomAdapter(sharedDBManager);
-        customAdapter.openDB();
 
         recViewTaskList = findViewById(R.id.recycler_view_task_list);
         recViewTaskList.setLayoutManager(linearLayoutManager);
@@ -84,6 +82,8 @@ public class HomeScreen extends AppCompatActivity implements Observer {
                 editor.apply();
 
                 exitApp();
+
+                // TODO: remove all alarms
             }
         });
 
@@ -135,9 +135,10 @@ public class HomeScreen extends AppCompatActivity implements Observer {
 
         assert dateStart != null;
         long unixTimestamp = dateStart.getTime();
+        // notification ID identifies the pending intent
         int notificationID = (int) (unixTimestamp / 1000);
-        Log.v("MY TAG", "notif ID " + notificationID);
 
+        // TODO: record these before setting an alarm, for cancel purposes
         setAlarm(task, unixTimestamp, notificationID);
     }
 
@@ -148,6 +149,6 @@ public class HomeScreen extends AppCompatActivity implements Observer {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), notificationID, intent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, unixTimestamp, pendingIntent);
-        Log.v("MY TAG", "alarm set for " + task + " at " + unixTimestamp + " compare " + System.currentTimeMillis());
+        Log.v("MY TAG", "alarm set for " + task + " at " + unixTimestamp);
     }
 }

@@ -1,8 +1,5 @@
 package com.example.miniapp.models;
 
-import android.util.Log;
-import android.widget.ArrayAdapter;
-
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
@@ -16,7 +13,6 @@ import com.couchbase.lite.QueryChangeListener;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.SelectResult;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class UserDBManager extends DBManager {
