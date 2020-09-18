@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.miniapp.helper_classes.IPublisher;
 import com.example.miniapp.helper_classes.ISubscriber;
+import com.example.miniapp.models.IUserDBManager;
 import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
@@ -13,10 +14,10 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher {
-    private UserDBManager dbManager;
+    private IUserDBManager dbManager;
     private ISubscriber homeScreenView;
 
-    public HomeScreenViewModel(ISubscriber homeScreenView,UserDBManager dbManager){
+    public HomeScreenViewModel(ISubscriber homeScreenView, IUserDBManager dbManager){
         this.dbManager = dbManager;
         // subscribe to changes in the DB
         this.dbManager.addSub(this);

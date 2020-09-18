@@ -5,13 +5,11 @@ import android.util.Log;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
-import com.example.miniapp.helper_classes.IPublisher;
 import com.example.miniapp.helper_classes.ISubscriber;
 
 import java.util.ArrayList;
 
-// TODO: remove Observable and implement own Observer pattern
-public abstract class DBManager implements IDBManager, IPublisher {
+public abstract class DBManager implements IDBManager {
     ArrayList<ISubscriber> listeners;
     protected Database currentDatabase;    // open one database per session (yeah?)
     protected String dbToUseOrMake;         // DB name to use or make for current session

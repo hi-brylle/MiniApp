@@ -1,6 +1,8 @@
 package com.example.miniapp.models;
 
-public interface IDBManager {
+import com.example.miniapp.helper_classes.IPublisher;
+
+public interface IDBManager extends IPublisher {
     void openDB();
     void closeDB();
 }
