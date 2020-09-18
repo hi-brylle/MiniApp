@@ -12,7 +12,6 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.example.miniapp.R;
-import com.example.miniapp.views.HomeScreen;
 import com.example.miniapp.views.MainActivity;
 
 public class NotificationHelper extends ContextWrapper {

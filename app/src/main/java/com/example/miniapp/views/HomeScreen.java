@@ -1,11 +1,13 @@
 package com.example.miniapp.views;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -72,18 +74,39 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber {
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences userLoginTrackerSharedPref = getSharedPreferences("loggedInUser", MODE_PRIVATE);
-                SharedPreferences.Editor editor = userLoginTrackerSharedPref.edit();
-                editor.putString("email", "");
-                editor.putString("password", "");
-                editor.apply();
-
-                exitApp();
-
-                // TODO: remove all alarms
+                showLogoutDialog();
             }
         });
 
+    }
+
+    private void showLogoutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Logout")
+                .setMessage("Are you sure you want to logout? All alarms under your account will be cancelled.")
+                .setCancelable(true)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setPositiveButton("Log out", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences userLoginTrackerSharedPref = getSharedPreferences("loggedInUser", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = userLoginTrackerSharedPref.edit();
+                        editor.putString("email", "");
+                        editor.putString("password", "");
+                        editor.apply();
+
+                        exitApp();
+
+                        // TODO: remove all alarms for this user
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -93,9 +116,6 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber {
 
         // updates items to be shown in the RecyclerView
         customAdapter.updateList();
-
-        // filter away past tasks; remaining active tasks are only the ones given an alarm
-        // homeScreenViewModel.filterActiveTasks();
     }
 
     @Override

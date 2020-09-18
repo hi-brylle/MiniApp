@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.ISubscriber;
-import com.example.miniapp.models.ILoginDBManager;
 import com.example.miniapp.models.LoginDBManager;
 import com.example.miniapp.models.Task;
 import com.example.miniapp.viewmodels.LoginViewModel;
@@ -28,8 +27,6 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, ISubscriber {
 
