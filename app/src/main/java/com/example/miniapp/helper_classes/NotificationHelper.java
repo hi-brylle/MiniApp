@@ -2,14 +2,18 @@ package com.example.miniapp.helper_classes;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
 import com.example.miniapp.R;
+import com.example.miniapp.views.HomeScreen;
+import com.example.miniapp.views.MainActivity;
 
 public class NotificationHelper extends ContextWrapper {
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
@@ -33,9 +37,13 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     private NotificationCompat.Builder getNotificationBuilder(String task){
+        Intent openAppIntent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, openAppIntent, PendingIntent.FLAG_ONE_SHOT);
+
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("To-do:")
                 .setContentText(task)
+                .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_alarm_clock);
 
         return notifyBuilder;
