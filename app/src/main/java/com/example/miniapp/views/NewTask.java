@@ -28,10 +28,10 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
-public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Observer, Validator.ValidationListener {
+public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
+                                                            TimePickerDialog.OnTimeSetListener,
+                                                            Validator.ValidationListener {
 
     private Validator validator;
     @NotEmpty
@@ -66,7 +66,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         String dbName = getIntent().getStringExtra("userEmail");
         taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
-        taskViewModel.addObserver(this);
 
         editTextSelectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,12 +218,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         finish();
     }
 
-
-
-    @Override
-    public void update(Observable observable, Object o) {
-
-    }
 
 
 }

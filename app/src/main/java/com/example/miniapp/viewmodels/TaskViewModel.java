@@ -2,18 +2,17 @@ package com.example.miniapp.viewmodels;
 
 import android.annotation.SuppressLint;
 
-import com.example.miniapp.models.UserDBManager;
+import com.example.miniapp.models.IUserDBManager;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Observable;
 
-public class TaskViewModel extends Observable {
-    private UserDBManager userDBManager;
+public class TaskViewModel {
+    private IUserDBManager dbManager;
 
-    public TaskViewModel(UserDBManager dbM){
-        userDBManager = dbM;
+    public TaskViewModel(IUserDBManager dbManager){
+        this.dbManager = dbManager;
     }
 
     public static String  dateRepresentation(int year, int month, int day) {
@@ -33,15 +32,15 @@ public class TaskViewModel extends Observable {
     }
 
     public void openDB(){
-        userDBManager.openDB();
+        dbManager.openDB();
     }
 
     public void closeDB(){
-        userDBManager.closeDB();
+        dbManager.closeDB();
     }
 
     public void submit(String task, Date created, Date start){
-        userDBManager.create(task, created, start);
+        dbManager.create(task, created, start);
     }
 
     public boolean isValid(Date dateTimeSelected) {
