@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void checkSharedPrefs() {
-        userLoginTrackerSharedPref = getSharedPreferences(LOGGED_IN_USERNAME, MODE_PRIVATE);
+        userLoginTrackerSharedPref = getSharedPreferences(getString(R.string.logged_in_username), MODE_PRIVATE);
         emailFromSP = userLoginTrackerSharedPref.getString("email", "");
         String password = userLoginTrackerSharedPref.getString("password", "");
         if (emailFromSP.equals("") || password.equals("")){
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void setAlwaysLoggedIn(){
-        userLoginTrackerSharedPref = getSharedPreferences(LOGGED_IN_USERNAME, MODE_PRIVATE);
+        userLoginTrackerSharedPref = getSharedPreferences(getString(R.string.logged_in_username), MODE_PRIVATE);
         SharedPreferences.Editor editor = userLoginTrackerSharedPref.edit();
         editor.putString("email", String.valueOf(editTextEmail.getText()));
         editor.putString("password", String.valueOf(editTextPassword.getText())); // IS THIS SECURE?? NO, IT'S NOT

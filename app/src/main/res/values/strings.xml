@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MiniApp</string>
+    <string name="logged_in_username">loggedInUser</string>
 </resources>

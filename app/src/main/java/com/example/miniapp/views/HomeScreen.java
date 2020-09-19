@@ -82,7 +82,7 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
     private void showLogoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Logout")
-                .setMessage("Are you sure you want to logout? All alarms under your account will be cancelled.")
+                .setMessage("Are you sure you want to logout? All alarms under your account will be cancelled (LOL not really).")
                 .setCancelable(true)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -101,6 +101,7 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
 
                         exitApp();
 
+                        // TODO: cancel notifications
                         // TODO: remove all alarms for this user
                     }
                 });
