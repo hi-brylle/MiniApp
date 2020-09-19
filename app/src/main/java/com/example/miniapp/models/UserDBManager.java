@@ -15,7 +15,6 @@ import com.couchbase.lite.SelectResult;
 import com.example.miniapp.helper_classes.ISubscriber;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class UserDBManager extends DBManager implements IUserDBManager {
     public UserDBManager(String dbName, DatabaseConfiguration config){
@@ -73,15 +72,5 @@ public class UserDBManager extends DBManager implements IUserDBManager {
         for(ISubscriber subscriber : listeners){
             subscriber.update(t);
         }
-    }
-
-    @Override
-    public void notifySubs(HashMap<String, Object> alarmPair) {
-
-    }
-
-    @Override
-    public void notifySubs(int loginStatus) {
-
     }
 }

@@ -5,15 +5,12 @@ import android.util.Log;
 import com.example.miniapp.helper_classes.IPublisher;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.models.ILoginDBManager;
-import com.example.miniapp.models.Task;
 
-import java.util.HashMap;
-
-public class LoginViewModel implements IViewModel, IPublisher {
+public class LoginViewModel implements IViewModel, IPublisher<Integer> {
     private ILoginDBManager dbManager;
     private ISubscriber loginView;
 
-    public LoginViewModel(ISubscriber loginView, ILoginDBManager dbManager){
+    public LoginViewModel(ISubscriber<Integer> loginView, ILoginDBManager dbManager){
         this.dbManager = dbManager;
 
         // publish changes to MainActivity (login)
@@ -69,17 +66,8 @@ public class LoginViewModel implements IViewModel, IPublisher {
     }
 
     @Override
-    public void notifySubs(Task t) {
-
-    }
-
-    @Override
-    public void notifySubs(HashMap<String, Object> alarmPair) {
-
-    }
-
-    @Override
-    public void notifySubs(int loginStatus) {
+    public void notifySubs(Integer loginStatus) {
         loginView.update(loginStatus);
     }
+
 }

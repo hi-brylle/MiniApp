@@ -20,7 +20,6 @@ import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
 import com.example.miniapp.helper_classes.CustomBroadcastReceiver;
 import com.example.miniapp.helper_classes.ISubscriber;
-import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,7 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Date;
 import java.util.HashMap;
 
-public class HomeScreen extends AppCompatActivity implements ISubscriber {
+public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap<String, Object>> {
     private RecyclerView recViewTaskList;
     private LinearLayoutManager linearLayoutManager;
     private CustomAdapter customAdapter;
@@ -136,11 +135,6 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber {
     }
 
     @Override
-    public void update(Task t) {
-
-    }
-
-    @Override
     public void update(HashMap<String, Object> alarmPair) {
         Date dateStart = (Date) alarmPair.get("dateStart");
         String task = (String) alarmPair.get("task");
@@ -154,11 +148,6 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber {
 
         // TODO: record these before setting an alarm, for cancel purposes
         setAlarm(task, unixTimestamp, notificationID);
-    }
-
-    @Override
-    public void update(int loginStatus) {
-
     }
 
     private void exitApp(){

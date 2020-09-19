@@ -14,8 +14,6 @@ import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 import com.example.miniapp.helper_classes.PasswordHash;
 
-import java.util.HashMap;
-
 public class LoginDBManager extends DBManager implements ILoginDBManager {
     public LoginDBManager(DatabaseConfiguration config){
         super();
@@ -116,21 +114,6 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
         }
 
         return isPasswordCorrect;
-    }
-
-    @Override
-    public void notifySubs(Task t) {
-
-    }
-
-    @Override
-    public void notifySubs(HashMap<String, Object> alarmPair) {
-
-    }
-
-    @Override
-    public void notifySubs(int loginStatus) {
-
     }
 
     private class EmailRegisteredRunnable implements Runnable {

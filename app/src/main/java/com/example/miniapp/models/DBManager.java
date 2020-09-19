@@ -45,7 +45,6 @@ public abstract class DBManager implements IDBManager {
         }
     }
 
-    @Override
     public void addSub(ISubscriber subscriber){
         if (listeners == null){
             listeners = new ArrayList<>();
@@ -54,7 +53,6 @@ public abstract class DBManager implements IDBManager {
         listeners.add(subscriber);
     }
 
-    @Override
     public void removeSub(ISubscriber subscriber){
         listeners.remove(subscriber);
     }

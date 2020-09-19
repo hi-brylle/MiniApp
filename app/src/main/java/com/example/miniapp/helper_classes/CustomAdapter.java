@@ -13,9 +13,8 @@ import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements ISubscriber {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements ISubscriber<Task> {
     private UserDBManager userDBManager;
     public ArrayList<Task> taskList;
 
@@ -89,16 +88,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     public void update(Task t) {
         taskList.add(t);
         notifyDataSetChanged();
-    }
-
-    @Override
-    public void update(HashMap<String, Object> alarmPair) {
-
-    }
-
-    @Override
-    public void update(int loginStatus) {
-
     }
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {

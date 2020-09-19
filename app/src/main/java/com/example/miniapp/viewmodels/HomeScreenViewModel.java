@@ -6,14 +6,13 @@ import com.example.miniapp.helper_classes.IPublisher;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.models.IUserDBManager;
 import com.example.miniapp.models.Task;
-import com.example.miniapp.models.UserDBManager;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import java.util.HashMap;
 
-public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher {
+public class HomeScreenViewModel implements IViewModel, ISubscriber<Task>, IPublisher<HashMap<String, Object>> {
     private IUserDBManager dbManager;
     private ISubscriber homeScreenView;
 
@@ -52,16 +51,6 @@ public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher 
     }
 
     @Override
-    public void update(HashMap<String, Object> alarmPair) {
-
-    }
-
-    @Override
-    public void update(int loginStatus) {
-
-    }
-
-    @Override
     public void addSub(ISubscriber subscriber) {
         homeScreenView = subscriber;
     }
@@ -72,17 +61,8 @@ public class HomeScreenViewModel implements IViewModel, ISubscriber, IPublisher 
     }
 
     @Override
-    public void notifySubs(Task t) {
-
-    }
-
-    @Override
     public void notifySubs(HashMap<String, Object> alarmPair) {
         homeScreenView.update(alarmPair);
     }
 
-    @Override
-    public void notifySubs(int loginStatus) {
-
-    }
 }
