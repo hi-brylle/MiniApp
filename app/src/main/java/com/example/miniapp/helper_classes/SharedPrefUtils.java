@@ -32,4 +32,11 @@ public class SharedPrefUtils {
         editor.putString("password", password); // IS THIS SECURE?? NO, IT'S NOT
         editor.apply();
     }
+
+    public void clearLogin() {
+        SharedPreferences.Editor editor = userLoginTrackerSharedPref.edit();
+        editor.putString("email", "");
+        editor.putString("password", "");
+        editor.apply();
+    }
 }

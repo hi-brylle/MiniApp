@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +16,7 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
 import com.example.miniapp.helper_classes.ISubscriber;
+import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.TestService;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
@@ -82,11 +82,8 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
                 .setPositiveButton("Log out", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        SharedPreferences userLoginTrackerSharedPref = getSharedPreferences("loggedInUser", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = userLoginTrackerSharedPref.edit();
-                        editor.putString("email", "");
-                        editor.putString("password", "");
-                        editor.apply();
+                        SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(getApplicationContext());
+                        sharedPrefUtils.clearLogin();
 
                         exitApp();
                         // TODO: remove all alarms for this user

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +28,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, ISubscriber<Integer> {
 
-    private static SharedPreferences userLoginTrackerSharedPref;
     SharedPrefUtils sharedPrefUtils;
 
     private Validator validator;
@@ -38,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     private EditText editTextEmail;
     @Password(scheme = Password.Scheme.ANY, message = "Password must be at least 6 characters")
     private EditText editTextPassword;
-    private Button buttonSignIn;
 
     private LoginViewModel loginViewModel;
 
@@ -54,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
-        buttonSignIn = findViewById(R.id.button_sign_in);
+        Button buttonSignIn = findViewById(R.id.button_sign_in);
 
         loginViewModel = new LoginViewModel(this, new LoginDBManager(new DatabaseConfiguration(getApplicationContext())));
 
