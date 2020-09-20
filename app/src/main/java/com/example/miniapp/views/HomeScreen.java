@@ -28,14 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap<String, Object>> {
-    private RecyclerView recViewTaskList;
-    private LinearLayoutManager linearLayoutManager;
     private CustomAdapter customAdapter;
-
-    private Button buttonLogout;
-    private FloatingActionButton fabNewTask;
-
-    private HomeScreenViewModel homeScreenViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,21 +38,19 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         final String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         UserDBManager sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
 
-        homeScreenViewModel = new HomeScreenViewModel(this, sharedDBManager);
-        homeScreenViewModel.openDB();
+        HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel(this, sharedDBManager);
 
         customAdapter = new CustomAdapter(sharedDBManager);
-        customAdapter.openDB();
 
-        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        recViewTaskList = findViewById(R.id.recycler_view_task_list);
+        RecyclerView recViewTaskList = findViewById(R.id.recycler_view_task_list);
         recViewTaskList.setLayoutManager(linearLayoutManager);
         recViewTaskList.setAdapter(customAdapter);
 
-        buttonLogout = findViewById(R.id.button_logout);
-        fabNewTask = findViewById(R.id.fab_new_task);
+        Button buttonLogout = findViewById(R.id.button_logout);
+        FloatingActionButton fabNewTask = findViewById(R.id.fab_new_task);
 
         fabNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
