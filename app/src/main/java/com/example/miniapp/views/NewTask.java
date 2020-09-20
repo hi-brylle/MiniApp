@@ -64,7 +64,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
         buttonSaveTask = findViewById(R.id.button_save_task);
 
-        String dbName = getIntent().getStringExtra("userEmail");
+        String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
 
         editTextSelectDate.setOnClickListener(new View.OnClickListener() {
