@@ -9,8 +9,9 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent serviceIntent =  new Intent(context, TestService.class);
-        context.startService(serviceIntent);
+        // TODO: include intent extras here, with data from logged in user and their active tasks
+//        Intent serviceIntent =  new Intent(context, TestService.class);
+//        context.startService(serviceIntent);
         Log.v("MY TAG", "Boot broadcast received");
     }
 }
