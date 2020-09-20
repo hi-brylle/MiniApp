@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.ISubscriber;
+import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.models.LoginDBManager;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -28,10 +29,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, ISubscriber<Integer> {
 
-    // SharedPreferences used to track login status of users for auto-login checking
-    private static final String LOGGED_IN_USERNAME = "loggedInUser";
     private static SharedPreferences userLoginTrackerSharedPref;
-    private String emailFromSP;
+    SharedPrefUtils sharedPrefUtils;
 
     private Validator validator;
     @NotEmpty
@@ -47,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPrefUtils = new SharedPrefUtils(getApplicationContext());
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -66,15 +67,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void checkSharedPrefs() {
-        userLoginTrackerSharedPref = getSharedPreferences(getString(R.string.logged_in_username), MODE_PRIVATE);
-        emailFromSP = userLoginTrackerSharedPref.getString("email", "");
-        String password = userLoginTrackerSharedPref.getString("password", "");
-        if (emailFromSP.equals("") || password.equals("")){
-            // if sharedpref has been emptied (indicating logging out), continue this activity
-            return;
+        if (sharedPrefUtils.isUserLoggedOut()){
+            Log.v("MY TAG", "previous user logged out.");
         } else {
             Log.v("MY TAG", "auto login");
-            login(emailFromSP);
+            login(sharedPrefUtils.getEmailFromSP());
         }
     }
 
@@ -161,11 +158,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void setAlwaysLoggedIn(){
-        userLoginTrackerSharedPref = getSharedPreferences(getString(R.string.logged_in_username), MODE_PRIVATE);
-        SharedPreferences.Editor editor = userLoginTrackerSharedPref.edit();
-        editor.putString("email", String.valueOf(editTextEmail.getText()));
-        editor.putString("password", String.valueOf(editTextPassword.getText())); // IS THIS SECURE?? NO, IT'S NOT
-        editor.apply();
+        sharedPrefUtils.recordUserLogin(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
     }
 
     private void passwordEmailMismatchDialog() {

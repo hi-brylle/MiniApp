@@ -89,8 +89,6 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
                         editor.apply();
 
                         exitApp();
-
-                        // TODO: cancel notifications
                         // TODO: remove all alarms for this user
                     }
                 });
