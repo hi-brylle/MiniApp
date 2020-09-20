@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,8 +16,8 @@ import android.widget.Button;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
-import com.example.miniapp.helper_classes.CustomBroadcastReceiver;
 import com.example.miniapp.helper_classes.ISubscriber;
+import com.example.miniapp.helper_classes.TestService;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -139,7 +137,11 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         int notificationID = (int) (unixTimestamp / 1000);
 
         // TODO: record these before setting an alarm, for cancel purposes
-        setAlarm(task, unixTimestamp, notificationID);
+        Intent alarmServiceIntent = new Intent(getApplicationContext(), TestService.class);
+        alarmServiceIntent.putExtra("task", task);
+        alarmServiceIntent.putExtra("unixTimestamp", unixTimestamp);
+        alarmServiceIntent.putExtra("notificationID", notificationID);
+        startService(alarmServiceIntent);
     }
 
     private void exitApp(){
@@ -147,15 +149,5 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);
         startActivity(intent);
-    }
-
-    public void setAlarm(String task, long unixTimestamp, int notificationID){
-        Intent intent = new Intent(getApplicationContext(), CustomBroadcastReceiver.class);
-        intent.putExtra("task", task);
-        intent.putExtra("notificationID", notificationID);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), notificationID, intent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, unixTimestamp, pendingIntent);
-        Log.v("MY TAG", "alarm set for " + task + " at " + unixTimestamp);
     }
 }
