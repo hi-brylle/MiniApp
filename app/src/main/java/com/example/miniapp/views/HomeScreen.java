@@ -42,7 +42,7 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        final String dbName = getIntent().getStringExtra("userEmail");
+        final String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         UserDBManager sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
 
         homeScreenViewModel = new HomeScreenViewModel(this, sharedDBManager);
@@ -65,7 +65,7 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(HomeScreen.this, NewTask.class);
-                intent.putExtra("userEmail", dbName);
+                intent.putExtra(getString(R.string.userEmailExtra), dbName);
                 startActivity(intent);
             }
         });

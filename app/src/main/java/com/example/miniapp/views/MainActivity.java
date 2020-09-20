@@ -153,10 +153,10 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         }
     }
 
-    private void login(String userExtra) {
+    private void login(String userEmailExtra) {
         Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         // userEmail shall also be the name of the user-specific database
-        intent.putExtra("userEmail", userExtra);
+        intent.putExtra(getString(R.string.userEmailExtra), userEmailExtra);
         startActivity(intent);
     }
 
