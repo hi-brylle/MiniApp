@@ -18,10 +18,11 @@ public class BootReceiver extends BroadcastReceiver implements ISubscriber<Task>
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context = context;
         Log.v("MY TAG", "Boot broadcast received");
-        // TODO: include intent extras here, with data from logged in user and their active tasks
+
+        this.context = context;
         SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(context);
+
         if (sharedPrefUtils.isUserLoggedOut()){
             Log.v("MY TAG", "previous user logged out. don't start service");
         } else {
@@ -32,7 +33,6 @@ public class BootReceiver extends BroadcastReceiver implements ISubscriber<Task>
             dbManager.openDB();
             dbManager.listenForChanges();
         }
-
     }
 
     @Override
@@ -47,7 +47,6 @@ public class BootReceiver extends BroadcastReceiver implements ISubscriber<Task>
             // notification ID identifies the pending intent
             int notificationID = (int) (unixTimestamp / 1000);
 
-            // TODO: record these before setting an alarm, for cancel purposes
             Intent alarmServiceIntent = new Intent(context.getApplicationContext(), TestService.class);
             alarmServiceIntent.putExtra("task", task);
             alarmServiceIntent.putExtra("unixTimestamp", unixTimestamp);

@@ -53,6 +53,11 @@ public class TestService extends Service {
         return super.stopService(name);
     }
 
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+    }
+
     private void recordActiveTask(String task, int notificationID) {
         if (activeTasks == null) {
             activeTasks = new ArrayList<>();

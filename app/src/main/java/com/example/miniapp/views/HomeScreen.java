@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
+import com.example.miniapp.helper_classes.CustomBroadcastReceiver;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.TestService;
@@ -106,6 +109,7 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         super.onResume();
         // updates items to be shown in the RecyclerView
         customAdapter.updateList();
+        customAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -137,7 +141,20 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         alarmServiceIntent.putExtra("unixTimestamp", unixTimestamp);
         alarmServiceIntent.putExtra("notificationID", notificationID);
         startService(alarmServiceIntent);
+
+        // this alarm shall run even when app is killed (using a service crashes app when app is killed)
+        //setAlarmUnk(task, unixTimestamp, notificationID);
     }
+
+//    public void setAlarmUnk(String task, long unixTimestamp, int notificationID){
+//        Intent intent = new Intent(HomeScreen.this, CustomBroadcastReceiver.class);
+//        intent.putExtra("task", task);
+//        intent.putExtra("notificationID", notificationID);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(HomeScreen.this, notificationID, intent, PendingIntent.FLAG_ONE_SHOT);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, unixTimestamp, pendingIntent);
+//        Log.v("MY TAG", "alarm set for " + task + " at " + unixTimestamp);
+//    }
 
     private void exitApp(){
         Intent intent = new Intent(HomeScreen.this, MainActivity.class);
