@@ -23,7 +23,7 @@ public class BootReceiver extends BroadcastReceiver implements ISubscriber<Task>
         // TODO: include intent extras here, with data from logged in user and their active tasks
         SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(context);
         if (sharedPrefUtils.isUserLoggedOut()){
-            Log.v("MY TAG", "previous user logged out. dont start service");
+            Log.v("MY TAG", "previous user logged out. don't start service");
         } else {
             Log.v("MY TAG", "start service for user " + sharedPrefUtils.getEmailFromSP());
             String email = sharedPrefUtils.getEmailFromSP();

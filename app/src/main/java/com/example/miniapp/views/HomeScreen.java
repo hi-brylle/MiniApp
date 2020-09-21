@@ -71,7 +71,7 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
     private void showLogoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Logout")
-                .setMessage("Are you sure you want to logout? All alarms under your account will be cancelled (LOL not really).")
+                .setMessage("Are you sure you want to logout? All alarms under your account will be cancelled.")
                 .setCancelable(true)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -85,8 +85,10 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
                         SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(getApplicationContext());
                         sharedPrefUtils.clearLogin();
 
+                        Intent stopServiceIntent = new Intent(getApplicationContext(), TestService.class);
+                        stopService(stopServiceIntent);
+
                         exitApp();
-                        // TODO: remove all alarms for this user
                     }
                 });
         AlertDialog alert = builder.create();
@@ -130,7 +132,6 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         // notification ID identifies the pending intent
         int notificationID = (int) (unixTimestamp / 1000);
 
-        // TODO: record these before setting an alarm, for cancel purposes
         Intent alarmServiceIntent = new Intent(getApplicationContext(), TestService.class);
         alarmServiceIntent.putExtra("task", task);
         alarmServiceIntent.putExtra("unixTimestamp", unixTimestamp);
