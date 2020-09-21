@@ -97,14 +97,13 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
     protected void onStart() {
         super.onStart();
         customAdapter.openDB();
-
-        // updates items to be shown in the RecyclerView
-        customAdapter.updateList();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        // updates items to be shown in the RecyclerView
+        customAdapter.updateList();
     }
 
     @Override
