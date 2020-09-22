@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,18 +15,13 @@ import android.widget.Button;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
-import com.example.miniapp.helper_classes.CustomBroadcastReceiver;
-import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.TestService;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Date;
-import java.util.HashMap;
-
-public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap<String, Object>> {
+public class HomeScreen extends AppCompatActivity {
     private CustomAdapter customAdapter;
 
     @Override
@@ -39,7 +32,7 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         final String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         UserDBManager sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
 
-        HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel(this, sharedDBManager);
+        HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
 
         customAdapter = new CustomAdapter(sharedDBManager);
 
@@ -123,26 +116,6 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
         Log.v("MY TAG", "SHOULD BE EXITING NOW");
         exitApp();
     }
-
-    @Override
-    public void update(HashMap<String, Object> alarmPair) {
-//        Date dateStart = (Date) alarmPair.get("dateStart");
-//        String task = (String) alarmPair.get("task");
-//        Log.v("MY TAG", "date start: " + dateStart);
-//        Log.v("MY TAG", "task: " + task);
-//
-//        assert dateStart != null;
-//        long unixTimestamp = dateStart.getTime();
-//        // notification ID identifies the pending intent
-//        int notificationID = (int) (unixTimestamp / 1000);
-//
-//        Intent alarmServiceIntent = new Intent(getApplicationContext(), TestService.class);
-//        alarmServiceIntent.putExtra("task", task);
-//        alarmServiceIntent.putExtra("unixTimestamp", unixTimestamp);
-//        alarmServiceIntent.putExtra("notificationID", notificationID);
-//        startService(alarmServiceIntent);
-    }
-
 
     private void exitApp(){
         Intent intent = new Intent(HomeScreen.this, MainActivity.class);

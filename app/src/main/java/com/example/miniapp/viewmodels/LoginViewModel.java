@@ -8,7 +8,7 @@ import com.example.miniapp.models.ILoginDBManager;
 
 public class LoginViewModel implements IViewModel, IPublisher<Integer> {
     private ILoginDBManager dbManager;
-    private ISubscriber loginView;
+    private ISubscriber<Integer> loginView;
 
     public LoginViewModel(ISubscriber<Integer> loginView, ILoginDBManager dbManager){
         this.dbManager = dbManager;
@@ -62,7 +62,6 @@ public class LoginViewModel implements IViewModel, IPublisher<Integer> {
 
     @Override
     public void removeSub(ISubscriber subscriber) {
-
     }
 
     @Override
