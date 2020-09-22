@@ -19,6 +19,7 @@ import java.util.Date;
 
 public class TestService extends Service implements ISubscriber<Task> {
     ArrayList<Pair<Integer, String>> activeTasks;
+
     public TestService() {
     }
 
@@ -42,12 +43,7 @@ public class TestService extends Service implements ISubscriber<Task> {
         if (sharedPrefUtils.isUserLoggedOut()){
             Log.v("MY TAG", "previous user logged out.");
         } else {
-            Log.v("MY TAG", "start service for user " + sharedPrefUtils.getEmailFromSP());
-            String email = sharedPrefUtils.getEmailFromSP();
-            IUserDBManager dbManager = new UserDBManager(email, new DatabaseConfiguration(this));
-            dbManager.addSub(this);
-            dbManager.openDB();
-            dbManager.listenForChanges();
+            start(sharedPrefUtils.getEmailFromSP());
         }
 
         return START_STICKY;
@@ -61,8 +57,24 @@ public class TestService extends Service implements ISubscriber<Task> {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.v("MY TAG", "APP KILLED FROM RECENT");
-        Intent restartIntent = new Intent(getApplicationContext(), OnAppKilledReceiver.class);
-        sendBroadcast(restartIntent);
+//        SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(this);
+//        start(sharedPrefUtils.getEmailFromSP());
+        Intent restartService = new Intent(getApplicationContext(), TestService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, restartService, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 10000, pendingIntent);
+        Log.v("MY TAG", "service restarted?");
+//        startService(restartService);
+
+    }
+
+    private void start(String emailFromSP) {
+        Log.v("MY TAG", "start service for user " + emailFromSP);
+        IUserDBManager dbManager = new UserDBManager(emailFromSP, new DatabaseConfiguration(this));
+        dbManager.addSub(this);
+        dbManager.openDB();
+        dbManager.listenForChanges();
     }
 
     @Override
@@ -81,6 +93,7 @@ public class TestService extends Service implements ISubscriber<Task> {
                 Log.v("MY TAG", "Warning: default values on service params");
             }
 
+            // record task now for cancellation should user log out
             recordActiveTask(task, notificationID);
 
             setAlarm(task, unixTimestamp, notificationID);

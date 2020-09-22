@@ -129,14 +129,12 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             case 0:
                 loginViewModel.register(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
                 setAlwaysLoggedIn();
-                startServiceForUser();
                 login(String.valueOf(editTextEmail.getText()));
                 break;
 
             // password correct
             case 1:
                 setAlwaysLoggedIn();
-                startServiceForUser();
                 login(String.valueOf(editTextEmail.getText()));
                 break;
 
@@ -151,6 +149,9 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void login(String userEmailExtra) {
+        // start alarm service prior to login
+        startServiceForUser();
+
         Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         // userEmail shall also be the name of the user-specific database
         intent.putExtra(getString(R.string.userEmailExtra), userEmailExtra);
