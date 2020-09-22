@@ -8,10 +8,16 @@ import android.os.IBinder;
 import android.util.Log;
 import android.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.couchbase.lite.DatabaseConfiguration;
+import com.example.miniapp.models.IUserDBManager;
+import com.example.miniapp.models.Task;
+import com.example.miniapp.models.UserDBManager;
 
-public class TestService extends Service {
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+public class TestService extends Service implements ISubscriber<Task> {
     ArrayList<Pair<Integer, String>> activeTasks;
     public TestService() {
     }
@@ -23,39 +29,62 @@ public class TestService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.v("MY TAG", "SERVICE STOPPED");
         cancelAll();
+        Log.v("MY TAG", "SERVICE STOPPED");
         super.onDestroy();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String task = intent.getStringExtra("task");
-        long unixTimestamp = intent.getLongExtra("unixTimestamp", 0);
-        int notificationID = intent.getIntExtra("notificationID", 0);
-
-        if(unixTimestamp == 0 || notificationID == 0){
-            Log.v("MY TAG", "Warning: default values on service params");
-        }
-
-        // record active so they can be cancelled later should user log out
-        recordActiveTask(task, notificationID);
-
         Log.v("MY TAG", "SERVICE STARTED");
-        setAlarm(task, unixTimestamp, notificationID);
+        SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(this);
+
+        if (sharedPrefUtils.isUserLoggedOut()){
+            Log.v("MY TAG", "previous user logged out.");
+        } else {
+            Log.v("MY TAG", "start service for user " + sharedPrefUtils.getEmailFromSP());
+            String email = sharedPrefUtils.getEmailFromSP();
+            IUserDBManager dbManager = new UserDBManager(email, new DatabaseConfiguration(this));
+            dbManager.addSub(this);
+            dbManager.openDB();
+            dbManager.listenForChanges();
+        }
 
         return START_STICKY;
     }
 
     @Override
     public boolean stopService(Intent name) {
-        Log.v("MY TAG", "user logged out. stopping alarm service");
         return super.stopService(name);
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        super.onTaskRemoved(rootIntent);
+        Log.v("MY TAG", "APP KILLED FROM RECENT");
+        Intent restartIntent = new Intent(getApplicationContext(), OnAppKilledReceiver.class);
+        sendBroadcast(restartIntent);
+    }
+
+    @Override
+    public void update(Task t) {
+        Date now = Calendar.getInstance().getTime();
+        if (t.getDateStart().after(now)){
+            String task = t.getTask();
+            Date dateStart = t.getDateStart();
+
+            assert dateStart != null;
+            long unixTimestamp = dateStart.getTime();
+            // notification ID identifies the pending intent
+            int notificationID = (int) (unixTimestamp / 1000);
+
+            if(unixTimestamp == 0 || notificationID == 0){
+                Log.v("MY TAG", "Warning: default values on service params");
+            }
+
+            recordActiveTask(task, notificationID);
+
+            setAlarm(task, unixTimestamp, notificationID);
+        }
     }
 
     private void recordActiveTask(String task, int notificationID) {
@@ -91,5 +120,7 @@ public class TestService extends Service {
         for(Pair<Integer, String> pair : activeTasks){
             cancelAlarm(pair.first, pair.second);
         }
+        Log.v("MY TAG", "cancelled all alarms for user");
     }
+
 }

@@ -12,9 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name="com.example.miniapp.helper_classes.TestService" />
+        <receiver android:name=".helper_classes.OnAppKilledReceiver" />
 
-        <receiver android:name="com.example.miniapp.helper_classes.BootReceiver">
+        <service android:name=".helper_classes.TestService" />
+
+        <receiver android:name=".helper_classes.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

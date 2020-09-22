@@ -126,35 +126,23 @@ public class HomeScreen extends AppCompatActivity implements ISubscriber<HashMap
 
     @Override
     public void update(HashMap<String, Object> alarmPair) {
-        Date dateStart = (Date) alarmPair.get("dateStart");
-        String task = (String) alarmPair.get("task");
-        Log.v("MY TAG", "date start: " + dateStart);
-        Log.v("MY TAG", "task: " + task);
-
-        assert dateStart != null;
-        long unixTimestamp = dateStart.getTime();
-        // notification ID identifies the pending intent
-        int notificationID = (int) (unixTimestamp / 1000);
-
-        Intent alarmServiceIntent = new Intent(getApplicationContext(), TestService.class);
-        alarmServiceIntent.putExtra("task", task);
-        alarmServiceIntent.putExtra("unixTimestamp", unixTimestamp);
-        alarmServiceIntent.putExtra("notificationID", notificationID);
-        startService(alarmServiceIntent);
-
-        // this alarm shall run even when app is killed (using a service crashes app when app is killed)
-        //setAlarmUnk(task, unixTimestamp, notificationID);
+//        Date dateStart = (Date) alarmPair.get("dateStart");
+//        String task = (String) alarmPair.get("task");
+//        Log.v("MY TAG", "date start: " + dateStart);
+//        Log.v("MY TAG", "task: " + task);
+//
+//        assert dateStart != null;
+//        long unixTimestamp = dateStart.getTime();
+//        // notification ID identifies the pending intent
+//        int notificationID = (int) (unixTimestamp / 1000);
+//
+//        Intent alarmServiceIntent = new Intent(getApplicationContext(), TestService.class);
+//        alarmServiceIntent.putExtra("task", task);
+//        alarmServiceIntent.putExtra("unixTimestamp", unixTimestamp);
+//        alarmServiceIntent.putExtra("notificationID", notificationID);
+//        startService(alarmServiceIntent);
     }
 
-//    public void setAlarmUnk(String task, long unixTimestamp, int notificationID){
-//        Intent intent = new Intent(HomeScreen.this, CustomBroadcastReceiver.class);
-//        intent.putExtra("task", task);
-//        intent.putExtra("notificationID", notificationID);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(HomeScreen.this, notificationID, intent, PendingIntent.FLAG_ONE_SHOT);
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.RTC_WAKEUP, unixTimestamp, pendingIntent);
-//        Log.v("MY TAG", "alarm set for " + task + " at " + unixTimestamp);
-//    }
 
     private void exitApp(){
         Intent intent = new Intent(HomeScreen.this, MainActivity.class);

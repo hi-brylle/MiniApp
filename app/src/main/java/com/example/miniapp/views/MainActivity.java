@@ -16,6 +16,7 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
+import com.example.miniapp.helper_classes.TestService;
 import com.example.miniapp.models.LoginDBManager;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -128,12 +129,14 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             case 0:
                 loginViewModel.register(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
                 setAlwaysLoggedIn();
+                startServiceForUser();
                 login(String.valueOf(editTextEmail.getText()));
                 break;
 
             // password correct
             case 1:
                 setAlwaysLoggedIn();
+                startServiceForUser();
                 login(String.valueOf(editTextEmail.getText()));
                 break;
 
@@ -156,6 +159,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     private void setAlwaysLoggedIn(){
         sharedPrefUtils.recordUserLogin(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
+    }
+
+    private void startServiceForUser() {
+        Intent alarmServiceIntent = new Intent(MainActivity.this, TestService.class);
+        startService(alarmServiceIntent);
     }
 
     private void passwordEmailMismatchDialog() {
