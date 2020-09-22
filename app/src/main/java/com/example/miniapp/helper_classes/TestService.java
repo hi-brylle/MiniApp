@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.models.IUserDBManager;
@@ -56,17 +57,7 @@ public class TestService extends Service implements ISubscriber<Task> {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        Log.v("MY TAG", "APP KILLED FROM RECENT");
-//        SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(this);
-//        start(sharedPrefUtils.getEmailFromSP());
-        Intent restartService = new Intent(getApplicationContext(), TestService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, restartService, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Calendar calendar = Calendar.getInstance();
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 10000, pendingIntent);
-        Log.v("MY TAG", "service restarted?");
-//        startService(restartService);
-
+        Toast.makeText(this, "App Killed. All alarms are disabled", Toast.LENGTH_SHORT).show();
     }
 
     private void start(String emailFromSP) {
