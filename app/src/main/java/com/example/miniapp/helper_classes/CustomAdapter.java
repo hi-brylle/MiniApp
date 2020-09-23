@@ -9,34 +9,35 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.miniapp.R;
+import com.example.miniapp.models.IUserDBManager;
 import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
 import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements ISubscriber<Task> {
-    private UserDBManager userDBManager;
+    private IUserDBManager dbManager;
     public ArrayList<Task> taskList;
 
     public CustomAdapter(UserDBManager userDBManager){
-        this.userDBManager = userDBManager;
-        this.userDBManager.addSub(this);
+        this.dbManager = userDBManager;
+        this.dbManager.addSub(this);
         if (taskList == null){
             taskList = new ArrayList<>();
         }
     }
 
     public void openDB(){
-        userDBManager.openDB();
+        dbManager.openDB();
     }
 
     public void closeDB(){
-        userDBManager.closeDB();
+        dbManager.closeDB();
     }
 
     public void updateList() {
         taskList.clear();
-        userDBManager.listenForChanges();
+        dbManager.listenForChanges();
     }
 
     @NonNull
