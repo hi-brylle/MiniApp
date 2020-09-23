@@ -1,6 +1,5 @@
 package com.example.miniapp.views;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
@@ -10,8 +9,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -47,12 +44,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     private EditText editTextSelectDate;
     @NotEmpty
     private EditText editTextSelectTime;
-    private Button buttonSaveTask;
-
-    // TODO: remove block later
-    private Button buttonTestAlarm;
-
-    private ImageButton imageButtonAddPhoto;
 
     private TaskViewModel taskViewModel;
 
@@ -71,54 +62,35 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextTask = findViewById(R.id.edit_text_task);
         editTextSelectDate = findViewById(R.id.edit_text_select_date);
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
-        buttonSaveTask = findViewById(R.id.button_save_task);
-        imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
+        Button buttonSaveTask = findViewById(R.id.button_save_task);
+        ImageButton imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
 
         String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
 
-        editTextSelectDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDatePickerDialog();
-            }
-        });
-        editTextSelectTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openTimePickerDialog();
+        editTextSelectDate.setOnClickListener(view -> openDatePickerDialog());
+        editTextSelectTime.setOnClickListener(view -> openTimePickerDialog());
+
+        buttonSaveTask.setOnClickListener(view -> {
+            if(taskViewModel.isValid(dateStart)){
+                validator.validate();
+            } else {
+                editTextSelectTime.setError("Time cannot be from the past");
             }
         });
 
-        buttonSaveTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(taskViewModel.isValid(dateStart)){
-                    validator.validate();
-                } else {
-                    editTextSelectTime.setError("Time cannot be from the past");
-                }
-            }
-        });
-
-        imageButtonAddPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(NewTask.this, view);
-                popupMenu.setOnMenuItemClickListener(NewTask.this);
-                popupMenu.inflate(R.menu.popup_menu);
-                popupMenu.show();
-            }
+        imageButtonAddPhoto.setOnClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(NewTask.this, view);
+            popupMenu.setOnMenuItemClickListener(NewTask.this);
+            popupMenu.inflate(R.menu.popup_menu);
+            popupMenu.show();
         });
 
         // TODO: remove block later
-        buttonTestAlarm = findViewById(R.id.button_test_alarm);
-        buttonTestAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wrappedAlarm(60, 1,"60s alive");
-                wrappedAlarm(120, 2, "120s alive");
-            }
+        Button buttonTestAlarm = findViewById(R.id.button_test_alarm);
+        buttonTestAlarm.setOnClickListener(view -> {
+            wrappedAlarm(60, 1,"60s alive");
+            wrappedAlarm(120, 2, "120s alive");
         });
 
     }
@@ -242,8 +214,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         // set time component of dateStart
         dateStart = calendar.getTime();
 
-        String rep = TaskViewModel.timeRepresentation(i, i1);
-        editTextSelectTime.setText(rep);
+        editTextSelectTime.setText(TaskViewModel.timeRepresentation(i, i1));
     }
 
     private void saveTask() {
