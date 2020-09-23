@@ -12,8 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <receiver android:name=".helper_classes.OnAppKilledReceiver" />
-
         <service android:name=".helper_classes.TestService" />
 
         <receiver android:name=".helper_classes.BootReceiver">
@@ -22,7 +20,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".helper_classes.CustomBroadcastReceiver" />
+        <receiver android:name=".helper_classes.NotificationBroadcastReceiver" />
 
         <activity android:name=".views.NewTask" />
         <activity android:name=".views.HomeScreen" />

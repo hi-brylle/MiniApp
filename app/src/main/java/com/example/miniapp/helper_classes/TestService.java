@@ -99,7 +99,7 @@ public class TestService extends Service implements ISubscriber<Task> {
     }
 
     private void setAlarm(String task, long unixTimestamp, int notificationID){
-        Intent intent = new Intent(getApplicationContext(), CustomBroadcastReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), NotificationBroadcastReceiver.class);
         intent.putExtra("task", task);
         intent.putExtra("notificationID", notificationID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), notificationID, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -109,7 +109,7 @@ public class TestService extends Service implements ISubscriber<Task> {
     }
 
     private void cancelAlarm(int notificationID, String task){
-        Intent intent = new Intent(getApplicationContext(), CustomBroadcastReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), NotificationBroadcastReceiver.class);
         intent.putExtra("task", task);
         intent.putExtra("notificationID", notificationID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), notificationID, intent, PendingIntent.FLAG_ONE_SHOT);

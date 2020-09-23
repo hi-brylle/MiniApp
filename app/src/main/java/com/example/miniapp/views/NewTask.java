@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
-import com.example.miniapp.helper_classes.CustomBroadcastReceiver;
+import com.example.miniapp.helper_classes.NotificationBroadcastReceiver;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -106,7 +106,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     // TODO: remove block later
     public void wrappedAlarm(int seconds, int notificationID, String task){
         Toast.makeText(NewTask.this, "Alarm Set!", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(NewTask.this, CustomBroadcastReceiver.class);
+        Intent intent = new Intent(NewTask.this, NotificationBroadcastReceiver.class);
         intent.putExtra("task", task);
         intent.putExtra("notificationID", notificationID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(NewTask.this, notificationID, intent, 0);
