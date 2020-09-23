@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.Objects;
+
 public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")){
+        if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")){
             Log.v("MY TAG", "Boot broadcast received");
             Intent alarmServiceIntent = new Intent(context, TestService.class);
             context.startService(alarmServiceIntent);

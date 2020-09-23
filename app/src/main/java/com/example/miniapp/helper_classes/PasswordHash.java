@@ -6,8 +6,7 @@ import java.security.NoSuchAlgorithmException;
 public final class PasswordHash {
 
     public static String hash(String plainTextPassword) {
-        String hash = null;
-        MessageDigest md = null;
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
             md.update(plainTextPassword.getBytes());

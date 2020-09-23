@@ -56,12 +56,12 @@ public class LoginViewModel implements IViewModel, IPublisher<Integer> {
     }
 
     @Override
-    public void addSub(ISubscriber subscriber) {
+    public void addSub(ISubscriber<Integer> subscriber) {
         loginView = subscriber;
     }
 
     @Override
-    public void removeSub(ISubscriber subscriber) {
+    public void removeSub(ISubscriber<Integer> subscriber) {
     }
 
     @Override

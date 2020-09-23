@@ -53,13 +53,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
         holder.bind(task);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean expanded = task.isExpanded();
-                task.setExpanded(!expanded);
-                notifyItemChanged(position);
-            }
+        holder.itemView.setOnClickListener(view -> {
+            boolean expanded = task.isExpanded();
+            task.setExpanded(!expanded);
+            notifyItemChanged(position);
         });
 
     }

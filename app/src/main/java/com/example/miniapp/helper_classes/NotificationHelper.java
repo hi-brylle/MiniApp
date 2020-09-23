@@ -39,13 +39,11 @@ public class NotificationHelper extends ContextWrapper {
         Intent openAppIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, openAppIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+        return new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("To-do:")
                 .setContentText(task)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_alarm_clock);
-
-        return notifyBuilder;
     }
 
 

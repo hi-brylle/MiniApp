@@ -10,7 +10,7 @@ import com.example.miniapp.helper_classes.ISubscriber;
 import java.util.ArrayList;
 
 public abstract class DBManager implements IDBManager {
-    ArrayList<ISubscriber> listeners;
+    ArrayList<ISubscriber<?>> listeners;
     protected Database currentDatabase;    // open one database per session (yeah?)
     protected String dbToUseOrMake;         // DB name to use or make for current session
     protected DatabaseConfiguration config;
@@ -45,7 +45,7 @@ public abstract class DBManager implements IDBManager {
         }
     }
 
-    public void addSub(ISubscriber subscriber){
+    public void addSub(ISubscriber<?> subscriber){
         if (listeners == null){
             listeners = new ArrayList<>();
         }
@@ -53,7 +53,7 @@ public abstract class DBManager implements IDBManager {
         listeners.add(subscriber);
     }
 
-    public void removeSub(ISubscriber subscriber){
+    public void removeSub(ISubscriber<?> subscriber){
         listeners.remove(subscriber);
     }
 }
