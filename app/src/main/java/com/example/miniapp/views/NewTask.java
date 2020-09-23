@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -35,7 +37,8 @@ import java.util.List;
 
 public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
                                                             TimePickerDialog.OnTimeSetListener,
-                                                            Validator.ValidationListener {
+                                                            Validator.ValidationListener,
+                                                            PopupMenu.OnMenuItemClickListener {
 
     private Validator validator;
     @NotEmpty
@@ -48,6 +51,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     // TODO: remove block later
     private Button buttonTestAlarm;
+
+    private ImageButton imageButtonAddPhoto;
 
     private TaskViewModel taskViewModel;
 
@@ -67,6 +72,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextSelectDate = findViewById(R.id.edit_text_select_date);
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
         buttonSaveTask = findViewById(R.id.button_save_task);
+        imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
 
         String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
@@ -92,6 +98,16 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                 } else {
                     editTextSelectTime.setError("Time cannot be from the past");
                 }
+            }
+        });
+
+        imageButtonAddPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(NewTask.this, view);
+                popupMenu.setOnMenuItemClickListener(NewTask.this);
+                popupMenu.inflate(R.menu.popup_menu);
+                popupMenu.show();
             }
         });
 
@@ -121,15 +137,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.popup_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
             case R.id.popup_item_take_photo:
                 takePhoto();
                 return true;
@@ -137,7 +146,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                 choosePhoto();
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return false;
         }
     }
 
@@ -250,7 +259,5 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         finish();
     }
-
-
 
 }
