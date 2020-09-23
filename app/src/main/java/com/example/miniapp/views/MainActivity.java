@@ -3,7 +3,6 @@ package com.example.miniapp.views;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,12 +55,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
         loginViewModel = new LoginViewModel(this, new LoginDBManager(new DatabaseConfiguration(getApplicationContext())));
 
-        buttonSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validator.validate();
-            }
-        });
+        buttonSignIn.setOnClickListener(view -> validator.validate());
     }
 
     private void checkSharedPrefs() {
@@ -172,13 +166,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         builder.setTitle("Sign In Failed")
                 .setMessage("Your password is incorrect.")
                 .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // we don't need to clear out the email for extra security
-                        // I mean, this is just a task notifier app
-                        // editTextEmail.setText("");
-                        editTextPassword.setText("");
-                    }
+                .setPositiveButton("OK", (dialog, id) -> {
+                    // we don't need to clear out the email for extra security
+                    // I mean, this is just a task notifier app
+                    // editTextEmail.setText("");
+                    editTextPassword.setText("");
                 });
         AlertDialog alert = builder.create();
         alert.show();
