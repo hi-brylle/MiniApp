@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/popup_item_take_photo"
+        android:title="Take Photo" />
+    <item
+        android:id="@+id/popup_item_choose_photo"
+        android:title="Choose photo" />
+</menu>
