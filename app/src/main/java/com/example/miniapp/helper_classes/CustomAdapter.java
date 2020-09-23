@@ -1,8 +1,10 @@
 package com.example.miniapp.helper_classes;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -93,6 +95,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         public TextView textViewSubDateStart;
         private TextView textViewSubDateCreated;
         private View subItem;
+        private ImageView imageViewSub;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,6 +104,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             textViewSubDateStart = itemView.findViewById(R.id.text_view_sub_date_start);
             textViewSubDateCreated = itemView.findViewById(R.id.text_view_sub_date_created);
             subItem = itemView.findViewById(R.id.layout_sub_items);
+            imageViewSub = itemView.findViewById(R.id.image_view_sub);
         }
 
         public void bind(Task task) {
@@ -111,6 +115,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             textViewTaskRow.setText(task.getTask());
             textViewSubDateStart.setText(String.format("Start by: %s", task.getDateStart()));
             textViewSubDateCreated.setText(String.format("Date created: %s", task.getDateCreated()));
+
+            if (task.getImageURI() != null){
+                imageViewSub.setImageURI(Uri.parse(task.getImageURI()));
+            }
             // TODO: add mark done?
         }
     }
