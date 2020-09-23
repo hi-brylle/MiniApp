@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import com.couchbase.lite.DatabaseConfiguration;
@@ -18,7 +16,6 @@ import com.example.miniapp.helper_classes.CustomAdapter;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.TestService;
 import com.example.miniapp.models.UserDBManager;
-import com.example.miniapp.viewmodels.HomeScreenViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeScreen extends AppCompatActivity {
@@ -32,7 +29,8 @@ public class HomeScreen extends AppCompatActivity {
         final String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         UserDBManager sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
 
-        HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
+        // implement once again when connection to server is established
+        // HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
 
         customAdapter = new CustomAdapter(sharedDBManager);
 
@@ -46,22 +44,13 @@ public class HomeScreen extends AppCompatActivity {
         Button buttonLogout = findViewById(R.id.button_logout);
         FloatingActionButton fabNewTask = findViewById(R.id.fab_new_task);
 
-        fabNewTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeScreen.this, NewTask.class);
-                intent.putExtra(getString(R.string.userEmailExtra), dbName);
-                startActivity(intent);
-            }
+        fabNewTask.setOnClickListener(view -> {
+            Intent intent = new Intent(HomeScreen.this, NewTask.class);
+            intent.putExtra(getString(R.string.userEmailExtra), dbName);
+            startActivity(intent);
         });
 
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLogoutDialog();
-            }
-        });
-
+        buttonLogout.setOnClickListener(view -> showLogoutDialog());
     }
 
     private void showLogoutDialog() {
@@ -69,23 +58,17 @@ public class HomeScreen extends AppCompatActivity {
         builder.setTitle("Logout")
                 .setMessage("Are you sure you want to logout? All alarms under your account will be cancelled.")
                 .setCancelable(true)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                .setNegativeButton("Cancel", (dialogInterface, i) -> {
 
-                    }
                 })
-                .setPositiveButton("Log out", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(getApplicationContext());
-                        sharedPrefUtils.clearLogin();
+                .setPositiveButton("Log out", (dialogInterface, i) -> {
+                    SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(getApplicationContext());
+                    sharedPrefUtils.clearLogin();
 
-                        Intent stopServiceIntent = new Intent(getApplicationContext(), TestService.class);
-                        stopService(stopServiceIntent);
+                    Intent stopServiceIntent = new Intent(getApplicationContext(), TestService.class);
+                    stopService(stopServiceIntent);
 
-                        exitApp();
-                    }
+                    exitApp();
                 });
         AlertDialog alert = builder.create();
         alert.show();
