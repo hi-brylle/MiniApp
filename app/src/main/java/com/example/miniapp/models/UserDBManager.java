@@ -22,13 +22,13 @@ public class UserDBManager extends DBManager implements IUserDBManager {
     }
 
     @Override
-    public void create(String task, Date dateCreated, Date dateStart, String imageURI){
+    public void create(String task, Date dateCreated, Date dateStart, String imageURIString){
         MutableDocument doc = new MutableDocument();
         doc.setString("task", task);
         doc.setDate("dateCreated", dateCreated);
         doc.setDate("dateStart", dateStart);
         doc.setBoolean("isDone", false);
-        doc.setString("imageURI", imageURI);
+        doc.setString("imageURI", imageURIString);
 
         try {
             currentDatabase.save(doc);

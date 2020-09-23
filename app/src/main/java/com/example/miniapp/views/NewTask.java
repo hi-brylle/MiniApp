@@ -7,9 +7,12 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +33,7 @@ import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -90,6 +94,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             popupMenu.inflate(R.menu.popup_menu);
             popupMenu.show();
         });
+
         // TODO: remove block later
         Button buttonTestAlarm = findViewById(R.id.button_test_alarm);
         buttonTestAlarm.setOnClickListener(view -> {
@@ -127,7 +132,18 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     private void takePhoto() {
-        Toast.makeText(this, "UNDER CONSTRUCTION", Toast.LENGTH_SHORT).show();
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, 2);
+        }
+    }
+
+    private Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String title = "jpeg_" + System.currentTimeMillis();
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, title, null);
+        return Uri.parse(path);
     }
 
     private void choosePhoto() {
@@ -140,14 +156,20 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
-            case 0:
             case 1:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     assert data != null;
                     imageURI = data.getData();
                     imageButtonAddPhoto.setImageURI(imageURI);
                 }
-
+                break;
+            case 2:
+                if (resultCode == RESULT_OK){
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    imageURI = null;
+                    imageButtonAddPhoto.setImageBitmap(imageBitmap);
+                }
                 break;
         }
     }
@@ -243,7 +265,9 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         task = String.valueOf(editTextTask.getText());
         dateCreated = Calendar.getInstance().getTime();
 
-        taskViewModel.submit(task, dateCreated, dateStart, imageURI.toString());
+        String imageURIString = imageURI == null ? "" : imageURI.toString();
+
+        taskViewModel.submit(task, dateCreated, dateStart, imageURIString);
 
         Log.v("MY TAG", "Task: " + task);
         Log.v("MY TAG", "Created: " + dateCreated);
