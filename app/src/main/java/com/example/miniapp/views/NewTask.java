@@ -1,5 +1,6 @@
 package com.example.miniapp.views;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
@@ -7,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -45,11 +47,14 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     @NotEmpty
     private EditText editTextSelectTime;
 
+    ImageButton imageButtonAddPhoto;
+
     private TaskViewModel taskViewModel;
 
     String task;
     Date dateStart;
     Date dateCreated;
+    Uri imageURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +68,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextSelectDate = findViewById(R.id.edit_text_select_date);
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
         Button buttonSaveTask = findViewById(R.id.button_save_task);
-        ImageButton imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
+        imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
 
         String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
@@ -85,7 +90,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             popupMenu.inflate(R.menu.popup_menu);
             popupMenu.show();
         });
-
         // TODO: remove block later
         Button buttonTestAlarm = findViewById(R.id.button_test_alarm);
         buttonTestAlarm.setOnClickListener(view -> {
@@ -123,11 +127,29 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     private void takePhoto() {
-        Toast.makeText(this, "TAKING PHOTO NOW", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "UNDER CONSTRUCTION", Toast.LENGTH_SHORT).show();
     }
 
     private void choosePhoto() {
-        Toast.makeText(this, "UNDER CONSTRUCTION", Toast.LENGTH_SHORT).show();
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto , 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case 0:
+            case 1:
+                if(resultCode == RESULT_OK){
+                    assert data != null;
+                    imageURI = data.getData();
+                    imageButtonAddPhoto.setImageURI(imageURI);
+                }
+
+                break;
+        }
     }
 
     @Override
@@ -220,11 +242,13 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     private void saveTask() {
         task = String.valueOf(editTextTask.getText());
         dateCreated = Calendar.getInstance().getTime();
-        taskViewModel.submit(task, dateCreated, dateStart);
+
+        taskViewModel.submit(task, dateCreated, dateStart, imageURI.toString());
 
         Log.v("MY TAG", "Task: " + task);
         Log.v("MY TAG", "Created: " + dateCreated);
         Log.v("MY TAG", "Start: " + dateStart);
+        Log.v("MY TAG", "URI: " + imageURI);
 
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
 

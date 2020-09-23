@@ -1,5 +1,7 @@
 package com.example.miniapp.models;
 
+import android.net.Uri;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,7 +12,7 @@ public class Task {
     private Date dateStart;
     private boolean isDone;
     private boolean isExpanded; // for use in the recycler view only; not stored in DB
-    private ArrayList<URI> imageURIs;
+    private String imageURI;
 
     public Task(String task, Date created, Date start){
         this.task = task;
@@ -23,11 +25,12 @@ public class Task {
         isDone = m;
     }
 
-    protected void addImageURI(URI imgURI){
-        if (imageURIs == null){
-            imageURIs = new ArrayList<URI>();
-        }
-        imageURIs.add(imgURI);
+    public void setExpanded(boolean b){
+        isExpanded = b;
+    }
+
+    protected void addImageURI(String imageURI){
+        this.imageURI = imageURI;
     }
 
     public String getTask() {
@@ -50,7 +53,7 @@ public class Task {
         return isExpanded;
     }
 
-    public void setExpanded(boolean b){
-        isExpanded = b;
+    public String getImageURI(){
+        return imageURI;
     }
 }
