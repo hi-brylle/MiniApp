@@ -1,5 +1,6 @@
 package com.example.miniapp.views;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
@@ -9,6 +10,9 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -114,6 +118,35 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         long timeAtButtonClick = System.currentTimeMillis();
         long timeInMS = 1000 * seconds;
         alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick + timeInMS, pendingIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.popup_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.popup_item_take_photo:
+                takePhoto();
+                return true;
+            case R.id.popup_item_choose_photo:
+                choosePhoto();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void takePhoto() {
+        Toast.makeText(this, "TAKING PHOTO NOW", Toast.LENGTH_SHORT).show();
+    }
+
+    private void choosePhoto() {
+        Toast.makeText(this, "UNDER CONSTRUCTION", Toast.LENGTH_SHORT).show();
     }
 
     @Override
