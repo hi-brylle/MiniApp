@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -34,6 +35,9 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -131,28 +135,40 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         }
     }
 
+    private final int GALLERY_REQUEST = 1;
+    private final int CAMERA_REQUEST = 2;
+
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, 2);
+            File file = null;
+            try {
+                file = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            imageURI = null;
+            if (file != null) {
+                imageURI = Uri.fromFile(file);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+            }
         }
     }
 
-    private Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File storageDir = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return File.createTempFile(timeStamp, ".jpg", storageDir);
     }
 
     private void choosePhoto() {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhoto , 1);
+        startActivityForResult(pickPhoto , GALLERY_REQUEST);
     }
-
-    private final int GALLERY_REQUEST = 1;
-    private final int CAMERA_REQUEST = 2;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -167,11 +183,9 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                 break;
             case CAMERA_REQUEST:
                 if (resultCode == RESULT_OK){
-                    assert data != null;
-                    Bundle extras = data.getExtras();
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    imageURI = getImageUri(this, imageBitmap);
-                    imageButtonAddPhoto.setImageBitmap(imageBitmap);
+                    if (imageURI != null){
+                        imageButtonAddPhoto.setImageURI(imageURI);
+                    }
                 }
                 break;
         }
