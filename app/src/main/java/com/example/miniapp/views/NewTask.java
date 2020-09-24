@@ -151,19 +151,23 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         startActivityForResult(pickPhoto , 1);
     }
 
+    private final int GALLERY_REQUEST = 1;
+    private final int CAMERA_REQUEST = 2;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
-            case 1:
+            case GALLERY_REQUEST:
                 if (resultCode == RESULT_OK) {
                     assert data != null;
                     imageURI = data.getData();
                     imageButtonAddPhoto.setImageURI(imageURI);
                 }
                 break;
-            case 2:
+            case CAMERA_REQUEST:
                 if (resultCode == RESULT_OK){
+                    assert data != null;
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
                     imageURI = getImageUri(this, imageBitmap);
