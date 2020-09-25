@@ -17,6 +17,8 @@ import com.example.miniapp.helper_classes.ISubscriber;
 import java.util.Date;
 
 public class UserDBManager extends DBManager implements IUserDBManager {
+    Query changesQuery;
+    ListenerToken listenerToken;
     public UserDBManager(String dbName, DatabaseConfiguration config){
         super(dbName, config);
     }
@@ -39,26 +41,20 @@ public class UserDBManager extends DBManager implements IUserDBManager {
 
     @Override
     public void listenForChanges(){
-        Query changesQuery = QueryBuilder.select(SelectResult.all())
-                .from(DataSource.database(currentDatabase));
+        listenerToken = changesQuery.addChangeListener(change -> {
+            for (Result result : change.getResults()) {
+                Dictionary all = result.getDictionary(currentDatabase.getName());
+                String task = all.getString("task");
+                Date dateCreated = all.getDate("dateCreated");
+                Date dateStart = all.getDate("dateStart");
+                boolean isDone = all.getBoolean("isDone");
+                String imageURI = all.getString("imageURI");
 
-        ListenerToken listenerToken = changesQuery.addChangeListener(new QueryChangeListener() {
-            @Override
-            public void changed(QueryChange change) {
-                for (Result result : change.getResults()) {
-                    Dictionary all = result.getDictionary(currentDatabase.getName());
-                    String task = all.getString("task");
-                    Date dateCreated = all.getDate("dateCreated");
-                    Date dateStart = all.getDate("dateStart");
-                    boolean isDone = all.getBoolean("isDone");
-                    String imageURI = all.getString("imageURI");
+                Task t = new Task(task, dateCreated, dateStart);
+                t.setDone(isDone);
+                t.addImageURI(imageURI);
 
-                    Task t = new Task(task, dateCreated, dateStart);
-                    t.setDone(isDone);
-                    t.addImageURI(imageURI);
-
-                    notifySubs(t);
-                }
+                notifySubs(t);
             }
         });
 
@@ -75,5 +71,21 @@ public class UserDBManager extends DBManager implements IUserDBManager {
         for(ISubscriber subscriber : listeners){
             subscriber.update(t);
         }
+    }
+
+    @Override
+    public void openDB() {
+        super.openDB();
+        changesQuery = QueryBuilder.select(SelectResult.all())
+                .from(DataSource.database(currentDatabase));
+    }
+
+    @Override
+    public void closeDB() {
+        if (listenerToken != null) {
+            changesQuery.removeChangeListener(listenerToken);
+        }
+
+        super.closeDB();
     }
 }
