@@ -28,6 +28,8 @@ import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.NotificationBroadcastReceiver;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -102,6 +104,13 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             wrappedAlarm(60, 1,"60s alive");
             wrappedAlarm(120, 2, "120s alive");
         });
+
+        String API_KEY = getString(R.string.api_key);
+        if (!Places.isInitialized()){
+            Places.initialize(getApplicationContext(), API_KEY);
+        }
+
+        PlacesClient placesClient = Places.createClient(this);
 
     }
 
