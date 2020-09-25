@@ -29,7 +29,10 @@ import com.example.miniapp.helper_classes.NotificationBroadcastReceiver;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -37,6 +40,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +57,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     private EditText editTextSelectDate;
     @NotEmpty
     private EditText editTextSelectTime;
+
+    private EditText editTextLocation;
 
     ImageButton imageButtonAddPhoto;
 
@@ -112,6 +118,17 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         PlacesClient placesClient = Places.createClient(this);
 
+        editTextLocation = findViewById(R.id.edit_text_location);
+        editTextLocation.setOnClickListener(view -> onSearchCalled());
+    }
+
+    private final int AUTOCOMPLETE_REQUEST_CODE = 3;
+
+    private void onSearchCalled() {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).setCountry("PH").build(this);
+
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
     // TODO: remove block later
@@ -194,6 +211,16 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                     }
                 }
                 break;
+            case AUTOCOMPLETE_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    assert data != null;
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    editTextLocation.setText(place.getAddress());
+                }
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected value: " + requestCode);
         }
     }
 
