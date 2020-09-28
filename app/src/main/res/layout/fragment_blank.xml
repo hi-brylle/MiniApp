@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_purple"
+    android:clickable="true"
+    tools:context=".views.BlankFragment">
+
+
+    <Button
+        android:id="@+id/button_close_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CLOSE?"
+        android:layout_centerInParent="true"
+        android:textAllCaps="false" />
+
+    <ImageView
+        android:id="@+id/fragment_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_close_fragment"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

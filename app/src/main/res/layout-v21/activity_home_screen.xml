@@ -30,8 +30,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:src="@mipmap/ic_launcher_round"
-        android:layout_margin="16dp"
-        android:stateListAnimator="@null"/>
+        android:layout_margin="16dp" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

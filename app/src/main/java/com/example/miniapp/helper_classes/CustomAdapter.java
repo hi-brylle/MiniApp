@@ -20,10 +20,12 @@ import java.util.ArrayList;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements ISubscriber<Task> {
     private IUserDBManager dbManager;
     public ArrayList<Task> taskList;
+    protected static onImageClickedListener imageClickedListener;
 
-    public CustomAdapter(UserDBManager userDBManager){
+    public CustomAdapter(UserDBManager userDBManager, onImageClickedListener imageClickedListener){
         this.dbManager = userDBManager;
         this.dbManager.addSub(this);
+        CustomAdapter.imageClickedListener = imageClickedListener;
         if (taskList == null){
             taskList = new ArrayList<>();
         }
@@ -118,9 +120,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
             if (!task.getImageURI().equals("")){
                 imageViewSub.setImageURI(Uri.parse(task.getImageURI()));
+                imageViewSub.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        imageClickedListener.onImageClicked(task.getImageURI());
+                    }
+                });
             }
             // TODO: add mark done?
         }
+    }
+
+    public interface onImageClickedListener {
+        void onImageClicked(String stringUri);
     }
 
 }

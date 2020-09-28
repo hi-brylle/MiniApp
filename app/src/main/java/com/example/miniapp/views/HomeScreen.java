@@ -2,6 +2,8 @@ package com.example.miniapp.views;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
@@ -18,8 +21,9 @@ import com.example.miniapp.helper_classes.TestService;
 import com.example.miniapp.models.UserDBManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class HomeScreen extends AppCompatActivity {
+public class HomeScreen extends AppCompatActivity implements CustomAdapter.onImageClickedListener {
     private CustomAdapter customAdapter;
+    private FrameLayout frameLayoutContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,9 @@ public class HomeScreen extends AppCompatActivity {
         // implement once again when connection to server is established
         // HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
 
-        customAdapter = new CustomAdapter(sharedDBManager);
+        frameLayoutContainer = findViewById(R.id.fragment_container);
+
+        customAdapter = new CustomAdapter(sharedDBManager, this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -105,5 +111,18 @@ public class HomeScreen extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);
         startActivity(intent);
+    }
+
+    public void openFragment(String stringUri){
+        BlankFragment fragment = BlankFragment.newInstance(stringUri);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.add(R.id.fragment_container, fragment, "BLANK_FRAGMENT").commit();
+    }
+
+    @Override
+    public void onImageClicked(String stringUri) {
+        openFragment(stringUri);
     }
 }
