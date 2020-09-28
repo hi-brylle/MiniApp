@@ -103,7 +103,13 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
     @Override
     public void onBackPressed() {
         Log.v("MY TAG", "SHOULD BE EXITING NOW");
-        exitApp();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0 ){
+            getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            super.onBackPressed();
+            exitApp();
+        }
+
     }
 
     private void exitApp(){
