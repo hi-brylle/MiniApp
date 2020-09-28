@@ -1,6 +1,5 @@
 package com.example.miniapp.views;
 
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,10 +16,10 @@ import com.example.miniapp.R;
 public class ImageFragment extends Fragment {
     Uri imageUri;
     ImageView imageView;
-    Drawable drawable;
+
 
     public ImageFragment() {
-        // Required empty public constructor
+
     }
 
     public static ImageFragment newInstance(String stringUri) {
@@ -36,7 +35,6 @@ public class ImageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null){
             imageUri = Uri.parse(getArguments().getString("stringUri"));
-            Log.v("MY TAG", "shit to load: " + imageUri);
         }
     }
 
