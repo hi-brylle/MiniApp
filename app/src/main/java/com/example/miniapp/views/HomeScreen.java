@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
@@ -23,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeScreen extends AppCompatActivity implements CustomAdapter.onImageClickedListener {
     private CustomAdapter customAdapter;
-    private FrameLayout frameLayoutContainer;
+    FloatingActionButton fabNewTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
         // implement once again when connection to server is established
         // HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
 
-        frameLayoutContainer = findViewById(R.id.fragment_container);
+        FrameLayout frameLayoutContainer = findViewById(R.id.fragment_container);
 
         customAdapter = new CustomAdapter(sharedDBManager, this);
 
@@ -48,7 +48,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
         recViewTaskList.setAdapter(customAdapter);
 
         Button buttonLogout = findViewById(R.id.button_logout);
-        FloatingActionButton fabNewTask = findViewById(R.id.fab_new_task);
+        fabNewTask = findViewById(R.id.fab_new_task);
 
         fabNewTask.setOnClickListener(view -> {
             Intent intent = new Intent(HomeScreen.this, NewTask.class);
@@ -102,11 +102,11 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
 
     @Override
     public void onBackPressed() {
-        Log.v("MY TAG", "SHOULD BE EXITING NOW");
         if (getSupportFragmentManager().getBackStackEntryCount() > 0 ){
             getSupportFragmentManager().popBackStackImmediate();
+            fabNewTask.setEnabled(true);
+            fabNewTask.setVisibility(View.VISIBLE);
         } else {
-            super.onBackPressed();
             exitApp();
         }
 
@@ -120,7 +120,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
     }
 
     public void openFragment(String stringUri){
-        BlankFragment fragment = BlankFragment.newInstance(stringUri);
+        ImageFragment fragment = ImageFragment.newInstance(stringUri);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.addToBackStack(null);
@@ -130,5 +130,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
     @Override
     public void onImageClicked(String stringUri) {
         openFragment(stringUri);
+        fabNewTask.setEnabled(false);
+        fabNewTask.setVisibility(View.GONE);
     }
 }
