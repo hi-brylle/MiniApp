@@ -23,9 +23,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     protected static onImageClickedListener imageClickedListener;
     private onItemLongClickedListener itemLongClickedListener;
 
-    // for item removal, stored during onLongClick, but only used when deletion is confirmed
-    private int cachedPosition;
-
     public CustomAdapter(UserDBManager userDBManager,
                          onImageClickedListener imageClickedListener,
                          onItemLongClickedListener itemLongClickedListener){
@@ -73,7 +70,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
         holder.itemView.setOnLongClickListener(view -> {
             Task longClicked = taskList.get(position);
-            cachedPosition = position;
             itemLongClickedListener.onItemLongClicked(longClicked);
             return true;
         });
