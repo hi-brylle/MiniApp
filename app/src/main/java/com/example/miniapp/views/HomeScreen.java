@@ -19,12 +19,15 @@ import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.TestService;
+import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
+import com.example.miniapp.viewmodels.HomeScreenViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeScreen extends AppCompatActivity implements CustomAdapter.onImageClickedListener, CustomAdapter.onItemLongClickedListener {
     private CustomAdapter customAdapter;
     FloatingActionButton fabNewTask;
+    HomeScreenViewModel homeScreenViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +37,8 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
         final String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         UserDBManager sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
 
-        // implement once again when connection to server is established
-        // HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
+        // TODO: implement fully once connection to server is established
+        homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
 
         FrameLayout frameLayoutContainer = findViewById(R.id.fragment_container);
 
@@ -136,7 +139,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
     }
 
     @Override
-    public void onItemLongClicked() {
+    public void onItemLongClicked(Task longClicked) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Delete task?")
                 .setCancelable(true)
@@ -145,6 +148,8 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
                 })
                 .setPositiveButton("Yes", (dialog, id) -> {
                     Toast.makeText(this, "(can't delete yet, our db is local)", Toast.LENGTH_SHORT).show();
+                    longClicked.queueForDeletion();
+                    homeScreenViewModel.queueForDeletion(longClicked);
                 });
         AlertDialog alert = builder.create();
         alert.show();

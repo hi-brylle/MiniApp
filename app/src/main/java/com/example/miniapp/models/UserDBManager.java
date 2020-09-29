@@ -4,13 +4,14 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Dictionary;
+import com.couchbase.lite.Expression;
 import com.couchbase.lite.ListenerToken;
+import com.couchbase.lite.Meta;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
-import com.couchbase.lite.QueryChange;
-import com.couchbase.lite.QueryChangeListener;
 import com.couchbase.lite.Result;
+import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 import com.example.miniapp.helper_classes.ISubscriber;
 
@@ -31,12 +32,37 @@ public class UserDBManager extends DBManager implements IUserDBManager {
         doc.setDate("dateStart", dateStart);
         doc.setBoolean("isDone", false);
         doc.setString("imageURI", imageURIString);
+        doc.setBoolean("isQueuedForDeletion", false);
 
         try {
             currentDatabase.save(doc);
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void queueDelete(String task, Date dateCreated, Date dateStart) {
+        Query docQuery = QueryBuilder.select(SelectResult.expression(Meta.id))
+                                        .from(DataSource.database(currentDatabase))
+                                        .where(Expression.property("task").equalTo(Expression.string(task))
+                                            .add(Expression.property("dateCreated").equalTo(Expression.date(dateCreated)))
+                                            .add(Expression.property("dateStart").equalTo(Expression.date(dateStart))));
+
+        try {
+            ResultSet resultSet = docQuery.execute();
+            for(Result result : resultSet){
+                String id = result.getString("id");
+                MutableDocument mutableDocument  = currentDatabase.getDocument(id).toMutable();
+                mutableDocument.setBoolean("isQueuedForDeletion", true);
+                currentDatabase.save(mutableDocument);
+                notifySubs(null);
+            }
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
@@ -49,12 +75,18 @@ public class UserDBManager extends DBManager implements IUserDBManager {
                 Date dateStart = all.getDate("dateStart");
                 boolean isDone = all.getBoolean("isDone");
                 String imageURI = all.getString("imageURI");
+                boolean isQueuedForDeletion = all.getBoolean("isQueuedForDeletion");
 
-                Task t = new Task(task, dateCreated, dateStart);
-                t.setDone(isDone);
-                t.addImageURI(imageURI);
+                if(!isQueuedForDeletion){
+                    Task t = new Task(task, dateCreated, dateStart);
+                    // TODO: change setDone based on date and time
+                    t.setDone(isDone);
+                    t.addImageURI(imageURI);
 
-                notifySubs(t);
+                    notifySubs(t);
+                }
+
+
             }
         });
 

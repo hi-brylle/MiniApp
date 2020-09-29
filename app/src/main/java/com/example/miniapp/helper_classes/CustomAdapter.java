@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.miniapp.R;
@@ -22,7 +21,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     private IUserDBManager dbManager;
     public ArrayList<Task> taskList;
     protected static onImageClickedListener imageClickedListener;
-    onItemLongClickedListener itemLongClickedListener;
+    private onItemLongClickedListener itemLongClickedListener;
+
+    // for item removal, stored during onLongClick, but only used when deletion is confirmed
+    private int cachedPosition;
 
     public CustomAdapter(UserDBManager userDBManager,
                          onImageClickedListener imageClickedListener,
@@ -69,12 +71,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             notifyItemChanged(position);
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                itemLongClickedListener.onItemLongClicked();
-                return true;
-            }
+        holder.itemView.setOnLongClickListener(view -> {
+            Task longClicked = taskList.get(position);
+            cachedPosition = position;
+            itemLongClickedListener.onItemLongClicked(longClicked);
+            return true;
         });
 
     }
@@ -101,7 +102,18 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     @Override
     public void update(Task t) {
-        taskList.add(t);
+        if (t != null){
+            taskList.add(t);
+        }
+        // due to Java's type erasure, I cannot implement this class to implement both
+        // ISub<T> and ISub<Int>
+        // this is a hack, however, right now, addition and deletion of items are the only
+        // two actions that can be done with the list, so I guess this is okay. I hope I'm not wrong.
+        else {
+            updateList();
+        }
+
+        taskList.trimToSize();
         notifyDataSetChanged();
     }
 
@@ -144,7 +156,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     }
 
     public interface onItemLongClickedListener {
-        void onItemLongClicked();
+        void onItemLongClicked(Task longClicked);
     }
 
 }
