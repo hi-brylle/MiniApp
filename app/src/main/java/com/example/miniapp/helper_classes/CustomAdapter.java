@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.miniapp.R;
@@ -21,11 +22,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     private IUserDBManager dbManager;
     public ArrayList<Task> taskList;
     protected static onImageClickedListener imageClickedListener;
+    onItemLongClickedListener itemLongClickedListener;
 
-    public CustomAdapter(UserDBManager userDBManager, onImageClickedListener imageClickedListener){
+    public CustomAdapter(UserDBManager userDBManager,
+                         onImageClickedListener imageClickedListener,
+                         onItemLongClickedListener itemLongClickedListener){
         this.dbManager = userDBManager;
         this.dbManager.addSub(this);
         CustomAdapter.imageClickedListener = imageClickedListener;
+        this.itemLongClickedListener = itemLongClickedListener;
         if (taskList == null){
             taskList = new ArrayList<>();
         }
@@ -62,6 +67,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             boolean expanded = task.isExpanded();
             task.setExpanded(!expanded);
             notifyItemChanged(position);
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                itemLongClickedListener.onItemLongClicked();
+                return true;
+            }
         });
 
     }
@@ -120,12 +133,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
             if (!task.getImageURI().equals("")){
                 imageViewSub.setImageURI(Uri.parse(task.getImageURI()));
-                imageViewSub.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        imageClickedListener.onImageClicked(task.getImageURI());
-                    }
-                });
+                imageViewSub.setOnClickListener(view -> imageClickedListener.onImageClicked(task.getImageURI()));
             }
             // TODO: add mark done?
         }
@@ -133,6 +141,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     public interface onImageClickedListener {
         void onImageClicked(String stringUri);
+    }
+
+    public interface onItemLongClickedListener {
+        void onItemLongClicked();
     }
 
 }

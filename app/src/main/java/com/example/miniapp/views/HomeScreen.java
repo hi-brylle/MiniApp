@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
@@ -21,7 +22,7 @@ import com.example.miniapp.helper_classes.TestService;
 import com.example.miniapp.models.UserDBManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class HomeScreen extends AppCompatActivity implements CustomAdapter.onImageClickedListener {
+public class HomeScreen extends AppCompatActivity implements CustomAdapter.onImageClickedListener, CustomAdapter.onItemLongClickedListener {
     private CustomAdapter customAdapter;
     FloatingActionButton fabNewTask;
 
@@ -38,7 +39,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
 
         FrameLayout frameLayoutContainer = findViewById(R.id.fragment_container);
 
-        customAdapter = new CustomAdapter(sharedDBManager, this);
+        customAdapter = new CustomAdapter(sharedDBManager, this, this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -132,5 +133,20 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
         openFragment(stringUri);
         fabNewTask.setEnabled(false);
         fabNewTask.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onItemLongClicked() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Delete task?")
+                .setCancelable(true)
+                .setNegativeButton("Cancel", (dialogInterface, i) -> {
+
+                })
+                .setPositiveButton("Yes", (dialog, id) -> {
+                    Toast.makeText(this, "(can't delete yet, our db is local)", Toast.LENGTH_SHORT).show();
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
