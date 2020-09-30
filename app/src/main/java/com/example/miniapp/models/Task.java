@@ -10,6 +10,7 @@ public class Task {
     private boolean isExpanded; // for use in the recycler view only; not stored in DB
     private boolean isQueuedForDeletion;
     private String imageURI;
+    private String address;
 
     public Task(String task, Date created, Date start){
         this.task = task;
@@ -17,6 +18,8 @@ public class Task {
         this.dateStart = start;
         this.isDone = false;
         isQueuedForDeletion = false;
+        imageURI = "";
+        address = "";
     }
 
     public void setDone(boolean m){
@@ -33,6 +36,10 @@ public class Task {
 
     protected void addImageURI(String imageURI){
         this.imageURI = imageURI;
+    }
+
+    public void setAddress(String address){
+        this.address = address;
     }
 
     public String getTask() {
@@ -61,5 +68,9 @@ public class Task {
 
     public String getImageURI(){
         return imageURI;
+    }
+
+    public String getAddress(){
+        return address;
     }
 }

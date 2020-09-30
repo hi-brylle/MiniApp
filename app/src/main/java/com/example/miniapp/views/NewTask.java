@@ -58,6 +58,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     @NotEmpty
     private EditText editTextSelectTime;
 
+    EditText editTextLocation;
     ImageButton imageButtonAddPhoto;
 
     private TaskViewModel taskViewModel;
@@ -66,6 +67,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     Date dateStart;
     Date dateCreated;
     Uri imageURI;
+    String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextTask = findViewById(R.id.edit_text_task);
         editTextSelectDate = findViewById(R.id.edit_text_select_date);
         editTextSelectTime = findViewById(R.id.edit_text_select_time);
+        editTextLocation = findViewById(R.id.edit_text_location);
         Button buttonSaveTask = findViewById(R.id.button_save_task);
         imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
 
@@ -94,6 +97,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         editTextSelectDate.setOnClickListener(view -> openDatePickerDialog());
         editTextSelectTime.setOnClickListener(view -> openTimePickerDialog());
+        editTextLocation.setOnClickListener(view -> onSearchCalled());
 
         buttonSaveTask.setOnClickListener(view -> {
             if(taskViewModel.isValid(dateStart)){
@@ -116,9 +120,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             wrappedAlarm(60, 1,"60s alive");
             wrappedAlarm(120, 2, "120s alive");
         });
-
-        EditText editTextLocation = findViewById(R.id.edit_text_location);
-        editTextLocation.setOnClickListener(view -> onSearchCalled());
     }
 
     // TODO: remove block later
@@ -185,7 +186,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     }
 
     private void onSearchCalled() {
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
+        List<Place.Field> fields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS);
 
         Intent intent = new Autocomplete.IntentBuilder(
                 AutocompleteActivityMode.FULLSCREEN, fields).setCountry("PH")
@@ -216,8 +217,9 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                 if (resultCode == RESULT_OK){
                     assert data != null;
                     Place place = Autocomplete.getPlaceFromIntent(data);
-                    String address = place.getAddress();
-                    Log.v("MY TAG", "place: " + address);
+                    address = place.getAddress();
+                    editTextLocation.setText(address);
+                    Log.v("MY TAG", "place name if you're curious " + place.getName());
                 }
                 break;
 
@@ -318,13 +320,15 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         dateCreated = Calendar.getInstance().getTime();
 
         String imageURIString = imageURI == null ? "" : imageURI.toString();
+        String addressString = address == null ? "" : address;
 
-        taskViewModel.submit(task, dateCreated, dateStart, imageURIString);
+        taskViewModel.submit(task, dateCreated, dateStart, imageURIString, addressString);
 
         Log.v("MY TAG", "Task: " + task);
         Log.v("MY TAG", "Created: " + dateCreated);
         Log.v("MY TAG", "Start: " + dateStart);
         Log.v("MY TAG", "URI: " + imageURI);
+        Log.v("MY TAG", "Address: " + addressString);
 
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
 

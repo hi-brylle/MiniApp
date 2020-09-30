@@ -39,8 +39,8 @@ public class TaskViewModel {
         dbManager.closeDB();
     }
 
-    public void submit(String task, Date created, Date start, String imageURIString){
-        dbManager.create(task, created, start, imageURIString);
+    public void submit(String task, Date created, Date start, String imageURIString, String addressString){
+        dbManager.create(task, created, start, imageURIString, addressString);
     }
 
     public boolean isValid(Date dateTimeSelected) {

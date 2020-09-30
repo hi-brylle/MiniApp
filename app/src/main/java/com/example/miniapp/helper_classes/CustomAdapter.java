@@ -118,6 +118,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         public TextView textViewSubDateStart;
         private TextView textViewSubDateCreated;
         private View subItem;
+        private TextView textViewSubAddress;
         private ImageView imageViewSub;
 
         public CustomViewHolder(@NonNull View itemView) {
@@ -127,6 +128,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             textViewSubDateStart = itemView.findViewById(R.id.text_view_sub_date_start);
             textViewSubDateCreated = itemView.findViewById(R.id.text_view_sub_date_created);
             subItem = itemView.findViewById(R.id.layout_sub_items);
+            textViewSubAddress = itemView.findViewById(R.id.text_view_sub_address);
             imageViewSub = itemView.findViewById(R.id.image_view_sub);
         }
 
@@ -139,11 +141,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             textViewSubDateStart.setText(String.format("Start by: %s", task.getDateStart()));
             textViewSubDateCreated.setText(String.format("Date created: %s", task.getDateCreated()));
 
+            if (!task.getAddress().equals("")){
+                textViewSubAddress.setText(task.getAddress());
+            }
+
             if (!task.getImageURI().equals("")){
                 imageViewSub.setImageURI(Uri.parse(task.getImageURI()));
                 imageViewSub.setOnClickListener(view -> imageClickedListener.onImageClicked(task.getImageURI()));
             }
-            // TODO: add mark done?
+
         }
     }
 

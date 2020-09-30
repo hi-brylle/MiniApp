@@ -37,6 +37,13 @@
             android:text="Date created"
             android:textSize="20sp" />
 
+        <TextView
+            android:id="@+id/text_view_sub_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address"
+            android:textSize="20sp" />
+
         <ImageView
             android:id="@+id/image_view_sub"
             android:layout_width="wrap_content"

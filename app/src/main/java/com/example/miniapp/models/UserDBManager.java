@@ -25,13 +25,14 @@ public class UserDBManager extends DBManager implements IUserDBManager {
     }
 
     @Override
-    public void create(String task, Date dateCreated, Date dateStart, String imageURIString){
+    public void create(String task, Date dateCreated, Date dateStart, String imageURIString, String addressString){
         MutableDocument doc = new MutableDocument();
         doc.setString("task", task);
         doc.setDate("dateCreated", dateCreated);
         doc.setDate("dateStart", dateStart);
         doc.setBoolean("isDone", false);
         doc.setString("imageURI", imageURIString);
+        doc.setString("address", addressString);
         doc.setBoolean("isQueuedForDeletion", false);
 
         try {
@@ -75,13 +76,17 @@ public class UserDBManager extends DBManager implements IUserDBManager {
                 Date dateStart = all.getDate("dateStart");
                 boolean isDone = all.getBoolean("isDone");
                 String imageURI = all.getString("imageURI");
+                String address = all.getString("address");
                 boolean isQueuedForDeletion = all.getBoolean("isQueuedForDeletion");
 
                 if(!isQueuedForDeletion){
                     Task t = new Task(task, dateCreated, dateStart);
                     // TODO: change setDone based on date and time
                     t.setDone(isDone);
+
+                    // these are never null, but may be empty strings
                     t.addImageURI(imageURI);
+                    t.setAddress(address);
 
                     notifySubs(t);
                 }
