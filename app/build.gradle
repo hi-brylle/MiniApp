@@ -38,4 +38,5 @@ dependencies {
     implementation 'com.couchbase.lite:couchbase-lite-android:2.1.0'
     implementation 'com.mobsandgeeks:android-saripaar:2.0.3'
     implementation 'androidx.work:work-runtime:2.4.0'
+    implementation 'com.google.android.libraries.places:places:1.1.0'
 }
