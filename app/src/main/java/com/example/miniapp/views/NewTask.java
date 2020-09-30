@@ -67,7 +67,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     Date dateStart;
     Date dateCreated;
     Uri imageURI;
-    String address;
+    String completeAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,9 +217,8 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                 if (resultCode == RESULT_OK){
                     assert data != null;
                     Place place = Autocomplete.getPlaceFromIntent(data);
-                    address = place.getAddress();
-                    editTextLocation.setText(address);
-                    Log.v("MY TAG", "place name if you're curious " + place.getName());
+                    completeAddress = place.getName() + ", " + place.getAddress();
+                    editTextLocation.setText(completeAddress);
                 }
                 break;
 
@@ -320,7 +319,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         dateCreated = Calendar.getInstance().getTime();
 
         String imageURIString = imageURI == null ? "" : imageURI.toString();
-        String addressString = address == null ? "" : address;
+        String addressString = completeAddress == null ? "" : completeAddress;
 
         taskViewModel.submit(task, dateCreated, dateStart, imageURIString, addressString);
 
