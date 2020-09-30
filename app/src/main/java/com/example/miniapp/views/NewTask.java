@@ -28,6 +28,11 @@ import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.NotificationBroadcastReceiver;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.TaskViewModel;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -35,6 +40,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -68,6 +74,14 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         validator = new Validator(this);
         validator.setValidationListener(this);
+
+        String apiKey = getString(R.string.api_key);
+
+        if(!Places.isInitialized()){
+            Places.initialize(getApplicationContext(), apiKey);
+        }
+
+        PlacesClient placesClient = Places.createClient(this);
 
         editTextTask = findViewById(R.id.edit_text_task);
         editTextSelectDate = findViewById(R.id.edit_text_select_date);
@@ -107,10 +121,6 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         editTextLocation.setOnClickListener(view -> onSearchCalled());
     }
 
-    private void onSearchCalled() {
-        Toast.makeText(this, "sorry. under construction", Toast.LENGTH_SHORT).show();
-    }
-
     // TODO: remove block later
     public void wrappedAlarm(int seconds, int notificationID, String task){
         Toast.makeText(NewTask.this, "Alarm Set!", Toast.LENGTH_SHORT).show();
@@ -140,6 +150,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
     private final int GALLERY_REQUEST = 1;
     private final int CAMERA_REQUEST = 2;
+    private final int AUTOCOMPLETE_REQUEST = 3;
 
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -173,6 +184,15 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         startActivityForResult(pickPhoto , GALLERY_REQUEST);
     }
 
+    private void onSearchCalled() {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
+
+        Intent intent = new Autocomplete.IntentBuilder(
+                AutocompleteActivityMode.FULLSCREEN, fields).setCountry("PH")
+                .build(this);
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -189,6 +209,15 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
                     if (imageURI != null){
                         imageButtonAddPhoto.setImageURI(imageURI);
                     }
+                }
+                break;
+
+            case AUTOCOMPLETE_REQUEST:
+                if (resultCode == RESULT_OK){
+                    assert data != null;
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    String address = place.getAddress();
+                    Log.v("MY TAG", "place: " + address);
                 }
                 break;
 
