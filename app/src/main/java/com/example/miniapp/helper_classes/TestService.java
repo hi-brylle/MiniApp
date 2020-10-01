@@ -121,10 +121,12 @@ public class TestService extends Service implements ISubscriber<Task> {
     }
 
     private void cancelAll(){
-        for(Pair<Integer, String> pair : activeTasks){
-            cancelAlarm(pair.first, pair.second);
+        if (activeTasks != null){
+            for(Pair<Integer, String> pair : activeTasks){
+                cancelAlarm(pair.first, pair.second);
+            }
+            Log.v("MY TAG", "cancelled all alarms for user");
         }
-        Log.v("MY TAG", "cancelled all alarms for user");
     }
 
 }

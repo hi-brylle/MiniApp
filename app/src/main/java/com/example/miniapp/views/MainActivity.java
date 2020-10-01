@@ -3,7 +3,11 @@ package com.example.miniapp.views;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -71,13 +75,12 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     protected void onStart() {
         super.onStart();
         loginViewModel.openDB();
-        Log.v("MY TAG", "onStart called");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v("MY TAG", "onResume called");
+
         // this closes the app when the Back button is pressed in Home Screen
         if (getIntent().getBooleanExtra("EXIT", false)){
             finish();
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Override
     protected void onStop() {
         super.onStop();
+        attemptSync();
         loginViewModel.closeDB();
     }
 
@@ -179,5 +183,28 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Override
     public void update(Integer loginStatus) {
         handleLoginStatus(loginStatus);
+    }
+
+    private void attemptSync(){
+        BroadcastReceiver wifiStateReceiver =  new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+
+                switch (wifiState) {
+                    case WifiManager.WIFI_STATE_ENABLED:
+                        // TODO: add service for replicator of db for user login credentials
+                        Toast.makeText(context, "Wifi is Enabled", Toast.LENGTH_SHORT).show();
+                        break;
+                    case WifiManager.WIFI_STATE_DISABLED:
+                        // do nothing
+                        break;
+
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(wifiStateReceiver, intentFilter);
     }
 }
