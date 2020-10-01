@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name=".helper_classes.TestService" />
+        <service android:name=".helper_classes.AlarmService" />
 
         <receiver android:name=".helper_classes.BootReceiver">
             <intent-filter>

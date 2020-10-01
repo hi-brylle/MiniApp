@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TestService extends Service implements ISubscriber<Task> {
+public class AlarmService extends Service implements ISubscriber<Task> {
     ArrayList<Pair<Integer, String>> activeTasks;
 
-    public TestService() {
+    public AlarmService() {
     }
 
     @Override

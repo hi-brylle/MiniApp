@@ -18,7 +18,7 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
-import com.example.miniapp.helper_classes.TestService;
+import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
@@ -74,7 +74,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
                     SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(getApplicationContext());
                     sharedPrefUtils.clearLogin();
 
-                    Intent stopServiceIntent = new Intent(getApplicationContext(), TestService.class);
+                    Intent stopServiceIntent = new Intent(getApplicationContext(), AlarmService.class);
                     stopService(stopServiceIntent);
 
                     exitApp();

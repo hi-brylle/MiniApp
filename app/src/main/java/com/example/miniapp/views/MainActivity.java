@@ -19,7 +19,7 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
-import com.example.miniapp.helper_classes.TestService;
+import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.models.LoginDBManager;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void startServiceForUser() {
-        Intent alarmServiceIntent = new Intent(MainActivity.this, TestService.class);
+        Intent alarmServiceIntent = new Intent(MainActivity.this, AlarmService.class);
         startService(alarmServiceIntent);
     }
 
