@@ -8,10 +8,10 @@ import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TaskViewModel {
+public class NewTaskViewModel {
     private IUserDBManager dbManager;
 
-    public TaskViewModel(IUserDBManager dbManager){
+    public NewTaskViewModel(IUserDBManager dbManager){
         this.dbManager = dbManager;
     }
 

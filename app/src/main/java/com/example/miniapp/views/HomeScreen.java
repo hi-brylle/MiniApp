@@ -36,8 +36,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
 
         final String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
         UserDBManager sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
-
-        // TODO: implement fully once connection to server is established
+        
         homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
 
         FrameLayout frameLayoutContainer = findViewById(R.id.fragment_container);

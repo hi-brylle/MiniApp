@@ -27,7 +27,7 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.NotificationBroadcastReceiver;
 import com.example.miniapp.models.UserDBManager;
-import com.example.miniapp.viewmodels.TaskViewModel;
+import com.example.miniapp.viewmodels.NewTaskViewModel;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -61,7 +61,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     EditText editTextLocation;
     ImageButton imageButtonAddPhoto;
 
-    private TaskViewModel taskViewModel;
+    private NewTaskViewModel taskViewModel;
 
     String task;
     Date dateStart;
@@ -93,7 +93,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
 
         String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
-        taskViewModel = new TaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
+        taskViewModel = new NewTaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
 
         editTextSelectDate.setOnClickListener(view -> openDatePickerDialog());
         editTextSelectTime.setOnClickListener(view -> openTimePickerDialog());
@@ -296,7 +296,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         // set date component of dateStart
         dateStart = calendar.getTime();
 
-        editTextSelectDate.setText(TaskViewModel.dateRepresentation(i, i1, i2));
+        editTextSelectDate.setText(NewTaskViewModel.dateRepresentation(i, i1, i2));
     }
 
     @Override
@@ -311,7 +311,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         // set time component of dateStart
         dateStart = calendar.getTime();
 
-        editTextSelectTime.setText(TaskViewModel.timeRepresentation(i, i1));
+        editTextSelectTime.setText(NewTaskViewModel.timeRepresentation(i, i1));
     }
 
     private void saveTask() {
