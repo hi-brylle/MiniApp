@@ -3,9 +3,7 @@ package com.example.miniapp.views;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,7 +22,6 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
-import com.example.miniapp.helper_classes.NotificationBroadcastReceiver;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.NewTaskViewModel;
 import com.google.android.libraries.places.api.Places;
@@ -112,9 +109,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             popupMenu.inflate(R.menu.popup_menu);
             popupMenu.show();
         });
-
     }
-
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {

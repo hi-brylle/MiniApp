@@ -9,7 +9,7 @@
         android:id="@+id/edit_text_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Task" />
+        android:hint="@string/task" />
 
     <EditText
         android:id="@+id/edit_text_select_date"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_text_task"
         android:layout_centerInParent="true"
-        android:hint="Select Date"
+        android:hint="@string/select_date"
         android:inputType="none"
         android:clickable="true"
         android:focusable="false"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_text_select_date"
         android:layout_centerInParent="true"
-        android:hint="Select Time"
+        android:hint="@string/select_time"
         android:inputType="none"
         android:clickable="true"
         android:focusable="false"
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_text_location"
         android:layout_centerInParent="true"
-        android:text="Save Task"
+        android:text="@string/save_task"
         android:textAllCaps="false" />
 
     <Button
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/button_save_task"
         android:layout_centerInParent="true"
-        android:text="Test Alarm"
+        android:text="@string/test_alarm"
         android:textAllCaps="false" />
 
     <ImageButton

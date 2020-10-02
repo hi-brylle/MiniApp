@@ -14,7 +14,7 @@
         android:id="@+id/text_view_task_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sample task"
+        android:text="@string/sample_task"
         android:textSize="20sp" />
 
     <LinearLayout
@@ -27,14 +27,14 @@
             android:id="@+id/text_view_sub_date_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date start"
+            android:text="@string/date_start"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/text_view_sub_date_created"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date created"
+            android:text="@string/date_created"
             android:textSize="20sp" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:id="@+id/image_view_sub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Attached photo" />
+            android:contentDescription="@string/attached_photo" />
 
     </LinearLayout>
 

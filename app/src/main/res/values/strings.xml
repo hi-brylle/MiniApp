@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">MiniApp</string>
     <string name="api_key">AIzaSyA3Tt8aiDQxRmNA4XmDABsE4iNlmhmsaLc</string>
+    <string name="logout">Logout</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="task">Task</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_time">Select Time</string>
+    <string name="save_task">Save Task</string>
+    <string name="test_alarm">Test Alarm</string>
+    <string name="sample_task">Sample task</string>
+    <string name="date_start">Date start</string>
+    <string name="date_created">Date created</string>
+    <string name="attached_photo">Attached photo</string>
 </resources>
