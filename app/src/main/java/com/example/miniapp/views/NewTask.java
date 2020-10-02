@@ -113,8 +113,26 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
             popupMenu.show();
         });
 
+        // TODO: remove block later
+        Button buttonTestAlarm = findViewById(R.id.button_test_alarm);
+        buttonTestAlarm.setOnClickListener(view -> {
+            wrappedAlarm(60, 1,"60s alive");
+            wrappedAlarm(120, 2, "120s alive");
+        });
     }
 
+    // TODO: remove block later
+    public void wrappedAlarm(int seconds, int notificationID, String task){
+        Toast.makeText(NewTask.this, "Alarm Set!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(NewTask.this, NotificationBroadcastReceiver.class);
+        intent.putExtra("task", task);
+        intent.putExtra("notificationID", notificationID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(NewTask.this, notificationID, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long timeAtButtonClick = System.currentTimeMillis();
+        long timeInMS = 1000 * seconds;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonClick + timeInMS, pendingIntent);
+    }
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
