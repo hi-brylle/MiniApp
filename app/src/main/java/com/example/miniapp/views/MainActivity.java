@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Override
     protected void onStop() {
         super.onStop();
-        attemptSync();
         loginViewModel.closeDB();
     }
 

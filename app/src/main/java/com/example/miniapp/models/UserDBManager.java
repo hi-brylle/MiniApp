@@ -1,5 +1,7 @@
 package com.example.miniapp.models;
 
+import android.util.Log;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
@@ -56,7 +58,6 @@ public class UserDBManager extends DBManager implements IUserDBManager {
                 MutableDocument mutableDocument  = currentDatabase.getDocument(id).toMutable();
                 mutableDocument.setBoolean("isQueuedForDeletion", true);
                 currentDatabase.save(mutableDocument);
-                notifySubs(null);
             }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
@@ -68,43 +69,31 @@ public class UserDBManager extends DBManager implements IUserDBManager {
     @Override
     public void listenForChanges(){
         listenerToken = changesQuery.addChangeListener(change -> {
-            if (change.getResults() != null) {
-                for (Result result : change.getResults()) {
-                    Dictionary all = result.getDictionary(currentDatabase.getName());
-                    String task = all.getString("task");
-                    Date dateCreated = all.getDate("dateCreated");
-                    Date dateStart = all.getDate("dateStart");
-                    boolean isDone = all.getBoolean("isDone");
-                    String imageURI = all.getString("imageURI");
-                    String address = all.getString("address");
-                    Boolean isQueuedForDeletion = all.getBoolean("isQueuedForDeletion");
+            for (Result result : change.getResults()) {
+                Dictionary all = result.getDictionary(currentDatabase.getName());
+                String task = all.getString("task");
+                Date dateCreated = all.getDate("dateCreated");
+                Date dateStart = all.getDate("dateStart");
+                boolean isDone = all.getBoolean("isDone");
+                String imageURI = all.getString("imageURI");
+                String address = all.getString("address");
 
-                    if (isQueuedForDeletion.equals(null)){
-                        if (isQueuedForDeletion){
-                            return;
-                        } else {
-                            Task t = new Task(task, dateCreated, dateStart);
-                            // TODO: change setDone based on date and time
-                            t.setDone(isDone);
+                Task t = new Task(task, dateCreated, dateStart);
 
-                            // these are never null, but may be empty strings
-                            t.addImageURI(imageURI);
-                            t.setAddress(address);
+                // TODO: change setDone based on date and time
+                t.setDone(isDone);
+                t.addImageURI(imageURI);
+                t.setAddress(address);
 
-                            notifySubs(t);
-                        }
-                    } else {
-                        Task t = new Task(task, dateCreated, dateStart);
-                        // TODO: change setDone based on date and time
-                        t.setDone(isDone);
+                Log.v("MY TAG", "Task Retrieved: " + task);
+                Log.v("MY TAG", "Created Retrieved: " + dateCreated);
+                Log.v("MY TAG", "Start Retrieved: " + dateStart);
+                Log.v("MY TAG", "URI Retrieved: " + imageURI);
+                Log.v("MY TAG", "Address Retrieved: " + address);
 
-                        // these are never null, but may be empty strings
-                        t.addImageURI(imageURI);
-                        t.setAddress(address);
+                notifySubs(t);
 
-                        notifySubs(t);
-                    }
-                }
+
             }
         });
 
@@ -117,7 +106,6 @@ public class UserDBManager extends DBManager implements IUserDBManager {
 
     @Override
     public void notifySubs(Task t) {
-        // notify listeners (CustomAdapter and HomeScreenViewModel)
         for(ISubscriber subscriber : listeners){
             subscriber.update(t);
         }

@@ -320,13 +320,10 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
 
         newTaskViewModel.submit(task, dateCreated, dateStart, imageURI, completeAddress);
 
-        Log.v("MY TAG", "Task: " + task);
-        Log.v("MY TAG", "Created: " + dateCreated);
-        Log.v("MY TAG", "Start: " + dateStart);
-        Log.v("MY TAG", "URI: " + imageURI);
-        Log.v("MY TAG", "Address: " + completeAddress);
-
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
+
+        imageURI = null;
+        completeAddress = null;
 
         finish();
     }

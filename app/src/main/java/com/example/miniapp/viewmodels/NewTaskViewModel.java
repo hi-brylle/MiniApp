@@ -2,6 +2,7 @@ package com.example.miniapp.viewmodels;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.miniapp.models.IUserDBManager;
 
@@ -46,6 +47,12 @@ public class NewTaskViewModel {
         String address = completeAddress == null ? "" : completeAddress;
 
         dbManager.create(task, created, start, imageURIString, address);
+
+        Log.v("MY TAG", "Task: " + task);
+        Log.v("MY TAG", "Created: " + created);
+        Log.v("MY TAG", "Start: " + start);
+        Log.v("MY TAG", "URI: " + imageURIString);
+        Log.v("MY TAG", "Address: " + address);
     }
 
     public boolean isValid(Date dateTimeSelected) {

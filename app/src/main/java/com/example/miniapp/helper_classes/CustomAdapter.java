@@ -1,6 +1,7 @@
 package com.example.miniapp.helper_classes;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         this.dbManager.addSub(this);
         CustomAdapter.imageClickedListener = imageClickedListener;
         this.itemLongClickedListener = itemLongClickedListener;
+
         if (taskList == null){
             taskList = new ArrayList<>();
         }
@@ -69,8 +71,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         });
 
         holder.itemView.setOnLongClickListener(view -> {
-            Task longClicked = taskList.get(position);
-            itemLongClickedListener.onItemLongClicked(longClicked);
+            itemLongClickedListener.onItemLongClicked();
             return true;
         });
 
@@ -98,18 +99,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     @Override
     public void update(Task t) {
-        if (t != null){
-            taskList.add(t);
-        }
-        // due to Java's type erasure, I cannot implement this class to implement both
-        // ISub<T> and ISub<Int>
-        // this is a hack, however, right now, addition and deletion of items are the only
-        // two actions that can be done with the list, so I guess this is okay. I hope I'm not wrong.
-        else {
-            updateList();
-        }
-
-        taskList.trimToSize();
+        taskList.add(t);
         notifyDataSetChanged();
     }
 
@@ -140,15 +130,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             textViewTaskRow.setText(task.getTask());
             textViewSubDateStart.setText(String.format("Start by: %s", task.getDateStart()));
             textViewSubDateCreated.setText(String.format("Date created: %s", task.getDateCreated()));
-
-            if (!task.getAddress().equals("") && task.getAddress() != null){
-                textViewSubAddress.setText(task.getAddress());
-            }
-
-            if (!task.getImageURI().equals("") && task.getImageURI() != null){
-                imageViewSub.setImageURI(Uri.parse(task.getImageURI()));
-                imageViewSub.setOnClickListener(view -> imageClickedListener.onImageClicked(task.getImageURI()));
-            }
+            textViewSubAddress.setText(task.getAddress());
+            imageViewSub.setImageURI(Uri.parse(task.getImageURI()));
 
         }
     }
@@ -158,7 +141,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     }
 
     public interface onItemLongClickedListener {
-        void onItemLongClicked(Task longClicked);
+        void onItemLongClicked();
     }
 
 }

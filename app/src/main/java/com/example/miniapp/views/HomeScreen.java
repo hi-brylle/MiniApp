@@ -92,9 +92,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
     @Override
     protected void onResume() {
         super.onResume();
-        // updates items to be shown in the RecyclerView
         customAdapter.updateList();
-        customAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -138,7 +136,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
     }
 
     @Override
-    public void onItemLongClicked(Task longClicked) {
+    public void onItemLongClicked() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Delete task?")
                 .setCancelable(true)
@@ -147,8 +145,6 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
                 })
                 .setPositiveButton("Yes", (dialog, id) -> {
                     Toast.makeText(this, "(can't delete yet, our db is local)", Toast.LENGTH_SHORT).show();
-                    longClicked.queueForDeletion();
-                    homeScreenViewModel.queueForDeletion(longClicked);
                 });
         AlertDialog alert = builder.create();
         alert.show();
