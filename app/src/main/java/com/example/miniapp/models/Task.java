@@ -8,7 +8,7 @@ public class Task {
     private Date dateStart;
     private boolean isDone;
     private boolean isExpanded; // for use in the recycler view only; not stored in DB
-    private boolean isQueuedForDeletion;
+    private Boolean isQueuedForDeletion;
     private String imageURI;
     private String address;
 
@@ -17,7 +17,6 @@ public class Task {
         this.dateCreated = created;
         this.dateStart = start;
         this.isDone = false;
-        isQueuedForDeletion = false;
         imageURI = "";
         address = "";
     }

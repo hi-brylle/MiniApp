@@ -61,13 +61,13 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     EditText editTextLocation;
     ImageButton imageButtonAddPhoto;
 
-    private NewTaskViewModel taskViewModel;
+    private NewTaskViewModel newTaskViewModel;
 
     String task;
     Date dateStart;
     Date dateCreated;
-    Uri imageURI;
-    String completeAddress;
+    Uri imageURI = null;
+    String completeAddress = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,14 +93,14 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
 
         String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
-        taskViewModel = new NewTaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
+        newTaskViewModel = new NewTaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
 
         editTextSelectDate.setOnClickListener(view -> openDatePickerDialog());
         editTextSelectTime.setOnClickListener(view -> openTimePickerDialog());
         editTextLocation.setOnClickListener(view -> onSearchCalled());
 
         buttonSaveTask.setOnClickListener(view -> {
-            if(taskViewModel.isValid(dateStart)){
+            if(newTaskViewModel.isValid(dateStart)){
                 validator.validate();
             } else {
                 editTextSelectTime.setError("Time cannot be from the past");
@@ -230,13 +230,13 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     @Override
     protected void onStart() {
         super.onStart();
-        taskViewModel.openDB();
+        newTaskViewModel.openDB();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        taskViewModel.closeDB();
+        newTaskViewModel.closeDB();
     }
 
     @Override
@@ -318,16 +318,13 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         task = String.valueOf(editTextTask.getText());
         dateCreated = Calendar.getInstance().getTime();
 
-        String imageURIString = imageURI == null ? "" : imageURI.toString();
-        String addressString = completeAddress == null ? "" : completeAddress;
-
-        taskViewModel.submit(task, dateCreated, dateStart, imageURIString, addressString);
+        newTaskViewModel.submit(task, dateCreated, dateStart, imageURI, completeAddress);
 
         Log.v("MY TAG", "Task: " + task);
         Log.v("MY TAG", "Created: " + dateCreated);
         Log.v("MY TAG", "Start: " + dateStart);
         Log.v("MY TAG", "URI: " + imageURI);
-        Log.v("MY TAG", "Address: " + addressString);
+        Log.v("MY TAG", "Address: " + completeAddress);
 
         Toast.makeText(this, "Task Saved", Toast.LENGTH_SHORT).show();
 

@@ -1,6 +1,7 @@
 package com.example.miniapp.viewmodels;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 
 import com.example.miniapp.models.IUserDBManager;
 
@@ -39,8 +40,12 @@ public class NewTaskViewModel {
         dbManager.closeDB();
     }
 
-    public void submit(String task, Date created, Date start, String imageURIString, String addressString){
-        dbManager.create(task, created, start, imageURIString, addressString);
+    public void submit(String task, Date created, Date start, Uri imageURI, String completeAddress){
+
+        String imageURIString = imageURI == null ? "" : imageURI.toString();
+        String address = completeAddress == null ? "" : completeAddress;
+
+        dbManager.create(task, created, start, imageURIString, address);
     }
 
     public boolean isValid(Date dateTimeSelected) {

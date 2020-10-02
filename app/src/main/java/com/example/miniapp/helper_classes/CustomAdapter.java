@@ -141,11 +141,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             textViewSubDateStart.setText(String.format("Start by: %s", task.getDateStart()));
             textViewSubDateCreated.setText(String.format("Date created: %s", task.getDateCreated()));
 
-            if (!task.getAddress().equals("")){
+            if (!task.getAddress().equals("") && task.getAddress() != null){
                 textViewSubAddress.setText(task.getAddress());
             }
 
-            if (!task.getImageURI().equals("")){
+            if (!task.getImageURI().equals("") && task.getImageURI() != null){
                 imageViewSub.setImageURI(Uri.parse(task.getImageURI()));
                 imageViewSub.setOnClickListener(view -> imageClickedListener.onImageClicked(task.getImageURI()));
             }

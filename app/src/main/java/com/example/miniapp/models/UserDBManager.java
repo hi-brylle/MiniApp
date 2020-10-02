@@ -25,15 +25,14 @@ public class UserDBManager extends DBManager implements IUserDBManager {
     }
 
     @Override
-    public void create(String task, Date dateCreated, Date dateStart, String imageURIString, String addressString){
+    public void create(String task, Date dateCreated, Date dateStart, String imageURIString, String address){
         MutableDocument doc = new MutableDocument();
         doc.setString("task", task);
         doc.setDate("dateCreated", dateCreated);
         doc.setDate("dateStart", dateStart);
         doc.setBoolean("isDone", false);
         doc.setString("imageURI", imageURIString);
-        doc.setString("address", addressString);
-        doc.setBoolean("isQueuedForDeletion", false);
+        doc.setString("address", address);
 
         try {
             currentDatabase.save(doc);
@@ -69,29 +68,43 @@ public class UserDBManager extends DBManager implements IUserDBManager {
     @Override
     public void listenForChanges(){
         listenerToken = changesQuery.addChangeListener(change -> {
-            for (Result result : change.getResults()) {
-                Dictionary all = result.getDictionary(currentDatabase.getName());
-                String task = all.getString("task");
-                Date dateCreated = all.getDate("dateCreated");
-                Date dateStart = all.getDate("dateStart");
-                boolean isDone = all.getBoolean("isDone");
-                String imageURI = all.getString("imageURI");
-                String address = all.getString("address");
-                boolean isQueuedForDeletion = all.getBoolean("isQueuedForDeletion");
+            if (change.getResults() != null) {
+                for (Result result : change.getResults()) {
+                    Dictionary all = result.getDictionary(currentDatabase.getName());
+                    String task = all.getString("task");
+                    Date dateCreated = all.getDate("dateCreated");
+                    Date dateStart = all.getDate("dateStart");
+                    boolean isDone = all.getBoolean("isDone");
+                    String imageURI = all.getString("imageURI");
+                    String address = all.getString("address");
+                    Boolean isQueuedForDeletion = all.getBoolean("isQueuedForDeletion");
 
-                if(!isQueuedForDeletion){
-                    Task t = new Task(task, dateCreated, dateStart);
-                    // TODO: change setDone based on date and time
-                    t.setDone(isDone);
+                    if (isQueuedForDeletion.equals(null)){
+                        if (isQueuedForDeletion){
+                            return;
+                        } else {
+                            Task t = new Task(task, dateCreated, dateStart);
+                            // TODO: change setDone based on date and time
+                            t.setDone(isDone);
 
-                    // these are never null, but may be empty strings
-                    t.addImageURI(imageURI);
-                    t.setAddress(address);
+                            // these are never null, but may be empty strings
+                            t.addImageURI(imageURI);
+                            t.setAddress(address);
 
-                    notifySubs(t);
+                            notifySubs(t);
+                        }
+                    } else {
+                        Task t = new Task(task, dateCreated, dateStart);
+                        // TODO: change setDone based on date and time
+                        t.setDone(isDone);
+
+                        // these are never null, but may be empty strings
+                        t.addImageURI(imageURI);
+                        t.setAddress(address);
+
+                        notifySubs(t);
+                    }
                 }
-
-
             }
         });
 
