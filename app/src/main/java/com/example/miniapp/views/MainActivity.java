@@ -20,6 +20,7 @@ import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.AlarmService;
+import com.example.miniapp.helper_classes.TestWifiService;
 import com.example.miniapp.models.LoginDBManager;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -146,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void login(String userEmailExtra) {
+        startConnectivityService();
+
         // start alarm service prior to login
         startServiceForUser();
 
@@ -157,6 +160,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     private void setAlwaysLoggedIn(){
         sharedPrefUtils.recordUserLogin(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
+    }
+
+    private void startConnectivityService() {
+        Intent testWifiServiceIntent = new Intent(MainActivity.this, TestWifiService.class);
+        startService(testWifiServiceIntent);
     }
 
     private void startServiceForUser() {

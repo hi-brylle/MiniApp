@@ -19,6 +19,8 @@
 
         <service android:name=".helper_classes.AlarmService" />
 
+        <service android:name=".helper_classes.TestWifiService" />
+
         <receiver android:name=".helper_classes.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
