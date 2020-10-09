@@ -16,7 +16,7 @@ public final class PasswordHash {
                 sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
             }
 
-            return sb.toString();
+            return sb.toString().toUpperCase();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
