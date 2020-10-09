@@ -13,7 +13,6 @@ import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 import com.example.miniapp.helper_classes.PWHash;
-import com.example.miniapp.helper_classes.PasswordHash;
 
 public class LoginDBManager extends DBManager implements ILoginDBManager {
     public LoginDBManager(DatabaseConfiguration config){
@@ -26,7 +25,6 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
     public void register(String email, String password) {
         MutableDocument doc = new MutableDocument();
         doc.setString("email", email);
-        doc.setString("hash", PasswordHash.hash(password));
         doc.setString("hash", PWHash.hash(password));
 
         try {
