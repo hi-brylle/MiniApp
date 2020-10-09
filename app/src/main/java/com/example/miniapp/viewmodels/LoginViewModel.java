@@ -1,9 +1,8 @@
 package com.example.miniapp.viewmodels;
 
-import android.util.Log;
-
 import com.example.miniapp.helper_classes.IPublisher;
 import com.example.miniapp.helper_classes.ISubscriber;
+import com.example.miniapp.helper_classes.Logger;
 import com.example.miniapp.models.ILoginDBManager;
 
 public class LoginViewModel implements IViewModel, IPublisher<Integer> {
@@ -30,10 +29,10 @@ public class LoginViewModel implements IViewModel, IPublisher<Integer> {
     public void verify(String email, String password) {
         boolean isEmailRegistered = dbManager.isEmailRegistered(email);
         Boolean isPasswordCorrect = null;
-        Log.v("MY TAG", "email reg: " + isEmailRegistered);
+        Logger.log("registered email: " + isEmailRegistered);
         if (isEmailRegistered){
             isPasswordCorrect = dbManager.verifyCredentials(email, password);
-            Log.v("MY TAG", "password correct: " + isPasswordCorrect);
+            Logger.log("password correct: " + isPasswordCorrect);
         }
 
         // the following integers are used for the login status

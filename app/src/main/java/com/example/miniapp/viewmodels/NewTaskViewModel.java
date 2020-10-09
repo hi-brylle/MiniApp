@@ -2,8 +2,8 @@ package com.example.miniapp.viewmodels;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
-import android.util.Log;
 
+import com.example.miniapp.helper_classes.Logger;
 import com.example.miniapp.models.IUserDBManager;
 
 import java.text.DateFormatSymbols;
@@ -48,11 +48,11 @@ public class NewTaskViewModel {
 
         dbManager.create(task, created, start, imageURIString, address);
 
-        Log.v("MY TAG", "Task: " + task);
-        Log.v("MY TAG", "Created: " + created);
-        Log.v("MY TAG", "Start: " + start);
-        Log.v("MY TAG", "URI: " + imageURIString);
-        Log.v("MY TAG", "Address: " + address);
+        Logger.log("Task: " + task);
+        Logger.log("Created: " + created);
+        Logger.log("Start: " + start);
+        Logger.log("URI: " + imageURIString);
+        Logger.log("Address: " + address);
     }
 
     public boolean isValid(Date dateTimeSelected) {

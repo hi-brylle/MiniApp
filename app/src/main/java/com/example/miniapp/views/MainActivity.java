@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.ISubscriber;
+import com.example.miniapp.helper_classes.Logger;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.helper_classes.TestWifiService;
@@ -61,9 +61,9 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     private void checkSharedPrefs() {
         if (sharedPrefUtils.isUserLoggedOut()){
-            Log.v("MY TAG", "previous user logged out.");
+            Logger.log("previous user logged out.");
         } else {
-            Log.v("MY TAG", "auto login");
+            Logger.log("auto login");
             login(sharedPrefUtils.getEmailFromSP());
         }
     }
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 break;
 
             default:
-                Log.v("MY TAG", "Error in login status for some reason");
+                Logger.log("Error in login status for some reason");
         }
     }
 

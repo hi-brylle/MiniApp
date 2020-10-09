@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -23,7 +22,7 @@ public class TestWifiService extends Service {
 
             switch (wifiState) {
                 case WifiManager.WIFI_STATE_ENABLED:
-                    Log.v("MY TAG", "pinging google...");
+                    Logger.log("pinging google...");
                     new Thread(new PingURL()).start();
                     break;
 
@@ -42,7 +41,7 @@ public class TestWifiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v("MY TAG", "TEST SERVICE STARTED");
+        Logger.log("NET TEST SERVICE STARTED");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         registerReceiver(wifiOnReceiver, intentFilter);
@@ -66,7 +65,7 @@ public class TestWifiService extends Service {
                 connection.connect();
 
                 if(connection.getResponseCode() == 200){
-                    Log.v("MY TAG", "Connection OK");
+                    Logger.log("Connection OK");
                     // TODO: Connection OK, do the things (replicator service)
                 }
             } catch (IOException e) {

@@ -32,17 +32,17 @@ public class AlarmService extends Service implements ISubscriber<Task> {
     @Override
     public void onDestroy() {
         cancelAll();
-        Log.v("MY TAG", "SERVICE STOPPED");
+        Logger.log("ALARM SERVICE STOPPED");
         super.onDestroy();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v("MY TAG", "SERVICE STARTED");
+        Logger.log("ALARM SERVICE STARTED");
         SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(this);
 
         if (sharedPrefUtils.isUserLoggedOut()){
-            Log.v("MY TAG", "previous user logged out.");
+            Logger.log("previous user logged out.");
         } else {
             start(sharedPrefUtils.getEmailFromSP());
         }
@@ -61,7 +61,7 @@ public class AlarmService extends Service implements ISubscriber<Task> {
     }
 
     private void start(String emailFromSP) {
-        Log.v("MY TAG", "start service for user " + emailFromSP);
+        Logger.log("start service for user " + emailFromSP);
         IUserDBManager dbManager = new UserDBManager(emailFromSP, new DatabaseConfiguration(this));
         dbManager.addSub(this);
         dbManager.openDB();
@@ -81,7 +81,7 @@ public class AlarmService extends Service implements ISubscriber<Task> {
             int notificationID = (int) (unixTimestamp / 1000);
 
             if(unixTimestamp == 0 || notificationID == 0){
-                Log.v("MY TAG", "Warning: default values on service params");
+                Logger.log("Warning: default values on service params");
             }
 
             // record task now for cancellation should user log out
@@ -105,7 +105,7 @@ public class AlarmService extends Service implements ISubscriber<Task> {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), notificationID, intent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, unixTimestamp, pendingIntent);
-        Log.v("MY TAG", "alarm set for " + task + " at " + unixTimestamp);
+        Logger.log("alarm set for " + task + " at " + unixTimestamp);
     }
 
     private void cancelAlarm(int notificationID, String task){
@@ -116,7 +116,7 @@ public class AlarmService extends Service implements ISubscriber<Task> {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         if (pendingIntent != null) {
             alarmManager.cancel(pendingIntent);
-            Log.v("MY TAG", "cancelled alarm for " + task + " with ID " + notificationID);
+            Logger.log("cancelled alarm for " + task + " with ID " + notificationID);
         }
     }
 
@@ -125,7 +125,7 @@ public class AlarmService extends Service implements ISubscriber<Task> {
             for(Pair<Integer, String> pair : activeTasks){
                 cancelAlarm(pair.first, pair.second);
             }
-            Log.v("MY TAG", "cancelled all alarms for user");
+            Logger.log("cancelled all alarms for user");
         }
     }
 

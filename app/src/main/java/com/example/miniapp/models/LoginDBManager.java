@@ -1,7 +1,5 @@
 package com.example.miniapp.models;
 
-import android.util.Log;
-
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
@@ -12,6 +10,7 @@ import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
+import com.example.miniapp.helper_classes.Logger;
 import com.example.miniapp.helper_classes.PWHash;
 
 public class LoginDBManager extends DBManager implements ILoginDBManager {
@@ -77,7 +76,7 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
             }
 
             for(Result result: results){
-                Log.v("MY TAG", "email found: " + result.getString("email"));
+                Logger.log("email found: " + result.getString("email"));
                 if (email.equals(result.getString("email"))){
                     isEmailRegistered = true;
                 }
@@ -101,10 +100,10 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
 
         try {
             ResultSet resultSet = hashQuery.execute();
-            Log.v("MY TAG", "matched users");
+            Logger.log("matched users");
             for(Result result : resultSet){
-               Log.v("MY TAG", "email: " + result.getString("email"));
-               Log.v("MY TAG", "hash: " + result.getString("hash"));
+                Logger.log("email: " + result.getString("email"));
+                Logger.log("hash: " + result.getString("hash"));
                if(email.equals(result.getString("email")) && PWHash.hash(password).equals(result.getString("hash"))){
                    isPasswordCorrect = true;
                }

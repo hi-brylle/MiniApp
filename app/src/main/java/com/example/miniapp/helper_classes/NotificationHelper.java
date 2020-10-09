@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -46,11 +45,9 @@ public class NotificationHelper extends ContextWrapper {
                 .setSmallIcon(R.drawable.ic_alarm_clock);
     }
 
-
-    // TODO: add pending intent to do something when notification is clicked
     public void sendNotification(int notificationID, String task) {
         if (notificationID == 0){
-            Log.v("MY TAG", "Error in sending notification");
+            Logger.log("Error in sending notification");
         }
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder(task);
         notificationManager.notify(notificationID, notifyBuilder.build());

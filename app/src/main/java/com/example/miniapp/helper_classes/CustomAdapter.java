@@ -1,7 +1,6 @@
 package com.example.miniapp.helper_classes;
 
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

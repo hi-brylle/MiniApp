@@ -1,7 +1,5 @@
 package com.example.miniapp.models;
 
-import android.util.Log;
-
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.DatabaseConfiguration;
@@ -16,6 +14,7 @@ import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 import com.example.miniapp.helper_classes.ISubscriber;
+import com.example.miniapp.helper_classes.Logger;
 
 import java.util.Date;
 
@@ -85,11 +84,11 @@ public class UserDBManager extends DBManager implements IUserDBManager {
                 t.addImageURI(imageURI);
                 t.setAddress(address);
 
-                Log.v("MY TAG", "Task Retrieved: " + task);
-                Log.v("MY TAG", "Created Retrieved: " + dateCreated);
-                Log.v("MY TAG", "Start Retrieved: " + dateStart);
-                Log.v("MY TAG", "URI Retrieved: " + imageURI);
-                Log.v("MY TAG", "Address Retrieved: " + address);
+                Logger.log("Task Retrieved: " + task);
+                Logger.log("Created Retrieved: " + dateCreated);
+                Logger.log("Start Retrieved: " + dateStart);
+                Logger.log("URI Retrieved: " + imageURI);
+                Logger.log("Address Retrieved: " + address);
 
                 notifySubs(t);
 
