@@ -12,6 +12,7 @@ import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
+import com.example.miniapp.helper_classes.PWHash;
 import com.example.miniapp.helper_classes.PasswordHash;
 
 public class LoginDBManager extends DBManager implements ILoginDBManager {
@@ -26,6 +27,7 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
         MutableDocument doc = new MutableDocument();
         doc.setString("email", email);
         doc.setString("hash", PasswordHash.hash(password));
+        doc.setString("hash", PWHash.hash(password));
 
         try {
             currentDatabase.save(doc);
@@ -97,7 +99,7 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
         Query hashQuery = QueryBuilder.select(SelectResult.property("email"), SelectResult.property("hash"))
                         .from(DataSource.database(currentDatabase))
                         .where(Expression.property("email").equalTo(Expression.string(email))
-                                .add(Expression.property("hash").equalTo(Expression.string(PasswordHash.hash(password)))));
+                                .add(Expression.property("hash").equalTo(Expression.string(PWHash.hash(password)))));
 
         try {
             ResultSet resultSet = hashQuery.execute();
@@ -105,7 +107,7 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
             for(Result result : resultSet){
                Log.v("MY TAG", "email: " + result.getString("email"));
                Log.v("MY TAG", "hash: " + result.getString("hash"));
-               if(email.equals(result.getString("email")) && PasswordHash.hash(password).equals(result.getString("hash"))){
+               if(email.equals(result.getString("email")) && PWHash.hash(password).equals(result.getString("hash"))){
                    isPasswordCorrect = true;
                }
             }
