@@ -16,7 +16,6 @@ import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.Logger;
 import com.example.miniapp.helper_classes.PWHash;
 import com.example.miniapp.helper_classes.SecureSharedPref;
-import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.helper_classes.TestWifiService;
 import com.example.miniapp.models.LoginDBManager;

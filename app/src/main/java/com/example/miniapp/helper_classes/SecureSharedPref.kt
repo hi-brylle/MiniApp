@@ -23,7 +23,7 @@ class SecureSharedPref(val context: Context){
         val storedEmail = sharedPref().getString("email", "")
         val storedPassword = sharedPref().getString("hash", "")
 
-        return storedEmail == "" || storedPassword == ""
+        return if (storedEmail == null || storedPassword == null) true else (storedEmail == "" || storedPassword == "")
     }
 
     fun getLoggedEmail(): String? {
