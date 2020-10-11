@@ -14,6 +14,7 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.Logger;
+import com.example.miniapp.helper_classes.PWHash;
 import com.example.miniapp.helper_classes.SecureSharedPref;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.AlarmService;
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void setAlwaysLoggedIn(){
-        secureSharedPref.recordLogin(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
+        secureSharedPref.recordLogin(String.valueOf(editTextEmail.getText()), PWHash.hash(String.valueOf(editTextPassword.getText())));
     }
 
     private void startConnectivityService() {

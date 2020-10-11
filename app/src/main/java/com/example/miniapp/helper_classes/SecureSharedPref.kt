@@ -7,10 +7,10 @@ class SecureSharedPref(val context: Context){
     // store shared preferences as lambda lmao
     private val sharedPref = {context.getSharedPreferences("loggedInUser", Context.MODE_PRIVATE)}
 
-    fun recordLogin(email: String, password: String){
+    fun recordLogin(email: String, hash: String){
         val editor: SharedPreferences.Editor = sharedPref().edit()
         editor.putString("email", email)
-        editor.putString("password", password)
+        editor.putString("hash", hash)
         editor.apply()
     }
 
@@ -21,7 +21,7 @@ class SecureSharedPref(val context: Context){
 
     fun isUserLoggedOut(): Boolean {
         val storedEmail = sharedPref().getString("email", "")
-        val storedPassword = sharedPref().getString("password", "")
+        val storedPassword = sharedPref().getString("hash", "")
 
         return storedEmail == "" || storedPassword == ""
     }
