@@ -36,7 +36,7 @@ public class NotificationHelper extends ContextWrapper {
 
     private NotificationCompat.Builder getNotificationBuilder(String task){
         Intent openAppIntent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, openAppIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, openAppIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("To-do:")
