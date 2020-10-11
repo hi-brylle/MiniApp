@@ -27,7 +27,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".helper_classes.NotificationBroadcastReceiver" />
+        <receiver android:name=".helper_classes.SendNotificationReceiver" />
 
         <activity android:name=".views.NewTask"
                 android:configChanges="orientation|screenSize" />
