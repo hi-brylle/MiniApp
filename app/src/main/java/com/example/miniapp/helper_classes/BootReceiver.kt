@@ -1,19 +1,15 @@
-package com.example.miniapp.helper_classes;
+package com.example.miniapp.helper_classes
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 
-import java.util.Objects;
-
-public class BootReceiver extends BroadcastReceiver {
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")){
-            Logger.log("Boot broadcast received");
-            Intent alarmServiceIntent = new Intent(context, AlarmService.class);
-            context.startService(alarmServiceIntent);
+class BootReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == "android.intent.action.BOOT_COMPLETED") {
+            log("Boot broadcast received")
+            val alarmServiceIntent = Intent(context, AlarmService::class.java)
+            context.startService(alarmServiceIntent)
         }
     }
 }
