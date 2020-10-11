@@ -14,6 +14,7 @@ import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.Logger;
+import com.example.miniapp.helper_classes.SecureSharedPref;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.helper_classes.TestWifiService;
@@ -29,7 +30,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Validator.ValidationListener, ISubscriber<Integer> {
 
-    SharedPrefUtils sharedPrefUtils;
+    SecureSharedPref secureSharedPref;
 
     private Validator validator;
     @NotEmpty
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPrefUtils = new SharedPrefUtils(getApplicationContext());
+        secureSharedPref = new SecureSharedPref(getApplicationContext());
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -60,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void checkSharedPrefs() {
-        if (sharedPrefUtils.isUserLoggedOut()){
+        if (secureSharedPref.isUserLoggedOut()){
             Logger.log("previous user logged out.");
         } else {
             Logger.log("auto login");
-            login(sharedPrefUtils.getEmailFromSP());
+            login(secureSharedPref.getLoggedEmail());
         }
     }
 
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     }
 
     private void setAlwaysLoggedIn(){
-        sharedPrefUtils.recordUserLogin(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
+        secureSharedPref.recordLogin(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
     }
 
     private void startConnectivityService() {

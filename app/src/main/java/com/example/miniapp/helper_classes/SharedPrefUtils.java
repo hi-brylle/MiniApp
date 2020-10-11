@@ -3,14 +3,13 @@ package com.example.miniapp.helper_classes;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.miniapp.R;
-
 public class SharedPrefUtils {
     private SharedPreferences userLoginTrackerSharedPref;
     private String emailFromSP;
 
     public SharedPrefUtils(Context context){
-        userLoginTrackerSharedPref = context.getSharedPreferences(context.getString(R.string.logged_in_username), Context.MODE_PRIVATE);
+        String SHARED_PREF_KEY = "loggedInUser";
+        userLoginTrackerSharedPref = context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE);
     }
 
     public boolean isUserLoggedOut(){

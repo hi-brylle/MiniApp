@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
+import com.example.miniapp.helper_classes.SecureSharedPref;
 import com.example.miniapp.helper_classes.SharedPrefUtils;
 import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.models.UserDBManager;
@@ -70,8 +71,8 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
 
                 })
                 .setPositiveButton("Log out", (dialogInterface, i) -> {
-                    SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(getApplicationContext());
-                    sharedPrefUtils.clearLogin();
+                    SecureSharedPref secureSharedPref = new SecureSharedPref(getApplicationContext());
+                    secureSharedPref.clearLogin();
 
                     Intent stopServiceIntent = new Intent(getApplicationContext(), AlarmService.class);
                     stopService(stopServiceIntent);

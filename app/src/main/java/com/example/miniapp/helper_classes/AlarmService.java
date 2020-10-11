@@ -39,12 +39,12 @@ public class AlarmService extends Service implements ISubscriber<Task> {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.log("ALARM SERVICE STARTED");
-        SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(this);
+        SecureSharedPref secureSharedPref = new SecureSharedPref(getApplicationContext());
 
-        if (sharedPrefUtils.isUserLoggedOut()){
+        if (secureSharedPref.isUserLoggedOut()){
             Logger.log("previous user logged out.");
         } else {
-            start(sharedPrefUtils.getEmailFromSP());
+            start(secureSharedPref.getLoggedEmail());
         }
 
         return START_STICKY;
