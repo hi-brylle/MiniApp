@@ -1,13 +1,12 @@
-package com.example.miniapp.helper_classes;
+package com.example.miniapp.helper_classes
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 
-public class NotificationBroadcastReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        NotificationHelper notificationHelper = new NotificationHelper(context);
-        notificationHelper.sendNotification(intent.getIntExtra("notificationID", 0), intent.getStringExtra("task"));
+class NotificationBroadcastReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val notificationHelper = NotificationHelper(context)
+        notificationHelper.sendNotification(intent.getIntExtra("notificationID", 0), intent.getStringExtra("task"))
     }
 }
