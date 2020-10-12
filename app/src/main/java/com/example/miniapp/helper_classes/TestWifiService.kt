@@ -1,76 +1,68 @@
-package com.example.miniapp.helper_classes;
+package com.example.miniapp.helper_classes
 
-import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
-import android.os.IBinder;
+import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.wifi.WifiManager
+import android.os.IBinder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-import androidx.annotation.Nullable;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-public class TestWifiService extends Service {
-    BroadcastReceiver wifiOnReceiver =  new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-
-            switch (wifiState) {
-                case WifiManager.WIFI_STATE_ENABLED:
-                    Logger.log("pinging google...");
-                    new Thread(new PingURL()).start();
-                    break;
-
-                case WifiManager.WIFI_STATE_DISABLED:
-                    // nothing
-                    break;
-            }
-        }
-    };
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Logger.log("NET TEST SERVICE STARTED");
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        registerReceiver(wifiOnReceiver, intentFilter);
-
-        return START_STICKY;
-    }
-
-    @Override
-    public boolean stopService(Intent name) {
-        unregisterReceiver(wifiOnReceiver);
-        return super.stopService(name);
-    }
-
-    static class PingURL implements Runnable {
-        @Override
-        public void run() {
-            try {
-                URL url = new URL("https://www.google.com/");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setConnectTimeout(2000);
-                connection.connect();
-
-                if(connection.getResponseCode() == 200){
-                    Logger.log("Connection OK");
-                    // TODO: Connection OK, do the things (replicator service)
+class TestWifiService : Service() {
+    private var wifiOnReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
+            if(wifiState == WifiManager.WIFI_STATE_ENABLED){
+                CoroutineScope(IO).launch {
+                    val t1 = Date().time
+                    pingGoogle()
+                    val t2 = Date().time
+                    log("time spent: ${t2 - t1} ms")
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
+    }
+
+    override fun onBind(intent: Intent): IBinder? {
+        return null
+    }
+
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        log("NET TEST SERVICE STARTED")
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+        registerReceiver(wifiOnReceiver, intentFilter)
+        return START_STICKY
+    }
+
+    override fun stopService(name: Intent): Boolean {
+        unregisterReceiver(wifiOnReceiver)
+        return super.stopService(name)
+    }
+
+     fun pingGoogle(){
+         try {
+             log("pinging google...")
+             val url = URL("https://www.google.com/")
+             val connection = url.openConnection() as HttpURLConnection
+             connection.connectTimeout = 2000
+             connection.connect()
+             if (connection.responseCode == 200) {
+                 log("Connection OK")
+                 // TODO: Connection OK, do the things (replicator service)
+             }
+         } catch (e: IOException) {
+             e.printStackTrace()
+         }
     }
 }
