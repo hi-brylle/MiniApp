@@ -21,15 +21,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     private IUserDBManager dbManager;
     public ArrayList<Task> taskList;
     protected static onImageClickedListener imageClickedListener;
-    private onItemLongClickedListener itemLongClickedListener;
 
     public CustomAdapter(UserDBManager userDBManager,
-                         onImageClickedListener imageClickedListener,
-                         onItemLongClickedListener itemLongClickedListener){
+                         onImageClickedListener imageClickedListener){
         this.dbManager = userDBManager;
         this.dbManager.addSub(this);
         CustomAdapter.imageClickedListener = imageClickedListener;
-        this.itemLongClickedListener = itemLongClickedListener;
 
         if (taskList == null){
             taskList = new ArrayList<>();
@@ -67,11 +64,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
             boolean expanded = task.isExpanded();
             task.setExpanded(!expanded);
             notifyItemChanged(position);
-        });
-
-        holder.itemView.setOnLongClickListener(view -> {
-            itemLongClickedListener.onItemLongClicked();
-            return true;
         });
 
     }
@@ -137,10 +129,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     public interface onImageClickedListener {
         void onImageClicked(String stringUri);
-    }
-
-    public interface onItemLongClickedListener {
-        void onItemLongClicked();
     }
 
 }
