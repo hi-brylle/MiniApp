@@ -9,14 +9,11 @@ import android.net.wifi.WifiManager
 import android.os.IBinder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
 class TestWifiService : Service() {
     private var wifiOnReceiver: BroadcastReceiver = object : BroadcastReceiver() {
