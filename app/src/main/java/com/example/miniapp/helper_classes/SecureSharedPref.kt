@@ -3,20 +3,20 @@ package com.example.miniapp.helper_classes
 import android.content.Context
 import android.content.SharedPreferences
 
-class SecureSharedPref(val context: Context){
+class SecureSharedPref(val context: Context) {
     // store shared preferences as lambda lmao
-    private val sharedPref = {context.getSharedPreferences("loggedInUser", Context.MODE_PRIVATE)}
+    private val sharedPref = { context.getSharedPreferences("loggedInUser", Context.MODE_PRIVATE) }
 
-    fun recordLogin(email: String, hash: String){
+    fun recordLogin(email: String, hash: String) {
         val editor: SharedPreferences.Editor = sharedPref().edit()
         editor.putString("email", email)
         editor.putString("hash", hash)
         editor.apply()
     }
 
-    fun clearLogin(){
+    fun clearLogin() {
         // empty the shared pref
-        recordLogin("","")
+        recordLogin("", "")
     }
 
     fun isUserLoggedOut(): Boolean {
