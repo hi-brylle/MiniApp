@@ -81,7 +81,7 @@ public class UserDBManager extends DBManager implements IUserDBManager {
 
                 // TODO: change setDone based on date and time
                 t.setDone(isDone);
-                t.addImageURI(imageURI);
+                t.setImageURI(imageURI);
                 t.setAddress(address);
 
                 Logger.log("Task Retrieved: " + task);
