@@ -108,6 +108,7 @@ class AlarmService : Service(), ISubscriber<Task?> {
         for (pair in activeTasks) {
             cancelAlarm(pair.first, pair.second)
         }
+        activeTasks.clear()
         log("cancelled all alarms for user")
     }
 }
