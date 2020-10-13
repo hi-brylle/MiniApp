@@ -15,7 +15,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class AlarmService : Service(), ISubscriber<Task?> {
-    private var activeTasks: ArrayList<Pair<Int, String>> = ArrayList()
+    private lateinit var activeTasks: ArrayList<Pair<Int, String>>
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -35,6 +35,7 @@ class AlarmService : Service(), ISubscriber<Task?> {
         if (secureSharedPref.isUserLoggedOut()) {
             log("previous user logged out.")
         } else {
+            activeTasks = ArrayList()
             start(secureSharedPref.getLoggedEmail())
         }
 
