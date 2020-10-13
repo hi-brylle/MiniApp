@@ -61,21 +61,24 @@ class AlarmService : Service(), ISubscriber<Task?> {
     override fun update(updateInput: Task?) {
         val now = Calendar.getInstance().time
 
-        if (updateInput?.dateStart?.after(now)!!) {
-            val task = updateInput.task
-            val dateStart = updateInput.dateStart!!
-            val unixTimestamp = dateStart.time
+        updateInput?.let{ taskData ->
+            taskData.dateStart?.let {dateStart ->
+                if(dateStart.after(now)){
+                    val task = taskData.task
+                    val unixTimestamp = dateStart.time
 
-            // notification ID identifies the pending intent
-            val notificationID = (unixTimestamp / 1000).toInt()
+                    // notification ID identifies the pending intent
+                    val notificationID = (unixTimestamp / 1000).toInt()
 
-            if (unixTimestamp == 0L || notificationID == 0) {
-                log("Warning: default values on service params")
+                    if (unixTimestamp == 0L || notificationID == 0) {
+                        log("Warning: default values on service params")
+                    }
+
+                    // record task now for cancellation should user log out
+                    recordActiveTask(task, notificationID)
+                    setAlarm(task, unixTimestamp, notificationID)
+                }
             }
-
-            // record task now for cancellation should user log out
-            recordActiveTask(task, notificationID)
-            setAlarm(task, unixTimestamp, notificationID)
         }
     }
 
