@@ -16,11 +16,12 @@ import java.net.URL
 import java.util.*
 
 class TestWifiService : Service() {
-    private var wifiOnReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private val wifiOnReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
             if(wifiState == WifiManager.WIFI_STATE_ENABLED){
                 CoroutineScope(IO).launch {
+                    log("NET TEST RUNNING ON ${Thread.currentThread().name}")
                     val t1 = Date().time
                     pingGoogle()
                     val t2 = Date().time

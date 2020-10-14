@@ -20,6 +20,7 @@ import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.helper_classes.TestWifiService;
 import com.example.miniapp.helper_classes.UserDBListenerService;
 import com.example.miniapp.models.LoginDBManager;
+import com.example.miniapp.models.Repository;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     private void startListenerService(String userEmailExtra){
         Intent listenerServiceIntent = new Intent(MainActivity.this, UserDBListenerService.class);
         listenerServiceIntent.putExtra("email", userEmailExtra);
+        listenerServiceIntent.setAction("INTENT_ACTION_DB_CHANGED");
         startService(listenerServiceIntent);
     }
 
