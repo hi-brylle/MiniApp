@@ -6,6 +6,5 @@ import java.util.Date;
 
 public interface IUserDBManager extends IDBManager, IPublisher<Task> {
     void create(String task, Date dateCreated, Date dateStart, String imageURIString, String addressString);
-    void queueDelete(String task, Date dateCreated, Date dateStart);
     void listenForChanges();
 }

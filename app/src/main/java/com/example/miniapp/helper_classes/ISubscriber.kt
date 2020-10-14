@@ -1,5 +1,5 @@
-package com.example.miniapp.helper_classes;
+package com.example.miniapp.helper_classes
 
-public interface ISubscriber<T> {
-    void update(T updateInput);
+interface ISubscriber<T> {
+    fun update(updateInput: T)
 }

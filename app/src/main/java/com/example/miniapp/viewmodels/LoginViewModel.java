@@ -60,10 +60,6 @@ public class LoginViewModel implements IViewModel, IPublisher<Integer> {
     }
 
     @Override
-    public void removeSub(ISubscriber<Integer> subscriber) {
-    }
-
-    @Override
     public void notifySubs(Integer loginStatus) {
         loginView.update(loginStatus);
     }

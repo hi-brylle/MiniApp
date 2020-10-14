@@ -2,27 +2,35 @@ package com.example.miniapp.models;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
+import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Dictionary;
-import com.couchbase.lite.Expression;
 import com.couchbase.lite.ListenerToken;
-import com.couchbase.lite.Meta;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
 import com.couchbase.lite.Result;
-import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 import com.example.miniapp.helper_classes.ISubscriber;
 import com.example.miniapp.helper_classes.Logger;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 import java.util.Date;
 
-public class UserDBManager extends DBManager implements IUserDBManager {
+public class UserDBManager implements IUserDBManager {
+    ArrayList<ISubscriber> listeners;
+    protected Database currentDatabase;    // open one database per session (yeah?)
+    protected String dbToUseOrMake;         // DB name to use or make for current session
+    protected DatabaseConfiguration config;
+
     Query changesQuery;
     ListenerToken listenerToken;
+
     public UserDBManager(String dbName, DatabaseConfiguration config){
-        super(dbName, config);
+        dbToUseOrMake = dbName;
+        this.config = config;
     }
 
     @Override
@@ -40,29 +48,6 @@ public class UserDBManager extends DBManager implements IUserDBManager {
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void queueDelete(String task, Date dateCreated, Date dateStart) {
-        Query docQuery = QueryBuilder.select(SelectResult.expression(Meta.id))
-                                        .from(DataSource.database(currentDatabase))
-                                        .where(Expression.property("task").equalTo(Expression.string(task))
-                                            .add(Expression.property("dateCreated").equalTo(Expression.date(dateCreated)))
-                                            .add(Expression.property("dateStart").equalTo(Expression.date(dateStart))));
-
-        try {
-            ResultSet resultSet = docQuery.execute();
-            for(Result result : resultSet){
-                String id = result.getString("id");
-                MutableDocument mutableDocument  = currentDatabase.getDocument(id).toMutable();
-                mutableDocument.setBoolean("isQueuedForDeletion", true);
-                currentDatabase.save(mutableDocument);
-            }
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
     @Override
@@ -112,9 +97,16 @@ public class UserDBManager extends DBManager implements IUserDBManager {
 
     @Override
     public void openDB() {
-        super.openDB();
-        changesQuery = QueryBuilder.select(SelectResult.all())
-                .from(DataSource.database(currentDatabase));
+
+        try {
+            currentDatabase = new Database(dbToUseOrMake, config);
+            Logger.log("opened " + currentDatabase.getName());
+
+            changesQuery = QueryBuilder.select(SelectResult.all())
+                    .from(DataSource.database(currentDatabase));
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -123,6 +115,20 @@ public class UserDBManager extends DBManager implements IUserDBManager {
             changesQuery.removeChangeListener(listenerToken);
         }
 
-        super.closeDB();
+        try {
+            currentDatabase.close();
+            Logger.log("closed " + currentDatabase.getName());
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addSub(@Nullable ISubscriber<Task> subscriber) {
+        if (listeners == null){
+            listeners = new ArrayList<>();
+        }
+
+        listeners.add(subscriber);
     }
 }

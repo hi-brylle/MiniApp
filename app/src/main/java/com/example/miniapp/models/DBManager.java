@@ -51,8 +51,4 @@ public abstract class DBManager implements IDBManager {
 
         listeners.add(subscriber);
     }
-
-    public void removeSub(ISubscriber subscriber){
-        listeners.remove(subscriber);
-    }
 }
