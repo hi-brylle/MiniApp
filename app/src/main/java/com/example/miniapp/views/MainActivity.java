@@ -18,6 +18,7 @@ import com.example.miniapp.helper_classes.PWHash;
 import com.example.miniapp.helper_classes.SecureSharedPref;
 import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.helper_classes.TestWifiService;
+import com.example.miniapp.helper_classes.UserDBListenerService;
 import com.example.miniapp.models.LoginDBManager;
 import com.example.miniapp.viewmodels.LoginViewModel;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -146,8 +147,10 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     private void login(String userEmailExtra) {
         startConnectivityService();
 
+        startListenerService(userEmailExtra);
+
         // start alarm service prior to login
-        startServiceForUser();
+        startAlarmServiceForUser();
 
         Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         // userEmail shall also be the name of the user-specific database
@@ -164,7 +167,13 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         startService(testWifiServiceIntent);
     }
 
-    private void startServiceForUser() {
+    private void startListenerService(String userEmailExtra){
+        Intent listenerServiceIntent = new Intent(MainActivity.this, UserDBListenerService.class);
+        listenerServiceIntent.putExtra("email", userEmailExtra);
+        startService(listenerServiceIntent);
+    }
+
+    private void startAlarmServiceForUser() {
         Intent alarmServiceIntent = new Intent(MainActivity.this, AlarmService.class);
         startService(alarmServiceIntent);
     }

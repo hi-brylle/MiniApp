@@ -9,16 +9,16 @@ import com.example.miniapp.helper_classes.ISubscriber as ISubscriber
 class UserDBManager(private val dbToUseOrMake: String, private val config: DatabaseConfiguration) : IUserDBManager {
     private val listeners: ArrayList<ISubscriber<Task>> = ArrayList()
 
-    private lateinit var currentDatabase: Database
+    private lateinit var userDatabase: Database
     private lateinit var changesQuery: Query
     private lateinit var listenerToken: ListenerToken
 
     override fun openDB() {
         try {
-            currentDatabase = Database(dbToUseOrMake, config)
-            log("opened " + currentDatabase.name)
+            userDatabase = Database(dbToUseOrMake, config)
+            log("opened " + userDatabase.name)
             changesQuery = QueryBuilder.select(SelectResult.all())
-                    .from(DataSource.database(currentDatabase))
+                    .from(DataSource.database(userDatabase))
         } catch (e: CouchbaseLiteException) {
             e.printStackTrace()
         }
@@ -33,7 +33,7 @@ class UserDBManager(private val dbToUseOrMake: String, private val config: Datab
         doc.setString("imageURI", imageURIString)
         doc.setString("address", address)
         try {
-            currentDatabase.save(doc)
+            userDatabase.save(doc)
         } catch (e: CouchbaseLiteException) {
             e.printStackTrace()
         }
@@ -42,7 +42,7 @@ class UserDBManager(private val dbToUseOrMake: String, private val config: Datab
     override fun listenForChanges() {
         listenerToken = changesQuery.addChangeListener { change: QueryChange ->
             for (result in change.results) {
-                val all = result.getDictionary(currentDatabase!!.name)
+                val all = result.getDictionary(userDatabase.name)
                 val task = all.getString("task")
                 val dateCreated = all.getDate("dateCreated")
                 val dateStart = all.getDate("dateStart")
@@ -51,7 +51,6 @@ class UserDBManager(private val dbToUseOrMake: String, private val config: Datab
                 val address = all.getString("address")
                 val t = Task(task, dateCreated, dateStart)
 
-                // TODO: change setDone based on date and time
                 t.isDone = isDone
                 t.imageURI = imageURI
                 t.address = address
@@ -70,9 +69,9 @@ class UserDBManager(private val dbToUseOrMake: String, private val config: Datab
         }
     }
 
-    override fun notifySubs(task: Task) {
+    override fun notifySubs(notifyInput: Task) {
         for (subscriber in listeners) {
-            subscriber.update(task)
+            subscriber.update(notifyInput)
         }
     }
 
@@ -80,8 +79,8 @@ class UserDBManager(private val dbToUseOrMake: String, private val config: Datab
         changesQuery.removeChangeListener(listenerToken)
 
         try {
-            currentDatabase.close()
-            log("closed " + currentDatabase.name)
+            userDatabase.close()
+            log("closed " + userDatabase.name)
         } catch (e: CouchbaseLiteException) {
             e.printStackTrace()
         }
