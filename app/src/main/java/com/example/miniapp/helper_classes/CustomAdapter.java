@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.miniapp.R;
 import com.example.miniapp.models.IUserDBManager;
+import com.example.miniapp.models.Repository;
 import com.example.miniapp.models.Task;
 import com.example.miniapp.models.UserDBManager;
 
@@ -26,7 +27,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
                          onImageClickedListener imageClickedListener){
         this.dbManager = userDBManager;
         CustomAdapter.imageClickedListener = imageClickedListener;
-
+        Repository.INSTANCE.addSub(this);
         if (taskList == null){
             taskList = new ArrayList<>();
         }

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.example.miniapp.helper_classes.CustomAdapter
 import com.example.miniapp.helper_classes.IPublisher
 import com.example.miniapp.helper_classes.ISubscriber
 import com.example.miniapp.helper_classes.log
@@ -15,6 +16,8 @@ import com.example.miniapp.helper_classes.log
 * */
 
 object Repository : IPublisher<Task> {
+    private lateinit var adapter: ISubscriber<Task>
+
     private val changesReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
@@ -30,10 +33,6 @@ object Repository : IPublisher<Task> {
         }
     }
 
-    init {
-
-    }
-
     fun register(context: Context) {
         val intentFilter = IntentFilter()
         intentFilter.addAction("INTENT_ACTION_DB_CHANGED")
@@ -45,7 +44,10 @@ object Repository : IPublisher<Task> {
     }
 
     override fun addSub(subscriber: ISubscriber<Task>?) {
-        TODO("Not yet implemented")
+        log("add sub called")
+        when (subscriber) {
+            is CustomAdapter -> {adapter = subscriber; log("adapter is in boisssss")}
+        }
     }
 
     override fun notifySubs(notifyInput: Task) {
