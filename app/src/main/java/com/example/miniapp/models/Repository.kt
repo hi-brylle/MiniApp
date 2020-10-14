@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.example.miniapp.helper_classes.IPublisher
+import com.example.miniapp.helper_classes.ISubscriber
 import com.example.miniapp.helper_classes.log
 
 /*
@@ -11,7 +13,8 @@ import com.example.miniapp.helper_classes.log
 * 1. feeds data to custom adapter and alarm service
 * 2. listens for db changes from service
 * */
-class Repository(context: Context) {
+
+object Repository : IPublisher<Task> {
     private val changesReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
@@ -28,6 +31,10 @@ class Repository(context: Context) {
     }
 
     init {
+
+    }
+
+    fun register(context: Context) {
         val intentFilter = IntentFilter()
         intentFilter.addAction("INTENT_ACTION_DB_CHANGED")
         context.registerReceiver(changesReceiver, intentFilter)
@@ -35,6 +42,14 @@ class Repository(context: Context) {
 
     fun unregister(context: Context) {
         context.unregisterReceiver(changesReceiver)
+    }
+
+    override fun addSub(subscriber: ISubscriber<Task>?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun notifySubs(notifyInput: Task) {
+        TODO("Not yet implemented")
     }
 
 

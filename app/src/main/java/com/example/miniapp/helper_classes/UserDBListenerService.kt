@@ -16,7 +16,6 @@ class UserDBListenerService : Service() {
     private lateinit var userDatabase: Database
     private lateinit var changesQuery: Query
     private lateinit var listenerToken: ListenerToken
-    private lateinit var repository: Repository
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -24,7 +23,7 @@ class UserDBListenerService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         intent.getStringExtra("email")?.let {
-            repository = Repository(this)
+            Repository.register(this)
             start(it)
         } ?: run {log("user db name is null")}
 
@@ -32,7 +31,7 @@ class UserDBListenerService : Service() {
     }
 
     override fun stopService(name: Intent?): Boolean {
-        repository.unregister(this)
+        Repository.unregister(this)
         // TODO: remove listener and close db
         return super.stopService(name)
     }
