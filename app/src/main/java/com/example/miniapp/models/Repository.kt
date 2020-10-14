@@ -8,7 +8,7 @@ import com.example.miniapp.helper_classes.log
 /*
 * Roles of the repo:
 * 1. feeds data to custom adapter and alarm service
-* 2. listens for db changes
+* 2. listens for db changes from service
 * */
 class Repository : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

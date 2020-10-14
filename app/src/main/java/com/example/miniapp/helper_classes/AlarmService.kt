@@ -54,9 +54,7 @@ class AlarmService : Service(), ISubscriber<Task?> {
     private fun start(emailFromSP: String) {
         log("start service for user $emailFromSP")
         val dbManager: IUserDBManager = UserDBManager(emailFromSP, DatabaseConfiguration(this))
-        dbManager.addSub(this)
         dbManager.openDB()
-        dbManager.listenForChanges()
     }
 
     override fun update(updateInput: Task?) {

@@ -25,7 +25,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     public CustomAdapter(UserDBManager userDBManager,
                          onImageClickedListener imageClickedListener){
         this.dbManager = userDBManager;
-        this.dbManager.addSub(this);
         CustomAdapter.imageClickedListener = imageClickedListener;
 
         if (taskList == null){
@@ -43,7 +42,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     public void updateList() {
         taskList.clear();
-        dbManager.listenForChanges();
     }
 
     @NonNull

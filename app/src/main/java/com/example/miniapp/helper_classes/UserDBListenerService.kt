@@ -35,6 +35,7 @@ class UserDBListenerService : Service() {
 
     override fun stopService(name: Intent?): Boolean {
         unregisterReceiver(repository)
+        // TODO: remove listener and close db
         return super.stopService(name)
     }
 
@@ -72,7 +73,6 @@ class UserDBListenerService : Service() {
                 intent.putExtra("taskExtra", bundle)
                 intent.action = "INTENT_ACTION_DB_CHANGED"
                 sendBroadcast(intent)
-                log("broadcast sent")
             }
         }
         try {
@@ -81,38 +81,4 @@ class UserDBListenerService : Service() {
             e.printStackTrace()
         }
     }
-
-    /*
-    private fun listenForChanges(){
-        listenerToken = changesQuery.addChangeListener { change: QueryChange ->
-            for (result in change.results) {
-                val all = result.getDictionary(userDatabase.name)
-                val task = all.getString("task")
-                val dateCreated = all.getDate("dateCreated")
-                val dateStart = all.getDate("dateStart")
-                val isDone = all.getBoolean("isDone")
-                val imageURI = all.getString("imageURI")
-                val address = all.getString("address")
-                val t = Task(task, dateCreated, dateStart)
-
-                t.isDone = isDone
-                t.imageURI = imageURI
-                t.address = address
-
-                log("FROM SERVICE: Task Retrieved: $task")
-                log("FROM SERVICE: Created Retrieved: $dateCreated")
-                log("FROM SERVICE: Start Retrieved: $dateStart")
-                log("FROM SERVICE: URI Retrieved: $imageURI")
-                log("FROM SERVICE: Address Retrieved: $address")
-
-                //notifySubs(t)
-            }
-        }
-        try {
-            changesQuery.execute()
-        } catch (e: CouchbaseLiteException) {
-            e.printStackTrace()
-        }
-    }
-    */
 }
