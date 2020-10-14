@@ -36,7 +36,8 @@ class AlarmService : Service(), ISubscriber<Task?> {
             log("previous user logged out.")
         } else {
             activeTasks = ArrayList()
-            start(secureSharedPref.getLoggedEmail())
+            secureSharedPref.getLoggedEmail()?.let { start(it) } ?:
+                run { log("email is null. no service started") }
         }
 
         return START_STICKY
@@ -50,7 +51,7 @@ class AlarmService : Service(), ISubscriber<Task?> {
         Toast.makeText(this, "App Killed. All alarms are disabled", Toast.LENGTH_SHORT).show()
     }
 
-    private fun start(emailFromSP: String?) {
+    private fun start(emailFromSP: String) {
         log("start service for user $emailFromSP")
         val dbManager: IUserDBManager = UserDBManager(emailFromSP, DatabaseConfiguration(this))
         dbManager.addSub(this)
@@ -62,7 +63,7 @@ class AlarmService : Service(), ISubscriber<Task?> {
         val now = Calendar.getInstance().time
 
         updateInput?.let{ taskData ->
-            taskData.dateStart?.let {dateStart ->
+            taskData.dateStart.let { dateStart ->
                 if(dateStart.after(now)){
                     val task = taskData.task
                     val unixTimestamp = dateStart.time
