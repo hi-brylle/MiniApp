@@ -7,12 +7,8 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Pair
 import android.widget.Toast
-import com.couchbase.lite.DatabaseConfiguration
-import com.example.miniapp.models.IUserDBManager
 import com.example.miniapp.models.Repository
 import com.example.miniapp.models.Task
-import com.example.miniapp.models.UserDBManager
-import java.util.*
 import kotlin.collections.ArrayList
 
 class AlarmService : Service(), ISubscriber<Task> {
@@ -29,19 +25,11 @@ class AlarmService : Service(), ISubscriber<Task> {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        log("ALARM SERVICE STARTED")
-
-        val secureSharedPref = SecureSharedPref(applicationContext)
-
-        if (secureSharedPref.isUserLoggedOut()) {
-            log("previous user logged out.")
-        } else {
-            activeTasks = ArrayList()
-            secureSharedPref.getLoggedEmail()?.let {
-                Repository.addSub(this)
-                start(it)
-            } ?: run { log("email is null. no service started") }
-        }
+        intent.getStringExtra("email")?.let {
+            log("ALARM SERVICE STARTED")
+            Repository.register(this)
+            start(it)
+        } ?: run {log("NULL EMAIL. SERVICE FAILED TO START")}
 
         return START_STICKY
     }
@@ -56,12 +44,9 @@ class AlarmService : Service(), ISubscriber<Task> {
 
     private fun start(emailFromSP: String) {
         log("start service for user $emailFromSP")
-        val dbManager: IUserDBManager = UserDBManager(emailFromSP, DatabaseConfiguration(this))
-        dbManager.openDB()
     }
 
     override fun update(updateInput: Task) {
-        log("alarm service got emmm")
         val task = updateInput.task
         val unixTimestamp = updateInput.dateStart.time
         val notificationID = (unixTimestamp / 1000).toInt()

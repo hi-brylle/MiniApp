@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         startListenerService(userEmailExtra);
 
         // start alarm service prior to login
-        startAlarmServiceForUser();
+        startAlarmServiceForUser(userEmailExtra);
 
         Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         // userEmail shall also be the name of the user-specific database
@@ -175,8 +175,9 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         startService(listenerServiceIntent);
     }
 
-    private void startAlarmServiceForUser() {
+    private void startAlarmServiceForUser(String userEmailExtra) {
         Intent alarmServiceIntent = new Intent(MainActivity.this, AlarmService.class);
+        alarmServiceIntent.putExtra("email", userEmailExtra);
         startService(alarmServiceIntent);
     }
 

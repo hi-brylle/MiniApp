@@ -23,9 +23,10 @@ class UserDBListenerService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         intent.getStringExtra("email")?.let {
+            log("DB LISTENER SERVICE STARTED")
             Repository.register(this)
             start(it)
-        } ?: run {log("user db name is null")}
+        } ?: run {log("NULL EMAIL. SERVICE FAILED TO START")}
 
         return START_STICKY
     }
@@ -38,13 +39,12 @@ class UserDBListenerService : Service() {
     }
 
     private fun start(dbName: String) {
-        log("LISTENER SERVICE STARTED")
         userDatabase = Database(dbName, DatabaseConfiguration(this))
         changesQuery = QueryBuilder.select(SelectResult.all())
                 .from(DataSource.database(userDatabase))
 
         CoroutineScope(IO).launch {
-            log("LISTENER RUNNING ON ${Thread.currentThread().name}")
+            log("DB LISTENER RUNNING ON ${Thread.currentThread().name}")
             listenForChanges()
         }
     }
