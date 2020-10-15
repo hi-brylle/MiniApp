@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
@@ -89,6 +88,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
 
     @Override
     protected void onResume() {
+        customAdapter.updateHomeScreen();
         super.onResume();
     }
 

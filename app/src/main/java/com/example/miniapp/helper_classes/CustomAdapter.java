@@ -74,6 +74,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         notifyDataSetChanged();
     }
 
+    public void updateHomeScreen(){
+        taskList.clear();
+        Repository.INSTANCE.onRequestNotify();
+    }
+
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTaskRow;
         public TextView textViewSubDateStart;

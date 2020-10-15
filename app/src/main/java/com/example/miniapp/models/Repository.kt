@@ -9,13 +9,13 @@ import java.util.*
 
 /*
 * Roles of the repo:
-* 1. feeds data to custom adapter and alarm service
-* 2. listens for db changes from service
+* 1. feed data to custom adapter and alarm service
+* 2. listens for db changes from listener service
 * */
 
 object Repository : IPublisher<Task> {
-    private lateinit var adapter: ISubscriber<Task>
-    private lateinit var alarmService: ISubscriber<Task>
+    private var adapter: ISubscriber<Task>? = null
+    private var alarmService: ISubscriber<Task>? = null
     private val taskList = mutableListOf<Task>()
 
     fun register(context: Context) {
@@ -27,9 +27,11 @@ object Repository : IPublisher<Task> {
     private val changesReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
-                if(it.action == "INTENT_ACTION_DB_CHANGED"){
-                    val task : Task = intent.getBundleExtra("taskExtra")?.getSerializable("taskObj") as Task
-                    taskList.addUnique(task)
+                when (it.action) {
+                    "INTENT_ACTION_DB_CHANGED" -> {
+                        val task : Task = intent.getBundleExtra("taskExtra")?.getSerializable("taskObj") as Task
+                        taskList.addUnique(task)
+                    }
                 }
             }
         }
@@ -43,16 +45,20 @@ object Repository : IPublisher<Task> {
         when (subscriber) {
             is CustomAdapter -> {
                 adapter = subscriber
-                log("adapter is in boisssss")
+                log("adapter is subbed")
             }
             is AlarmService -> {
                 alarmService = subscriber
-                log("alarm is in boisssss")
+                log("alarm is subbed")
             }
         }
     }
 
-    fun MutableList<Task>.addUnique(task: Task){
+    /*
+    *   TODO: when deletion becomes possible, this method should instead merge changes
+    *       from the database with the taskList
+    */
+    private fun MutableList<Task>.addUnique(task: Task){
         var isUnique = true
         this.forEach {
             if (it.isSame(task)) {
@@ -72,9 +78,14 @@ object Repository : IPublisher<Task> {
     }
 
     override fun notifySubs(notifyInput: Task) {
-        adapter.update(notifyInput)
-        if (notifyInput.dateStart.after(Calendar.getInstance().time)) alarmService.update(notifyInput)
+        adapter?.update(notifyInput)
+
+        if (notifyInput.dateStart.after(Calendar.getInstance().time)) {
+            alarmService?.update(notifyInput)
+        }
     }
 
-
+    fun onRequestNotify() {
+        taskList.forEach { notifySubs(it) }
+    }
 }
