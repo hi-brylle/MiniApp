@@ -15,17 +15,14 @@ import com.example.miniapp.helper_classes.*
 object Repository : IPublisher<Task> {
     private lateinit var adapter: ISubscriber<Task>
     private lateinit var alarmService: ISubscriber<Task>
+    private val taskList = mutableListOf<Task>()
 
     private val changesReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
                 if(it.action == "INTENT_ACTION_DB_CHANGED"){
                     val task : Task = intent.getBundleExtra("taskExtra")?.getSerializable("taskObj") as Task
-                    log("FROM SERVICE: Task Retrieved: ${task.task}")
-                    log("FROM SERVICE: Created Retrieved: ${task.dateCreated}")
-                    log("FROM SERVICE: Start Retrieved: ${task.dateStart}")
-                    log("FROM SERVICE: URI Retrieved: ${task.imageURI}")
-                    log("FROM SERVICE: Address Retrieved: ${task.address}")
+                    taskList.addUnique(task)
                 }
             }
         }
@@ -54,8 +51,26 @@ object Repository : IPublisher<Task> {
         }
     }
 
+    fun MutableList<Task>.addUnique(task: Task){
+        var isUnique = true
+        this.forEach {
+            if (it.isSame(task)) {
+                isUnique = false
+            }
+        }
+
+        if(isUnique){
+            this.add(task)
+            log("ADDED FROM SERVICE: Task Retrieved: ${task.task}")
+            log("ADDED FROM SERVICE: Created Retrieved: ${task.dateCreated}")
+            log("ADDED FROM SERVICE: Start Retrieved: ${task.dateStart}")
+            log("ADDED FROM SERVICE: URI Retrieved: ${task.imageURI}")
+            log("ADDED FROM SERVICE: Address Retrieved: ${task.address}")
+        }
+    }
+
     override fun notifySubs(notifyInput: Task) {
-        TODO("Not yet implemented")
+        adapter.update(notifyInput)
     }
 
 

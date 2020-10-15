@@ -11,38 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.miniapp.R;
-import com.example.miniapp.models.IUserDBManager;
 import com.example.miniapp.models.Repository;
 import com.example.miniapp.models.Task;
-import com.example.miniapp.models.UserDBManager;
 
 import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements ISubscriber<Task> {
-    private IUserDBManager dbManager;
     public ArrayList<Task> taskList;
     protected static onImageClickedListener imageClickedListener;
 
-    public CustomAdapter(UserDBManager userDBManager,
-                         onImageClickedListener imageClickedListener){
-        this.dbManager = userDBManager;
+    public CustomAdapter(onImageClickedListener imageClickedListener){
         CustomAdapter.imageClickedListener = imageClickedListener;
         Repository.INSTANCE.addSub(this);
-        if (taskList == null){
-            taskList = new ArrayList<>();
-        }
-    }
-
-    public void openDB(){
-        dbManager.openDB();
-    }
-
-    public void closeDB(){
-        dbManager.closeDB();
-    }
-
-    public void updateList() {
-        taskList.clear();
+        taskList = new ArrayList<>();
     }
 
     @NonNull

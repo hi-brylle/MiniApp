@@ -32,7 +32,8 @@ class UserDBListenerService : Service() {
 
     override fun stopService(name: Intent?): Boolean {
         Repository.unregister(this)
-        // TODO: remove listener and close db
+        changesQuery.removeChangeListener(listenerToken)
+        userDatabase.close()
         return super.stopService(name)
     }
 

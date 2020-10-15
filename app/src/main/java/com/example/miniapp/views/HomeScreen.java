@@ -40,7 +40,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
 
         FrameLayout frameLayoutContainer = findViewById(R.id.fragment_container);
 
-        customAdapter = new CustomAdapter(sharedDBManager, this);
+        customAdapter = new CustomAdapter( this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -85,19 +85,16 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
     @Override
     protected void onStart() {
         super.onStart();
-        customAdapter.openDB();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        customAdapter.updateList();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        customAdapter.closeDB();
     }
 
     @Override
