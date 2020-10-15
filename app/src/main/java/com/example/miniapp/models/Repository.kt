@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import com.example.miniapp.helper_classes.*
+import java.util.*
 
 /*
 * Roles of the repo:
@@ -66,11 +67,13 @@ object Repository : IPublisher<Task> {
             log("ADDED FROM SERVICE: Start Retrieved: ${task.dateStart}")
             log("ADDED FROM SERVICE: URI Retrieved: ${task.imageURI}")
             log("ADDED FROM SERVICE: Address Retrieved: ${task.address}")
+            notifySubs(task)
         }
     }
 
     override fun notifySubs(notifyInput: Task) {
         adapter.update(notifyInput)
+        if (notifyInput.dateStart.after(Calendar.getInstance().time)) alarmService.update(notifyInput)
     }
 
 
