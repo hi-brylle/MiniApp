@@ -18,6 +18,12 @@ object Repository : IPublisher<Task> {
     private lateinit var alarmService: ISubscriber<Task>
     private val taskList = mutableListOf<Task>()
 
+    fun register(context: Context) {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("INTENT_ACTION_DB_CHANGED")
+        context.registerReceiver(changesReceiver, intentFilter)
+    }
+
     private val changesReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
@@ -27,12 +33,6 @@ object Repository : IPublisher<Task> {
                 }
             }
         }
-    }
-
-    fun register(context: Context) {
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("INTENT_ACTION_DB_CHANGED")
-        context.registerReceiver(changesReceiver, intentFilter)
     }
 
     fun unregister(context: Context) {

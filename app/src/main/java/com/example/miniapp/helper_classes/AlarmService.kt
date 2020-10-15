@@ -12,7 +12,7 @@ import com.example.miniapp.models.Task
 import kotlin.collections.ArrayList
 
 class AlarmService : Service(), ISubscriber<Task> {
-    private lateinit var activeTasks: ArrayList<Pair<Int, String>>
+    private val activeTasks: ArrayList<Pair<Int, String>> = ArrayList()
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -27,7 +27,7 @@ class AlarmService : Service(), ISubscriber<Task> {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         intent.getStringExtra("email")?.let {
             log("ALARM SERVICE STARTED")
-            Repository.register(this)
+            Repository.addSub(this)
             start(it)
         } ?: run {log("NULL EMAIL. SERVICE FAILED TO START")}
 
