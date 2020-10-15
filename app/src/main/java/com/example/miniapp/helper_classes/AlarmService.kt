@@ -9,12 +9,13 @@ import android.util.Pair
 import android.widget.Toast
 import com.couchbase.lite.DatabaseConfiguration
 import com.example.miniapp.models.IUserDBManager
+import com.example.miniapp.models.Repository
 import com.example.miniapp.models.Task
 import com.example.miniapp.models.UserDBManager
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AlarmService : Service(), ISubscriber<Task?> {
+class AlarmService : Service(), ISubscriber<Task> {
     private lateinit var activeTasks: ArrayList<Pair<Int, String>>
 
     override fun onBind(intent: Intent): IBinder? {
@@ -36,8 +37,10 @@ class AlarmService : Service(), ISubscriber<Task?> {
             log("previous user logged out.")
         } else {
             activeTasks = ArrayList()
-            secureSharedPref.getLoggedEmail()?.let { start(it) } ?:
-                run { log("email is null. no service started") }
+            secureSharedPref.getLoggedEmail()?.let {
+                Repository.addSub(this)
+                start(it)
+            } ?: run { log("email is null. no service started") }
         }
 
         return START_STICKY
@@ -57,28 +60,32 @@ class AlarmService : Service(), ISubscriber<Task?> {
         dbManager.openDB()
     }
 
-    override fun update(updateInput: Task?) {
-        val now = Calendar.getInstance().time
+//    override fun update(updateInput: Task?) {
+//        val now = Calendar.getInstance().time
+//
+//        updateInput?.let{ taskData ->
+//            taskData.dateStart.let { dateStart ->
+//                if(dateStart.after(now)){
+//                    val task = taskData.task
+//                    val unixTimestamp = dateStart.time
+//
+//                    // notification ID identifies the pending intent
+//                    val notificationID = (unixTimestamp / 1000).toInt()
+//
+//                    if (unixTimestamp == 0L || notificationID == 0) {
+//                        log("Warning: default values on service params")
+//                    }
+//
+//                    // record task now for cancellation should user log out
+//                    recordActiveTask(task, notificationID)
+//                    setAlarm(task, unixTimestamp, notificationID)
+//                }
+//            }
+//        }
+//    }
 
-        updateInput?.let{ taskData ->
-            taskData.dateStart.let { dateStart ->
-                if(dateStart.after(now)){
-                    val task = taskData.task
-                    val unixTimestamp = dateStart.time
-
-                    // notification ID identifies the pending intent
-                    val notificationID = (unixTimestamp / 1000).toInt()
-
-                    if (unixTimestamp == 0L || notificationID == 0) {
-                        log("Warning: default values on service params")
-                    }
-
-                    // record task now for cancellation should user log out
-                    recordActiveTask(task, notificationID)
-                    setAlarm(task, unixTimestamp, notificationID)
-                }
-            }
-        }
+    override fun update(updateInput: Task) {
+        log("alarm service got emmm")
     }
 
     private fun recordActiveTask(task: String, notificationID: Int) {
