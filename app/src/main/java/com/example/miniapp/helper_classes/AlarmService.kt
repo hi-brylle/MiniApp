@@ -60,32 +60,18 @@ class AlarmService : Service(), ISubscriber<Task> {
         dbManager.openDB()
     }
 
-//    override fun update(updateInput: Task?) {
-//        val now = Calendar.getInstance().time
-//
-//        updateInput?.let{ taskData ->
-//            taskData.dateStart.let { dateStart ->
-//                if(dateStart.after(now)){
-//                    val task = taskData.task
-//                    val unixTimestamp = dateStart.time
-//
-//                    // notification ID identifies the pending intent
-//                    val notificationID = (unixTimestamp / 1000).toInt()
-//
-//                    if (unixTimestamp == 0L || notificationID == 0) {
-//                        log("Warning: default values on service params")
-//                    }
-//
-//                    // record task now for cancellation should user log out
-//                    recordActiveTask(task, notificationID)
-//                    setAlarm(task, unixTimestamp, notificationID)
-//                }
-//            }
-//        }
-//    }
-
     override fun update(updateInput: Task) {
         log("alarm service got emmm")
+        val task = updateInput.task
+        val unixTimestamp = updateInput.dateStart.time
+        val notificationID = (unixTimestamp / 1000).toInt()
+
+        if (unixTimestamp == 0L || notificationID == 0) {
+            log("warning: default zero values on alarm service params")
+        } else {
+            recordActiveTask(task, notificationID)
+            setAlarm(task, unixTimestamp, notificationID)
+        }
     }
 
     private fun recordActiveTask(task: String, notificationID: Int) {
