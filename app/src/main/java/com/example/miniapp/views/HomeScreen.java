@@ -13,20 +13,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
-import com.example.miniapp.helper_classes.Logger;
 import com.example.miniapp.helper_classes.SecureSharedPref;
 import com.example.miniapp.helper_classes.AlarmService;
-import com.example.miniapp.models.UserDBManager;
-import com.example.miniapp.viewmodels.HomeScreenViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeScreen extends AppCompatActivity implements CustomAdapter.IOnImageClickedListener {
     private CustomAdapter customAdapter;
     FloatingActionButton fabNewTask;
-    HomeScreenViewModel homeScreenViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +29,6 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.IOnIm
         setContentView(R.layout.activity_home_screen);
 
         final String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
-        UserDBManager sharedDBManager = new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext()));
-        
-        homeScreenViewModel = new HomeScreenViewModel(sharedDBManager);
 
         FrameLayout frameLayoutContainer = findViewById(R.id.fragment_container);
 
