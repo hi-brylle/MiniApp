@@ -16,13 +16,14 @@ import android.widget.FrameLayout;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
 import com.example.miniapp.helper_classes.CustomAdapter;
+import com.example.miniapp.helper_classes.Logger;
 import com.example.miniapp.helper_classes.SecureSharedPref;
 import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.models.UserDBManager;
 import com.example.miniapp.viewmodels.HomeScreenViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class HomeScreen extends AppCompatActivity implements CustomAdapter.onImageClickedListener {
+public class HomeScreen extends AppCompatActivity implements CustomAdapter.IOnImageClickedListener {
     private CustomAdapter customAdapter;
     FloatingActionButton fabNewTask;
     HomeScreenViewModel homeScreenViewModel;
@@ -40,6 +41,7 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
         FrameLayout frameLayoutContainer = findViewById(R.id.fragment_container);
 
         customAdapter = new CustomAdapter( this);
+        customAdapter.updateHomeScreen();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -88,8 +90,8 @@ public class HomeScreen extends AppCompatActivity implements CustomAdapter.onIma
 
     @Override
     protected void onResume() {
-        customAdapter.updateHomeScreen();
         super.onResume();
+        customAdapter.updateHomeScreen();
     }
 
     @Override

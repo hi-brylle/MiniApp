@@ -1,67 +1,53 @@
-package com.example.miniapp.viewmodels;
+package com.example.miniapp.viewmodels
 
-import com.example.miniapp.helper_classes.IPublisher;
-import com.example.miniapp.helper_classes.ISubscriber;
-import com.example.miniapp.helper_classes.Logger;
-import com.example.miniapp.models.ILoginDBManager;
+import com.example.miniapp.helper_classes.IPublisher
+import com.example.miniapp.helper_classes.ISubscriber
+import com.example.miniapp.helper_classes.log
+import com.example.miniapp.models.ILoginDBManager
 
-public class LoginViewModel implements IViewModel, IPublisher<Integer> {
-    private ILoginDBManager dbManager;
-    private ISubscriber<Integer> loginView;
+class LoginViewModel(loginView: ISubscriber<Int>, private val dbManager: ILoginDBManager) : IViewModel, IPublisher<Int> {
+    private lateinit var loginView: ISubscriber<Int>
 
-    public LoginViewModel(ISubscriber<Integer> loginView, ILoginDBManager dbManager){
-        this.dbManager = dbManager;
-
+    init {
         // publish changes to MainActivity (login)
-        this.addSub(loginView);
+        this.addSub(loginView)
     }
 
-    @Override
-    public void openDB() {
-        dbManager.openDB();
+    override fun openDB() {
+        dbManager.openDB()
     }
 
-    @Override
-    public void closeDB() {
-        dbManager.closeDB();
+    override fun closeDB() {
+        dbManager.closeDB()
     }
 
-    public void verify(String email, String password) {
-        boolean isEmailRegistered = dbManager.isEmailRegistered(email);
-        Boolean isPasswordCorrect = null;
-        Logger.log("registered email: " + isEmailRegistered);
-        if (isEmailRegistered){
-            isPasswordCorrect = dbManager.verifyCredentials(email, password);
-            Logger.log("password correct: " + isPasswordCorrect);
-        }
+    fun verify(email: String, password: String) {
+        val isEmailRegistered = dbManager.isEmailRegistered(email)
+        val isPasswordCorrect: Boolean? = if(isEmailRegistered) dbManager.verifyCredentials(email, password) else null
 
         // the following integers are used for the login status
         // 0: email is not registered
         // 1: email is registered, password is correct
         // -1: email is registered, password is incorrect
         if (!isEmailRegistered) {
-            notifySubs(0);
+            log("register email $email")
+            customNotify { loginView.update(0) }
         } else {
-            if (isPasswordCorrect) {
-                notifySubs(1);
+            if (isPasswordCorrect!!) {
+                log("password correct for $email")
+                customNotify { loginView.update(1) }
             } else {
-                notifySubs(-1);
+                log("password incorrect for $email")
+                customNotify { loginView.update(-1) }
             }
         }
     }
 
-    public void register(String email, String password) {
-        dbManager.register(email, password);
+    fun register(email: String, password: String) {
+        dbManager.register(email, password)
     }
 
-    @Override
-    public void addSub(ISubscriber<Integer> subscriber) {
-        loginView = subscriber;
+    override fun addSub(subscriber: ISubscriber<Int>) {
+        loginView = subscriber
     }
-
-    @Override
-    public void notifySubs(Integer loginStatus) {
-        loginView.update(loginStatus);
-    }
-
 }

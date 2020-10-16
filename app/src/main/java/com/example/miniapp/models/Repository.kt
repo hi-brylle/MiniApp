@@ -73,19 +73,22 @@ object Repository : IPublisher<Task> {
             log("ADDED FROM SERVICE: Start Retrieved: ${task.dateStart}")
             log("ADDED FROM SERVICE: URI Retrieved: ${task.imageURI}")
             log("ADDED FROM SERVICE: Address Retrieved: ${task.address}")
-            notifySubs(task)
-        }
-    }
 
-    override fun notifySubs(notifyInput: Task) {
-        adapter?.update(notifyInput)
+            customNotify {
+                adapter?.update(task)
 
-        if (notifyInput.dateStart.after(Calendar.getInstance().time)) {
-            alarmService?.update(notifyInput)
+                if (task.dateStart.after(Calendar.getInstance().time)) {
+                    alarmService?.update(task)
+                }
+            }
         }
     }
 
     fun onRequestNotify() {
-        taskList.forEach { notifySubs(it) }
+        customNotify {
+            taskList.forEach{ adapter?.update(it) }
+        }
     }
+
+
 }

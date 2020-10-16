@@ -2,15 +2,11 @@ package com.example.miniapp.helper_classes
 
 import android.app.Service
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.os.IBinder
 import com.couchbase.lite.*
 import com.example.miniapp.models.Repository
 import com.example.miniapp.models.Task
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 
 class UserDBListenerService : Service() {
     private lateinit var userDatabase: Database
@@ -43,10 +39,7 @@ class UserDBListenerService : Service() {
         changesQuery = QueryBuilder.select(SelectResult.all())
                 .from(DataSource.database(userDatabase))
 
-        CoroutineScope(IO).launch {
-            log("DB LISTENER RUNNING ON ${Thread.currentThread().name}")
-            listenForChanges()
-        }
+        listenForChanges()
     }
 
     private fun listenForChanges() {

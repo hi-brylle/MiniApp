@@ -18,9 +18,9 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> implements ISubscriber<Task> {
     public ArrayList<Task> taskList;
-    protected static onImageClickedListener imageClickedListener;
+    protected static IOnImageClickedListener imageClickedListener;
 
-    public CustomAdapter(onImageClickedListener imageClickedListener){
+    public CustomAdapter(IOnImageClickedListener imageClickedListener){
         CustomAdapter.imageClickedListener = imageClickedListener;
         Repository.INSTANCE.addSub(this);
         taskList = new ArrayList<>();
@@ -80,8 +80,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     }
 
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewTaskRow;
-        public TextView textViewSubDateStart;
+        private TextView textViewTaskRow;
+        private TextView textViewSubDateStart;
         private TextView textViewSubDateCreated;
         private View subItem;
         private TextView textViewSubAddress;
@@ -112,7 +112,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
         }
     }
 
-    public interface onImageClickedListener {
+    public interface IOnImageClickedListener {
         void onImageClicked(String stringUri);
     }
 

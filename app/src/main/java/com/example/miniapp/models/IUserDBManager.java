@@ -1,7 +1,5 @@
 package com.example.miniapp.models;
 
-import com.example.miniapp.helper_classes.IPublisher;
-
 import java.util.Date;
 
 public interface IUserDBManager extends IDBManager {
