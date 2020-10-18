@@ -38,7 +38,7 @@ class LoginVM(private var loginView: ISubscriber<Int>, private val dbManager: ID
         return false
     }
     
-    private fun verifyCredentials(email: String, password: String): Boolean {
+    private fun areCredentialsCorrect(email: String, password: String): Boolean {
         val resultSet: ResultSet? = dbManager.read { currentDatabase ->
             QueryBuilder.select(SelectResult.property("email"), SelectResult.property("hash"))
                     .from(DataSource.database(currentDatabase))
@@ -63,8 +63,8 @@ class LoginVM(private var loginView: ISubscriber<Int>, private val dbManager: ID
         WRONG_PW(-1)
     }
 
-    fun verify(email: String, password: String){
-        val isPasswordCorrect: Boolean? = if(isEmailRegistered(email)) verifyCredentials(email, password) else null
+    fun verifyCredentials(email: String, password: String){
+        val isPasswordCorrect: Boolean? = if(isEmailRegistered(email)) areCredentialsCorrect(email, password) else null
 
         isPasswordCorrect?.let { correct ->
             if(correct) customNotify {loginView.update(STATUS.CORRECT_PW.value)} else customNotify {loginView.update(STATUS.WRONG_PW.value)}

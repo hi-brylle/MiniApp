@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void onValidationSucceeded() {
-        loginVM.verify(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
+        loginVM.verifyCredentials(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
     }
 
     @Override
