@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.couchbase.lite.DatabaseConfiguration;
 import com.example.miniapp.R;
-import com.example.miniapp.models.UserDBManager;
+import com.example.miniapp.models.DBManager;
 import com.example.miniapp.viewmodels.NewTaskViewModel;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -89,7 +89,7 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
         imageButtonAddPhoto = findViewById(R.id.image_button_add_photo);
 
         String dbName = getIntent().getStringExtra(getString(R.string.userEmailExtra));
-        newTaskViewModel = new NewTaskViewModel(new UserDBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
+        newTaskViewModel = new NewTaskViewModel(new DBManager(dbName, new DatabaseConfiguration(getApplicationContext())));
 
         editTextSelectDate.setOnClickListener(view -> openDatePickerDialog());
         editTextSelectTime.setOnClickListener(view -> openTimePickerDialog());
@@ -206,13 +206,11 @@ public class NewTask extends AppCompatActivity implements DatePickerDialog.OnDat
     @Override
     protected void onStart() {
         super.onStart();
-        newTaskViewModel.openDB();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        newTaskViewModel.closeDB();
     }
 
     @Override

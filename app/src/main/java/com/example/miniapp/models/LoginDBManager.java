@@ -1,7 +1,10 @@
 package com.example.miniapp.models;
 
+import android.provider.ContactsContract;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
+import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
 import com.couchbase.lite.Expression;
 import com.couchbase.lite.MutableDocument;
@@ -13,15 +16,22 @@ import com.couchbase.lite.SelectResult;
 import com.example.miniapp.helper_classes.Logger;
 import com.example.miniapp.helper_classes.PWHash;
 
-public class LoginDBManager extends DBManager implements ILoginDBManager {
+import org.jetbrains.annotations.NotNull;
+
+public class LoginDBManager implements ILoginDBManager {
+    private final String dbName = "users_login";
+    private Database currentDatabase;
+
     public LoginDBManager(DatabaseConfiguration config){
-        super();
-        this.config = config;
-        dbToUseOrMake = "users_login";
+        try {
+            currentDatabase = new Database(dbName, config);
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void register(String email, String password) {
+    public void register(@NotNull String email, @NotNull String password) {
         MutableDocument doc = new MutableDocument();
         doc.setString("email", email);
         doc.setString("hash", PWHash.hash(password));
@@ -34,7 +44,7 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
     }
 
     @Override
-    public boolean isEmailRegistered(String email) {
+    public boolean isEmailRegistered(@NotNull String email) {
        EmailRegisteredRunnable emailRegisteredRunnable =  new EmailRegisteredRunnable(email);
        Thread emailThread = new Thread(emailRegisteredRunnable);
        emailThread.start();
@@ -47,7 +57,7 @@ public class LoginDBManager extends DBManager implements ILoginDBManager {
     }
 
     @Override
-    public boolean verifyCredentials(String email, String password) {
+    public boolean verifyCredentials(@NotNull String email, @NotNull String password) {
         VerifyPasswordRunnable verifyPasswordRunnable = new VerifyPasswordRunnable(email, password);
         Thread passwordThread = new Thread(verifyPasswordRunnable);
         passwordThread.start();

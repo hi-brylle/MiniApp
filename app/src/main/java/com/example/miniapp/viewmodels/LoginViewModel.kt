@@ -5,20 +5,12 @@ import com.example.miniapp.helper_classes.ISubscriber
 import com.example.miniapp.helper_classes.log
 import com.example.miniapp.models.ILoginDBManager
 
-class LoginViewModel(loginView: ISubscriber<Int>, private val dbManager: ILoginDBManager) : IViewModel, IPublisher<Int> {
+class LoginViewModel(loginView: ISubscriber<Int>, private val dbManager: ILoginDBManager) : IPublisher<Int> {
     private lateinit var loginView: ISubscriber<Int>
 
     init {
         // publish changes to MainActivity (login)
         this.addSub(loginView)
-    }
-
-    override fun openDB() {
-        dbManager.openDB()
-    }
-
-    override fun closeDB() {
-        dbManager.closeDB()
     }
 
     fun verify(email: String, password: String) {

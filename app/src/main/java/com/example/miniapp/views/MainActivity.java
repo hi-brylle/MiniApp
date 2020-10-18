@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Override
     protected void onStart() {
         super.onStart();
-        loginViewModel.openDB();
     }
 
     @Override
@@ -91,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Override
     protected void onStop() {
         super.onStop();
-        loginViewModel.closeDB();
     }
 
     @Override

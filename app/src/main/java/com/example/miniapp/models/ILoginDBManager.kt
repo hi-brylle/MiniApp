@@ -1,7 +1,7 @@
-package com.example.miniapp.models;
+package com.example.miniapp.models
 
-public interface ILoginDBManager extends IDBManager {
-    void register(String email, String password);
-    boolean isEmailRegistered(String email);
-    boolean verifyCredentials(String email, String password);
+interface ILoginDBManager {
+    fun register(email: String, password: String)
+    fun isEmailRegistered(email: String): Boolean
+    fun verifyCredentials(email: String, password: String): Boolean
 }

@@ -2,29 +2,25 @@ package com.example.miniapp.viewmodels
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import com.example.miniapp.helper_classes.log
-import com.example.miniapp.models.IUserDBManager
+import com.couchbase.lite.MutableDocument
+import com.example.miniapp.models.IDBManager
 import java.text.DateFormatSymbols
 import java.util.*
 
-class NewTaskViewModel(private val dbManager: IUserDBManager) {
-    fun openDB() {
-        dbManager.openDB()
-    }
-
-    fun closeDB() {
-        dbManager.closeDB()
-    }
-
-    fun submit(task: String, created: Date, start: Date, imageURI: Uri?, completeAddress: String?) {
+class NewTaskViewModel(private val dbManager: IDBManager) {
+    fun submit(task: String, dateCreated: Date, dateStart: Date, imageURI: Uri?, completeAddress: String?) {
         val imageURIString = imageURI?.toString() ?: ""
         val address = completeAddress ?: ""
-        dbManager.create(task, created, start, imageURIString, address)
-        log("Task: $task")
-        log("Created: $created")
-        log("Start: $start")
-        log("URI: $imageURIString")
-        log("Address: $address")
+
+        dbManager.create {
+            val doc = MutableDocument()
+            doc.setString("task", task)
+            doc.setDate("dateCreated", dateCreated)
+            doc.setDate("dateStart", dateStart)
+            doc.setBoolean("isDone", false)
+            doc.setString("imageURI", imageURIString)
+            doc.setString("address", address)
+        }
     }
 
     fun isValid(dateTimeSelected: Date): Boolean {

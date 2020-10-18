@@ -1,6 +1,7 @@
-package com.example.miniapp.models;
+package com.example.miniapp.models
 
-public interface IDBManager {
-    void openDB();
-    void closeDB();
+import com.couchbase.lite.MutableDocument
+
+interface IDBManager {
+    fun create(customCreate: () -> MutableDocument)
 }
