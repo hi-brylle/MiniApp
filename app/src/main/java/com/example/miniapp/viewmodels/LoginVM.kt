@@ -57,19 +57,19 @@ class LoginVM(private var loginView: ISubscriber<Int>, private val dbManager: ID
         return false
     }
 
+    private enum class STATUS(val value: Int) {
+        NOT_REGISTERED(0),
+        CORRECT_PW(1),
+        WRONG_PW(-1)
+    }
+
     fun verify(email: String, password: String){
         val isEmailRegistered = isEmailRegistered(email)
         val isPasswordCorrect: Boolean? = if(isEmailRegistered) verifyCredentials(email, password) else null
-
-        /*
-            the following integers are used for the login status
-            0: email is not registered
-            1: email is registered, password is correct
-            -1: email is registered, password is incorrect
-        */
+        
         isPasswordCorrect?.let { correct ->
-            if(correct) customNotify {loginView.update(1)} else customNotify {loginView.update(-1)}
-        } ?: run { customNotify {loginView.update(0)} }
+            if(correct) customNotify {loginView.update(STATUS.CORRECT_PW.value)} else customNotify {loginView.update(STATUS.WRONG_PW.value)}
+        } ?: run { customNotify {loginView.update(STATUS.NOT_REGISTERED.value)} }
     }
 
     override fun addSub(subscriber: ISubscriber<Int>) {
