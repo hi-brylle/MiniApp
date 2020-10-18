@@ -19,8 +19,8 @@ import com.example.miniapp.helper_classes.SecureSharedPref;
 import com.example.miniapp.helper_classes.AlarmService;
 import com.example.miniapp.helper_classes.TestWifiService;
 import com.example.miniapp.helper_classes.UserDBListenerService;
-import com.example.miniapp.models.LoginDBManager;
-import com.example.miniapp.viewmodels.LoginViewModel;
+import com.example.miniapp.models.DBManager;
+import com.example.miniapp.viewmodels.LoginVM;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Password(scheme = Password.Scheme.ANY, message = "Password must be at least 6 characters")
     private EditText editTextPassword;
 
-    private LoginViewModel loginViewModel;
+    private LoginVM loginVM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         editTextPassword = findViewById(R.id.edit_text_password);
         Button buttonSignIn = findViewById(R.id.button_sign_in);
 
-        loginViewModel = new LoginViewModel(this, new LoginDBManager(new DatabaseConfiguration(getApplicationContext())));
+        loginVM = new LoginVM(this, new DBManager(getString(R.string.users_login_db_name), new DatabaseConfiguration(getApplicationContext())));
 
         buttonSignIn.setOnClickListener(view -> validator.validate());
     }
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     @Override
     public void onValidationSucceeded() {
-        loginViewModel.verify(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
+        loginVM.verify(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
     }
 
     @Override
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         switch (loginStatus){
             // register email
             case 0:
-                loginViewModel.register(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
+                loginVM.register(String.valueOf(editTextEmail.getText()), String.valueOf(editTextPassword.getText()));
                 setAlwaysLoggedIn();
                 login(String.valueOf(editTextEmail.getText()));
                 break;

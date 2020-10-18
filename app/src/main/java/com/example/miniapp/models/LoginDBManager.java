@@ -19,11 +19,11 @@ import com.example.miniapp.helper_classes.PWHash;
 import org.jetbrains.annotations.NotNull;
 
 public class LoginDBManager implements ILoginDBManager {
-    private final String dbName = "users_login";
     private Database currentDatabase;
 
     public LoginDBManager(DatabaseConfiguration config){
         try {
+            String dbName = "users_login";
             currentDatabase = new Database(dbName, config);
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();

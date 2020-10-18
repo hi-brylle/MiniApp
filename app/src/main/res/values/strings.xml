@@ -14,4 +14,5 @@
     <string name="date_start">Date start</string>
     <string name="date_created">Date created</string>
     <string name="attached_photo">Attached photo</string>
+    <string name="users_login_db_name">users_login</string>
 </resources>
