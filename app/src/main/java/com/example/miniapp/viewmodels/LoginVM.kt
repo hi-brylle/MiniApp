@@ -64,9 +64,8 @@ class LoginVM(private var loginView: ISubscriber<Int>, private val dbManager: ID
     }
 
     fun verify(email: String, password: String){
-        val isEmailRegistered = isEmailRegistered(email)
-        val isPasswordCorrect: Boolean? = if(isEmailRegistered) verifyCredentials(email, password) else null
-        
+        val isPasswordCorrect: Boolean? = if(isEmailRegistered(email)) verifyCredentials(email, password) else null
+
         isPasswordCorrect?.let { correct ->
             if(correct) customNotify {loginView.update(STATUS.CORRECT_PW.value)} else customNotify {loginView.update(STATUS.WRONG_PW.value)}
         } ?: run { customNotify {loginView.update(STATUS.NOT_REGISTERED.value)} }
