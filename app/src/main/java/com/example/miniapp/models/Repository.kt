@@ -8,10 +8,10 @@ import com.example.miniapp.helper_classes.*
 import java.util.*
 
 /*
-* Roles of the repo:
-* 1. feed data to custom adapter and alarm service
-* 2. listens for db changes from listener service
-* */
+    Roles of the repo:
+    1. feed data to custom adapter and alarm service
+    2. listens for db changes from listener service
+*/
 
 object Repository : IPublisher<Task> {
     private var adapter: ISubscriber<Task>? = null

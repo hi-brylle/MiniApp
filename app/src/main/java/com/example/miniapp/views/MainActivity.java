@@ -184,9 +184,6 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
                 .setMessage("Your password is incorrect.")
                 .setCancelable(false)
                 .setPositiveButton("OK", (dialog, id) -> {
-                    // we don't need to clear out the email for extra security
-                    // I mean, this is just a task notifier app
-                    // editTextEmail.setText("");
                     editTextPassword.setText("");
                 });
         AlertDialog alert = builder.create();
